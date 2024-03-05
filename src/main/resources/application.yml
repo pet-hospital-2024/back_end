@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:mysql://wxl475.cn:3306/
+    username: syf
+    password: PrjtmBwCRwsY8bmX
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+server:
+  port: 8081
