@@ -13,6 +13,7 @@ public class UserService_impl implements UserService {
 
     @Override
     public user login(user u){
+        userMapper.refreshTimestamp(u);
         return userMapper.getUserByUserNameAndPassword(u);
     }
 
@@ -46,6 +47,7 @@ public class UserService_impl implements UserService {
 
     @Override
     public void alterUserInfo(user u) {
+        userMapper.refreshTimestamp(u);
         userMapper.alterUserInfo(u);
     }
 

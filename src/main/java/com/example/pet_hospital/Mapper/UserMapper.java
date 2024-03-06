@@ -8,6 +8,9 @@ public interface UserMapper {
     @Select("select * from syf.userdata where username=#{username} and password=#{password}")
     user getUserByUserNameAndPassword(user u);
 
+    @Update("update syf.userdata set timestamp=localtimestamp() where username=#{username}")
+    void refreshTimestamp(user u);
+
     @Insert("insert into syf.userdata values(uuid_short(),#{username},#{password},#{identity},#{phone_number},#{email},localtimestamp())")
     void insertUser(user u);
 
@@ -20,7 +23,7 @@ public interface UserMapper {
     @Delete("delete from syf.userdata where username=#{username}")
     void deleteUser(user u);
 
-    @Update("update syf.userdata set identity=#{banned} where username=#{username}")
+    @Update("update syf.userdata set identity='banned' where username=#{username}")
     void banUser(user u);
 
     @Update("update syf.userdata set username=#{username}, password=#{password}, phone_number=#{phone_number}, email=#{email} where user_id=#{user_id}")

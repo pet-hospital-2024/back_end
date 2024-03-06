@@ -4,19 +4,20 @@ import com.example.pet_hospital.Entity.result;
 import com.example.pet_hospital.Entity.user;
 import com.example.pet_hospital.Service.UserService;
 import com.example.pet_hospital.Util.JWTUtils;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 public class UserController {
 
+    private static String signKey = "stargazing0115";
     @Autowired
     private UserService userService;
 
@@ -25,8 +26,6 @@ public class UserController {
         user us= userService.login(u);
         if (us!=null)
         {
-            String time=LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")).toString();
-            us.setTimestamp(time);
             Map<String,Object> claims = new HashMap<>();
             claims.put("username",u.getUsername());
             claims.put("password",u.getPassword());
@@ -78,12 +77,17 @@ public class UserController {
     }
 
     @PostMapping("/user/changeinfo")
-    public result alterUserInfo(@RequestBody user u){
+    public result alterUserInfo(@RequestBody user u, @RequestHeader String Authorization){
+        Claims claims = JWTUtils.jwtParser(Authorization);
+        String username =(String) claims.get("username");
+        String password= (String) claims.get("password");
+
         userService.alterUserInfo(u);
         result r= new result(1,"信息修改已完成！",new HashMap());
-        Map <String,Object> claims=new HashMap<>();
-        claims.put("username",u.getUsername());
-        claims.put("password",u.getPassword());
+
+        Map <String,Object> newclaims=new HashMap<>();
+        newclaims.put("username",username);
+        newclaims.put("password",password);
         String token= JWTUtils.jwtGenerater(claims);
         r.getData().put("Token",token);
         return r;
@@ -101,7 +105,6 @@ public class UserController {
             result r=new result(0,"未查找到该用户",null);
             return r;
         }
-
     }
 
 }
