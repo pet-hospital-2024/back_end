@@ -8,6 +8,8 @@ public interface UserService {
 
     Boolean findUser(user u);
 
+    user getUser(user u);
+
     void deleteUser(user u);
 
     void banUser(user u);

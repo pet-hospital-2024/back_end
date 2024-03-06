@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 public class UserController {
@@ -48,9 +47,8 @@ public class UserController {
         Boolean j = userService.findUser(u);
         if (!j)//没找到，代表可以进行注册
         {
-            user newuser=u;
-            newuser.setUser_id(UUID.randomUUID().toString());
-            userService.register(newuser);
+
+            userService.register(u);
             result r=new result(1,"注册成功",new HashMap());
 
             Map <String,Object> claims=new HashMap<>();
@@ -89,6 +87,21 @@ public class UserController {
         String token= JWTUtils.jwtGenerater(claims);
         r.getData().put("Token",token);
         return r;
+    }
+
+    @PostMapping("/user/getinfo")
+    public result getUser(@RequestBody user u){
+        Map m=new HashMap();
+        m.put("info",userService.getUser(u));
+        if (userService.getUser(u)!=null){
+            result r=new result(1,"信息已返回！",m);
+            return r;
+        }
+        else {
+            result r=new result(0,"未查找到该用户",null);
+            return r;
+        }
+
     }
 
 }

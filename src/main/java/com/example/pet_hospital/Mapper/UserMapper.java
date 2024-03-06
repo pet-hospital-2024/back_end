@@ -8,11 +8,14 @@ public interface UserMapper {
     @Select("select * from syf.userdata where username=#{username} and password=#{password}")
     user getUserByUserNameAndPassword(user u);
 
-    @Insert("insert into syf.userdata values(#{username},#{password},#{identity},#{phone_number},#{email},#{timestamp})")
+    @Insert("insert into syf.userdata values(uuid_short(),#{username},#{password},#{identity},#{phone_number},#{email},localtimestamp())")
     void insertUser(user u);
 
     @Select("select * from syf.userdata where username=#{username}")
     user getUser(user u);
+
+    @Select("select * from syf.userdata where user_id=#{user_id}")
+    user getUserByID(user u);
 
     @Delete("delete from syf.userdata where username=#{username}")
     void deleteUser(user u);

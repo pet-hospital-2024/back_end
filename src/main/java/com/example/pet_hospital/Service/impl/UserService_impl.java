@@ -30,6 +30,11 @@ public class UserService_impl implements UserService {
     }
 
     @Override
+    public user getUser(user u) {
+        return userMapper.getUserByID(u);
+    }
+
+    @Override
     public void deleteUser(user u) {
         userMapper.deleteUser(u);
     }
