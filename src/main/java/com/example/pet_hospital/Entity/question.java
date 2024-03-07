@@ -10,4 +10,16 @@ import java.util.Map;
 public class question {
     String question_id;
     String question_body;
+    String type;
+    String disease_kind;
+    String right_choice;
+    String A;
+    String B;
+    String C;
+    String D;
+    String judgement;
+
+    public Integer getId() {
+        return Integer.parseInt(question_id);
+    }
 }
