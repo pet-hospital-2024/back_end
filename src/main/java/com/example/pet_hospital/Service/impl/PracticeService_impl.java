@@ -12,9 +12,8 @@ public class PracticeService_impl implements PracticeService {
     private PracticeMapper practiceMapper;
 
     @Override
-    public question addQuestion(question q) {
+    public void addQuestion(question q) {
         practiceMapper.addQuestion(q);
-        return q;
     }
 
     @Override

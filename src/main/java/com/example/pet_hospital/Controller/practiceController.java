@@ -3,6 +3,7 @@ import com.example.pet_hospital.Entity.question;
 import com.example.pet_hospital.Entity.result;
 import com.example.pet_hospital.Service.PracticeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,8 +20,8 @@ public class practiceController {
 
     @PostMapping("/question/add")
     public result addQuestion(@RequestBody question q) {
-        question q1 = practiceService.addQuestion(q);
-        result r = new result(1, "添加成功", (Map) q1);
+        practiceService.addQuestion(q);
+        result r = new result(1, "添加成功", new HashMap<>());
         return r;
     }
 
@@ -31,10 +32,10 @@ public class practiceController {
         return r;
     }
 
-    @PostMapping("/question/getAll")
+    @GetMapping("/question/getAll")
     public result getAllQuestions() {
         question[] questions = practiceService.getAllQuestions();
-        Map<Integer, question> questionMap = new HashMap<>();
+        Map<String, question> questionMap = new HashMap<>();
         for (question q : questions) {
             questionMap.put(q.getId(), q);
         }

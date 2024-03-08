@@ -2,7 +2,6 @@ package com.example.pet_hospital.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -19,7 +18,7 @@ public class question {
     String D;
     String judgement;
 
-    public Integer getId() {
-        return Integer.parseInt(question_id);
+    public String getId() {
+        return question_id;
     }
 }
