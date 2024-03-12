@@ -1,5 +1,6 @@
 package com.example.pet_hospital.Mapper;
 
+import com.example.pet_hospital.Entity.paper;
 import com.example.pet_hospital.Entity.question;
 import org.apache.ibatis.annotations.*;
 
@@ -16,4 +17,13 @@ public interface PracticeMapper {
 
     @Select("select * from syf.questions")
     question[] getAllQuestions();
+
+    @Select("select * from syf.questions where question_id=#{question_id}")
+    question getQuestion(question q);
+
+    @Insert("insert into syf.papers values (uuid_short(),#{duration},#{paper_name})")
+    void createNewPaper(paper p);
+
+    @Insert("insert into  syf.papers values (#{paper_id},#{duration},#{paper_name},#{question_id},#{question_number},#{value})")
+    void insertNewQuestion(paper p);
 }

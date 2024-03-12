@@ -1,12 +1,12 @@
 package com.example.pet_hospital.Controller;
+import com.example.pet_hospital.Entity.paper;
 import com.example.pet_hospital.Entity.question;
 import com.example.pet_hospital.Entity.result;
 import com.example.pet_hospital.Service.PracticeService;
+import com.example.pet_hospital.Util.JWTUtils;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,4 +49,36 @@ public class practiceController {
         result r = new result(1, "修改成功", null);
         return r;
     }
+
+    @PostMapping("/question/getquestion")
+    public result getQuestion(@RequestBody question q) {
+        question que=practiceService.getQuestion(q);
+        Map<String,question> m=new HashMap<>();
+        m.put("question",que);
+        result r = new result(1, "操作成功", m);
+        return r;
+    }
+
+    @PostMapping("/paper/create")
+    public result createNewPaper(@RequestBody paper p){
+//        Claims claims = JWTUtils.jwtParser(Authorization);
+//        String identity =(String) claims.get("identity");
+//        if (identity.equals("user")){
+//            result r = new result(0, "无操作权限", null);
+//            return r;
+//        }
+        practiceService.createNewPaper(p);
+        result r = new result(1, "创建成功", null);
+        return r;
+    }
+
+    @PostMapping("/paper/addquestion")
+    public result insertNewQuestion(@RequestBody paper p){
+        //jwt part
+
+        practiceService.insertNewQuestion(p);
+        result r=new result(1,"插入成功！",null);
+        return r;
+    }
+
 }
