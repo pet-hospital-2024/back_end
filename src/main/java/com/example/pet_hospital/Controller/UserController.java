@@ -21,14 +21,39 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    public Boolean identitySecure(String target, String Authorization){
+        Claims claims = JWTUtils.jwtParser(Authorization);
+        String identity=(String) claims.get("identity");
+        if (target.equals(identity)){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public String newToken(String Authorization){
+        Claims claims=JWTUtils.jwtParser(Authorization);
+        String username=(String) claims.get("username");
+        String user_id=(String) claims.get("user_id");
+        String identity=(String) claims.get("identity");
+
+        HashMap<String,Object> newclaim=new HashMap<>();
+        newclaim.put("username",username);
+        newclaim.put("user_id",user_id);
+        newclaim.put("identity",identity);
+        String token =JWTUtils.jwtGenerater(newclaim);
+        return token;
+    }
+
     @PostMapping("/user/login")
     public result login(@RequestBody user u){
         user us= userService.login(u);
         if (us!=null)
         {
             Map<String,Object> claims = new HashMap<>();
-            claims.put("username",u.getUsername());
-            claims.put("password",u.getPassword());
+            claims.put("username",us.getUsername());
+            claims.put("user_id",us.getUser_id());
+            claims.put("identity",us.getIdentity());
             String token = JWTUtils.jwtGenerater(claims);
 
             result r=new result(1,"登陆成功",new HashMap());
@@ -46,15 +71,8 @@ public class UserController {
         Boolean j = userService.findUser(u);
         if (!j)//没找到，代表可以进行注册
         {
-
             userService.register(u);
-            result r=new result(1,"注册成功",new HashMap());
-
-            Map <String,Object> claims=new HashMap<>();
-            claims.put("username",u.getUsername());
-            claims.put("password",u.getPassword());
-            String token= JWTUtils.jwtGenerater(claims);
-            r.getData().put("Token",token);
+            result r=new result(1,"注册成功",null);
             return r;
         }
         else {
@@ -64,32 +82,34 @@ public class UserController {
     }
 
     @PostMapping("/user/ban")
-    public result UserBan(@RequestBody user u){
+    public result UserBan(@RequestBody user u, @RequestHeader String Authorization){
+        if (!identitySecure("administrator",Authorization)){
+            result r = new result(0,"无操作权限！",null);
+            return r;
+        }
         userService.banUser(u);
         result r= new result(1,"账号已禁用！",new HashMap());
+        r.getData().put("Token",newToken(Authorization));
         return r;
     }
+
     @PostMapping("/user/delete")
-    public result delete(@RequestBody user u){
+    public result delete(@RequestBody user u,@RequestHeader String Authorization){
+        if (!identitySecure("administrator",Authorization)){
+            result r= new result(0,"无操作权限！",null);
+            return r;
+        }
         userService.deleteUser(u);
         result r= new result(1,"用户已注销！",new HashMap());
+        r.getData().put("Token",newToken(Authorization));
         return r;
     }
 
     @PostMapping("/user/changeinfo")
     public result alterUserInfo(@RequestBody user u, @RequestHeader String Authorization){
-        Claims claims = JWTUtils.jwtParser(Authorization);
-        String username =(String) claims.get("username");
-        String password= (String) claims.get("password");
-
         userService.alterUserInfo(u);
         result r= new result(1,"信息修改已完成！",new HashMap());
-
-        Map <String,Object> newclaims=new HashMap<>();
-        newclaims.put("username",username);
-        newclaims.put("password",password);
-        String token= JWTUtils.jwtGenerater(claims);
-        r.getData().put("Token",token);
+        r.getData().put("Token",newToken(Authorization));
         return r;
     }
 

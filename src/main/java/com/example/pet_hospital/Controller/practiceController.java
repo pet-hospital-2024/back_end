@@ -12,23 +12,58 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-
 public class practiceController {
 
     @Autowired
     private PracticeService practiceService;
 
+    public Boolean identitySecure(String target, String Authorization){
+        Claims claims = JWTUtils.jwtParser(Authorization);
+        String identity=(String) claims.get("identity");
+        if (target.equals(identity)){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public String newToken(String Authorization){
+        Claims claims=JWTUtils.jwtParser(Authorization);
+        String username=(String) claims.get("username");
+        String user_id=(String) claims.get("user_id");
+        String identity=(String) claims.get("identity");
+
+        HashMap<String,Object> newclaim=new HashMap<>();
+        newclaim.put("username",username);
+        newclaim.put("user_id",user_id);
+        newclaim.put("identity",identity);
+        String token =JWTUtils.jwtGenerater(newclaim);
+        return token;
+    }
+
+
     @PostMapping("/question/add")
-    public result addQuestion(@RequestBody question q) {
+    public result addQuestion(@RequestBody question q, @RequestHeader String Authorization) {
+        if (identitySecure("user",Authorization)){
+            result r=new result(0,"无操作权限！",null);
+            return r;
+        }
+
         practiceService.addQuestion(q);
         result r = new result(1, "添加成功", new HashMap<>());
+        r.getData().put("Token",newToken(Authorization));
         return r;
     }
 
     @PostMapping("/question/delete")
-    public result deleteQuestion(@RequestBody question q) {
+    public result deleteQuestion(@RequestBody question q, @RequestHeader String Authorization) {
+        if (identitySecure("user",Authorization)){
+            result r=new result(0,"无操作权限！",null);
+            return r;
+        }
         practiceService.deleteQuestion(q);
-        result r = new result(1, "删除成功", null);
+        result r = new result(1, "删除成功", new HashMap<>());
+        r.getData().put("Token",newToken(Authorization));
         return r;
     }
 
@@ -44,9 +79,14 @@ public class practiceController {
     }
 
     @PostMapping("/question/alter")
-    public result alterQuestion(@RequestBody question q) {
+    public result alterQuestion(@RequestBody question q, @RequestHeader String Authorization) {
+        if (identitySecure("user",Authorization)){
+            result r=new result(0,"无操作权限！",null);
+            return r;
+        }
         practiceService.alterQuestion(q);
-        result r = new result(1, "修改成功", null);
+        result r = new result(1, "修改成功", new HashMap<>());
+        r.getData().put("Token",newToken(Authorization));
         return r;
     }
 
@@ -60,24 +100,26 @@ public class practiceController {
     }
 
     @PostMapping("/paper/create")
-    public result createNewPaper(@RequestBody paper p){
-//        Claims claims = JWTUtils.jwtParser(Authorization);
-//        String identity =(String) claims.get("identity");
-//        if (identity.equals("user")){
-//            result r = new result(0, "无操作权限", null);
-//            return r;
-//        }
+    public result createNewPaper(@RequestBody paper p, @RequestHeader String Authorization){
+        if (identitySecure("user",Authorization)){
+            result r=new result(0,"无操作权限！",null);
+            return r;
+        }
         practiceService.createNewPaper(p);
-        result r = new result(1, "创建成功", null);
+        result r = new result(1, "创建成功", new HashMap<>());
+        r.getData().put("Token",newToken(Authorization));
         return r;
     }
 
     @PostMapping("/paper/addquestion")
-    public result insertNewQuestion(@RequestBody paper p){
-        //jwt part
-
+    public result insertNewQuestion(@RequestBody paper p,@RequestHeader String Authorization){
+        if (identitySecure("user",Authorization)){
+            result r=new result(0,"无操作权限！",null);
+            return r;
+        }
         practiceService.insertNewQuestion(p);
-        result r=new result(1,"插入成功！",null);
+        result r=new result(1,"插入成功！",new HashMap<>());
+        r.getData().put("Token",newToken(Authorization));
         return r;
     }
 
