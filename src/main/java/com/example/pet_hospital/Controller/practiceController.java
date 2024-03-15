@@ -61,6 +61,10 @@ public class practiceController {
             result r=new result(0,"无操作权限！",null);
             return r;
         }
+        if (practiceService.getQuestion(q)==null){
+            result r=new result(0,"该题目不存在！",null);
+            return r;
+        }
         practiceService.deleteQuestion(q);
         result r = new result(1, "删除成功", new HashMap<>());
         r.getData().put("Token",newToken(Authorization));
@@ -84,6 +88,10 @@ public class practiceController {
             result r=new result(0,"无操作权限！",null);
             return r;
         }
+        if (practiceService.getQuestion(q)==null){
+            result r=new result(0,"该题目不存在！",null);
+            return r;
+        }
         practiceService.alterQuestion(q);
         result r = new result(1, "修改成功", new HashMap<>());
         r.getData().put("Token",newToken(Authorization));
@@ -92,6 +100,11 @@ public class practiceController {
 
     @PostMapping("/question/getquestion")
     public result getQuestion(@RequestBody question q) {
+        //no identity secure needed.
+        if (practiceService.getQuestion(q)==null){
+            result r=new result(0,"该题目不存在！",null);
+            return r;
+        }
         question que=practiceService.getQuestion(q);
         Map<String,question> m=new HashMap<>();
         m.put("question",que);
@@ -103,6 +116,10 @@ public class practiceController {
     public result createNewPaper(@RequestBody paper p, @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
             result r=new result(0,"无操作权限！",null);
+            return r;
+        }
+        if(practiceService.getPaper(p)!=null){
+            result r=new result(0,"该试卷已存在！",null);
             return r;
         }
         practiceService.createNewPaper(p);
@@ -117,10 +134,35 @@ public class practiceController {
             result r=new result(0,"无操作权限！",null);
             return r;
         }
+
+        //先查询后修改，防止bad request。
+        question q=new question();
+        q.setQuestion_id(p.getQuestion_id());
+        if (practiceService.getQuestion(q)==null){
+            result r=new result(0,"该题目不存在！",null);
+            return r;
+        }
+        if (practiceService.getPaper(p)==null){
+            result r=new result(0,"该试卷不存在！",null);
+            return r;
+        }
         practiceService.insertNewQuestion(p);
         result r=new result(1,"插入成功！",new HashMap<>());
         r.getData().put("Token",newToken(Authorization));
         return r;
     }
+
+    @PostMapping("/paper/getpaper")
+    public result getPaper(@RequestBody paper p){
+        //no identity secure needed.
+        if (practiceService.getPaper(p)==null){
+            result r=new result(0,"该试卷不存在！",null);
+            return r;
+        }
+        result r=new result(1,"查询成功！",new HashMap<>());
+        r.getData().put("paper",practiceService.getPaper(p));
+        return r;
+    }
+
 
 }

@@ -44,6 +44,11 @@ public class PracticeService_impl implements PracticeService {
     }
 
     @Override
+    public paper getPaper(paper p) {
+        return practiceMapper.getPaper(p);
+    }
+
+    @Override
     public void insertNewQuestion(paper p) {
         practiceMapper.insertNewQuestion(p);
     }

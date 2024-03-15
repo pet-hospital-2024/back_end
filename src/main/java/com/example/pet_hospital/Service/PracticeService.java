@@ -13,5 +13,6 @@ public interface PracticeService {
 
     void createNewPaper(paper p);
 
+    paper getPaper(paper p);
     void insertNewQuestion(paper p);
 }
