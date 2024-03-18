@@ -2,8 +2,8 @@ package com.example.pet_hospital.Service.impl;
 
 import com.example.pet_hospital.Entity.user;
 import com.example.pet_hospital.Mapper.UserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.example.pet_hospital.Service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
