@@ -47,6 +47,10 @@ public class practiceController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
+        if (practiceService.getQuestion(q)!=null){
+            result r=new result(0,"该题目已存在！",null);
+            return r;
+        }
         practiceService.addQuestion(q);
         return result.success(newToken(Authorization));
     }

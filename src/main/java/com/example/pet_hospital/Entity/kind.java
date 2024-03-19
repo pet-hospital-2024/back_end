@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class kind {
-    int id;
-
+    String id;
     String name;
 
+    public String getId() {
+        return id;
+    }
 }

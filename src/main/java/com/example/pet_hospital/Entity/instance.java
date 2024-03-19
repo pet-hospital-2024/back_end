@@ -12,13 +12,10 @@ public class instance {
     String name;
     int kind;
     String text;
-     String result;
-     String treatment;
-     String medicine;
-     String price;
-     String intro;
-     instance dis;
-
-
-
+    String result;
+    String treatment;
+    String medicine;
+    String price;
+    String intro;
+    instance dis;
 }
