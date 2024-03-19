@@ -113,6 +113,7 @@ public class UserController {
             return result.error("无操作权限！");
         }
         userService.deleteUser(u);
+        stringRedisTemplate.delete(u.getUser_id());
         return result.success(newToken(Authorization));
     }
 
