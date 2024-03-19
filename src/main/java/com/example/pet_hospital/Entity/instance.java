@@ -7,9 +7,18 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class disease {
+public class instance {
     int id;
-    int kind_id;
     String name;
+    int kind;
+    String text;
+     String result;
+     String treatment;
+     String medicine;
+     String price;
+     String intro;
+     instance dis;
+
+
 
 }

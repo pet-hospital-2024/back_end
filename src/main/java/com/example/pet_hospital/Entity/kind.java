@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class disease {
+public class kind {
     int id;
-    int kind_id;
+
     String name;
 
 }
