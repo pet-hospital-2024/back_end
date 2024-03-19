@@ -4,6 +4,27 @@ spring:
     username: syf
     password: PrjtmBwCRwsY8bmX
     driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    redis:
+      host: wxl475.cn
+      port: 6382
+      password: wxl5211314
+      jedis:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+          max-wait: 3000ms
+  mail:
+    host: smtp.qq.com
+    username: 2146765861@qq.com
+    password: ybmrbhsvbqwldjgb
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+    default-encoding: utf-8
 
 mybatis:
   configuration:

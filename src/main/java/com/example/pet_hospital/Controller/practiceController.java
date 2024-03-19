@@ -45,30 +45,22 @@ public class practiceController {
     @PostMapping("/question/add")
     public result addQuestion(@RequestBody question q, @RequestHeader String Authorization) {
         if (identitySecure("user",Authorization)){
-            result r=new result(0,"无操作权限！",null);
-            return r;
+            return result.error("无操作权限！");
         }
-
         practiceService.addQuestion(q);
-        result r = new result(1, "添加成功", new HashMap<>());
-        r.getData().put("Token",newToken(Authorization));
-        return r;
+        return result.success(newToken(Authorization));
     }
 
     @PostMapping("/question/delete")
     public result deleteQuestion(@RequestBody question q, @RequestHeader String Authorization) {
         if (identitySecure("user",Authorization)){
-            result r=new result(0,"无操作权限！",null);
-            return r;
+            return result.error("无操作权限！");
         }
         if (practiceService.getQuestion(q)==null){
-            result r=new result(0,"该题目不存在！",null);
-            return r;
+            return result.error("该题目不存在！");
         }
         practiceService.deleteQuestion(q);
-        result r = new result(1, "删除成功", new HashMap<>());
-        r.getData().put("Token",newToken(Authorization));
-        return r;
+        return result.success(newToken(Authorization));
     }
 
     @GetMapping("/question/getAll")
@@ -78,90 +70,68 @@ public class practiceController {
         for (question q : questions) {
             questionMap.put(q.getId(), q);
         }
-        result r = new result(1, "获取成功", questionMap);
-        return r;
+        return result.success(questionMap);
     }
 
     @PostMapping("/question/alter")
     public result alterQuestion(@RequestBody question q, @RequestHeader String Authorization) {
         if (identitySecure("user",Authorization)){
-            result r=new result(0,"无操作权限！",null);
-            return r;
+            return result.error("无操作权限。");
         }
         if (practiceService.getQuestion(q)==null){
-            result r=new result(0,"该题目不存在！",null);
-            return r;
+            return result.error("该题目不存在！");
         }
         practiceService.alterQuestion(q);
-        result r = new result(1, "修改成功", new HashMap<>());
-        r.getData().put("Token",newToken(Authorization));
-        return r;
+        return result.success(newToken(Authorization));
     }
 
     @PostMapping("/question/getquestion")
     public result getQuestion(@RequestBody question q) {
         //no identity secure needed.
         if (practiceService.getQuestion(q)==null){
-            result r=new result(0,"该题目不存在！",null);
-            return r;
+            return result.error("该题目不存在！");
         }
-        question que=practiceService.getQuestion(q);
-        Map<String,question> m=new HashMap<>();
-        m.put("question",que);
-        result r = new result(1, "操作成功", m);
-        return r;
+        return result.success(practiceService.getQuestion(q));
     }
 
     @PostMapping("/paper/create")
     public result createNewPaper(@RequestBody paper p, @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
-            result r=new result(0,"无操作权限！",null);
-            return r;
+            return result.error("无操作权限。");
         }
         if(practiceService.getPaper(p)!=null){
-            result r=new result(0,"该试卷已存在！",null);
-            return r;
+            return result.error("该试卷已存在！");
         }
         practiceService.createNewPaper(p);
-        result r = new result(1, "创建成功", new HashMap<>());
-        r.getData().put("Token",newToken(Authorization));
-        return r;
+        return result.success(newToken(Authorization));
     }
 
     @PostMapping("/paper/addquestion")
     public result insertNewQuestion(@RequestBody paper p,@RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
-            result r=new result(0,"无操作权限！",null);
-            return r;
+            return result.error("无操作权限。");
         }
 
         //先查询后修改，防止bad request。
         question q=new question();
         q.setQuestion_id(p.getQuestion_id());
         if (practiceService.getQuestion(q)==null){
-            result r=new result(0,"该题目不存在！",null);
-            return r;
+            return result.error("该题目不存在！");
         }
         if (practiceService.getPaper(p)==null){
-            result r=new result(0,"该试卷不存在！",null);
-            return r;
+            return result.error("该试卷不存在！");
         }
         practiceService.insertNewQuestion(p);
-        result r=new result(1,"插入成功！",new HashMap<>());
-        r.getData().put("Token",newToken(Authorization));
-        return r;
+        return result.success(newToken(Authorization));
     }
 
     @PostMapping("/paper/getpaper")
     public result getPaper(@RequestBody paper p){
         //no identity secure needed.
         if (practiceService.getPaper(p)==null){
-            result r=new result(0,"该试卷不存在！",null);
-            return r;
+            return result.error("该试卷不存在！");
         }
-        result r=new result(1,"查询成功！",new HashMap<>());
-        r.getData().put("paper",practiceService.getPaper(p));
-        return r;
+        return result.success(practiceService.getPaper(p));
     }
 
 

@@ -15,4 +15,5 @@ public class user {
     String email;
     String timestamp;
     String token;
+    String code;
 }

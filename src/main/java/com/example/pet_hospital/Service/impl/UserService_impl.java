@@ -1,7 +1,9 @@
 package com.example.pet_hospital.Service.impl;
 
+import cn.hutool.core.util.RandomUtil;
 import com.example.pet_hospital.Entity.user;
 import com.example.pet_hospital.Mapper.UserMapper;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.pet_hospital.Service.UserService;
 import org.springframework.stereotype.Service;
@@ -11,11 +13,15 @@ public class UserService_impl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private MailService mailService;
     @Override
     public user login(user u){
         userMapper.refreshTimestamp(u);
         return userMapper.getUserByUserNameAndPassword(u);
     }
+
+
 
     @Override
     public void register(user u) {

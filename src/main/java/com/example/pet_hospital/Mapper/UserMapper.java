@@ -2,6 +2,8 @@ package com.example.pet_hospital.Mapper;
 
 import com.example.pet_hospital.Entity.user;
 import org.apache.ibatis.annotations.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 @Mapper
 public interface UserMapper {
@@ -10,6 +12,7 @@ public interface UserMapper {
 
     @Update("update syf.userdata set timestamp=localtimestamp() where username=#{username}")
     void refreshTimestamp(user u);
+
 
     @Insert("insert into syf.userdata values(uuid_short(),#{username},#{password},#{identity},#{phone_number},#{email},localtimestamp())")
     void insertUser(user u);

@@ -1,11 +1,14 @@
 package com.example.pet_hospital.Controller;
 
+import cn.hutool.json.JSONUtil;
 import com.example.pet_hospital.Entity.result;
 import com.example.pet_hospital.Entity.user;
 import com.example.pet_hospital.Service.UserService;
+import com.example.pet_hospital.Service.impl.MailService;
 import com.example.pet_hospital.Util.JWTUtils;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -13,13 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 public class UserController {
 
-    private static String signKey = "stargazing0115";
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MailService mailService;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     public Boolean identitySecure(String target, String Authorization){
         Claims claims = JWTUtils.jwtParser(Authorization);
@@ -45,6 +54,11 @@ public class UserController {
         return token;
     }
 
+//    @PostMapping("/user/code")
+//    public result sendCode(@RequestBody user u){
+//
+//    }
+
     @PostMapping("/user/login")
     public result login(@RequestBody user u){
         user us= userService.login(u);
@@ -56,28 +70,30 @@ public class UserController {
             claims.put("identity",us.getIdentity());
             String token = JWTUtils.jwtGenerater(claims);
 
-            result r=new result(1,"登陆成功",new HashMap());
-            r.getData().put("Token",token);
-            return r;
+            return result.success(token);
         }
         else {
-            result r=new result(0,"用户名或密码错误！",null);
-            return r;
+            return result.error("用户名或密码错误");
         }
     }
 
     @PostMapping("/user/register")
     public result register (@RequestBody user u){
+        //redis 先查，MySQL后查
+        String user_id=stringRedisTemplate.opsForValue().get(u.getUser_id());
+        if (user_id!=null){
+            return result.error("该用户名已存在，无法注册");
+        }
+
         Boolean j = userService.findUser(u);
         if (!j)//没找到，代表可以进行注册
         {
             userService.register(u);
-            result r=new result(1,"注册成功",null);
-            return r;
+            stringRedisTemplate.opsForValue().set(u.getUsername(), JSONUtil.toJsonStr(u),120, TimeUnit.MINUTES);
+            return result.success();
         }
         else {
-            result r=new result(0,"该用户名已存在，无法注册",null);
-            return r;
+            return result.error("该用户名已存在，无法注册。");
         }
     }
 
@@ -88,42 +104,31 @@ public class UserController {
             return r;
         }
         userService.banUser(u);
-        result r= new result(1,"账号已禁用！",new HashMap());
-        r.getData().put("Token",newToken(Authorization));
-        return r;
+        return result.success(newToken(Authorization));
     }
 
     @PostMapping("/user/delete")
     public result delete(@RequestBody user u,@RequestHeader String Authorization){
         if (!identitySecure("administrator",Authorization)){
-            result r= new result(0,"无操作权限！",null);
-            return r;
+            return result.error("无操作权限！");
         }
         userService.deleteUser(u);
-        result r= new result(1,"用户已注销！",new HashMap());
-        r.getData().put("Token",newToken(Authorization));
-        return r;
+        return result.success(newToken(Authorization));
     }
 
     @PostMapping("/user/changeinfo")
     public result alterUserInfo(@RequestBody user u, @RequestHeader String Authorization){
         userService.alterUserInfo(u);
-        result r= new result(1,"信息修改已完成！",new HashMap());
-        r.getData().put("Token",newToken(Authorization));
-        return r;
+        return result.success(newToken(Authorization));
     }
 
     @PostMapping("/user/getinfo")
     public result getUser(@RequestBody user u){
-        Map m=new HashMap();
-        m.put("info",userService.getUser(u));
         if (userService.getUser(u)!=null){
-            result r=new result(1,"信息已返回！",m);
-            return r;
+            return result.success(userService.getUser(u));
         }
         else {
-            result r=new result(0,"未查找到该用户",null);
-            return r;
+            return result.error("未查找到该用户。");
         }
     }
 

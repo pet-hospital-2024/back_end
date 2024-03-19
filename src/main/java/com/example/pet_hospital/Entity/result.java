@@ -11,5 +11,17 @@ import java.util.Map;
 public class result {
     private Integer code;
     private String message;
-    private Map data;
+    private Object data;
+
+    public static result success(Object data){
+        return new result(1,"success",data);
+    }
+
+    public static result success(){
+        return new result(1,"success",null);
+    }
+
+    public static result error (String message){
+        return new result(0,message,null);
+    }
 }

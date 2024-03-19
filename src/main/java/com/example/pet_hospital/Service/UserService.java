@@ -4,6 +4,7 @@ import com.example.pet_hospital.Entity.user;
 
 public interface UserService {
     user login(user u);
+
     void register(user u);
 
     Boolean findUser(user u);
