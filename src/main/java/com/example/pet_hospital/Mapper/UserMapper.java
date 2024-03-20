@@ -10,6 +10,9 @@ public interface UserMapper {
     @Select("select * from syf.userdata where username=#{username} and password=#{password}")
     user getUserByUserNameAndPassword(user u);
 
+    @Select("select * from syf.userdata where username=#{username}")
+    user getUserByUserName(user u);
+
     @Update("update syf.userdata set timestamp=localtimestamp() where username=#{username}")
     void refreshTimestamp(user u);
 

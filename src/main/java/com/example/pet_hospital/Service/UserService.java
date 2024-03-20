@@ -9,8 +9,9 @@ public interface UserService {
 
     Boolean findUser(user u);
 
-    user getUser(user u);
+    user getUserByID(user u);
 
+    public user getUserByName(user u);
     void deleteUser(user u);
 
     void banUser(user u);

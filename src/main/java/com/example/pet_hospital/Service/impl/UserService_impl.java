@@ -31,8 +31,13 @@ public class UserService_impl implements UserService {
     }
 
     @Override
-    public user getUser(user u) {
+    public user getUserByID(user u) {
         return userMapper.getUserByID(u);
+    }
+
+    @Override
+    public user getUserByName(user u) {
+        return userMapper.getUserByUserName(u);
     }
 
     @Override

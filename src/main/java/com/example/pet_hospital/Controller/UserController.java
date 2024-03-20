@@ -54,6 +54,23 @@ public class UserController {
         return token;
     }
 
+    public Map<String,Object> CreateNewClaims (user u){
+        Map<String,Object> claims=new HashMap<>();
+
+        claims.put("username",u.getUsername());
+        claims.put("user_id",u.getUser_id());
+        claims.put("identity",u.getIdentity());
+        claims.put("password",u.getPassword());
+        claims.put("phone_number",u.getPhone_number());
+        claims.put("email",u.getEmail());
+        claims.put("timestamp",u.getTimestamp());
+        claims.put("token",u.getToken());
+        claims.put("code",u.getCode());
+        return claims;
+    }
+
+    String USER_LOGIN_KEY="LOGIN_USER:";
+
 //    @PostMapping("/user/code")
 //    public result sendCode(@RequestBody user u){
 //
@@ -69,7 +86,9 @@ public class UserController {
             claims.put("user_id",us.getUser_id());
             claims.put("identity",us.getIdentity());
             String token = JWTUtils.jwtGenerater(claims);
-
+            us.setToken(token);
+            stringRedisTemplate.opsForValue().
+                    set(USER_LOGIN_KEY+us.getUsername(), JSONUtil.toJsonStr(us),30, TimeUnit.MINUTES);
             return result.success(token);
         }
         else {
@@ -79,17 +98,11 @@ public class UserController {
 
     @PostMapping("/user/register")
     public result register (@RequestBody user u){
-        //redis 先查，MySQL后查
-        String user_id=stringRedisTemplate.opsForValue().get(u.getUser_id());
-        if (user_id!=null){
-            return result.error("该用户名已存在，无法注册");
-        }
-
         Boolean j = userService.findUser(u);
         if (!j)//没找到，代表可以进行注册
         {
             userService.register(u);
-            stringRedisTemplate.opsForValue().set(u.getUsername(), JSONUtil.toJsonStr(u),120, TimeUnit.MINUTES);
+            user us=userService.getUserByName(u);
             return result.success();
         }
         else {
@@ -100,10 +113,12 @@ public class UserController {
     @PostMapping("/user/ban")
     public result UserBan(@RequestBody user u, @RequestHeader String Authorization){
         if (!identitySecure("administrator",Authorization)){
-            result r = new result(0,"无操作权限！",null);
-            return r;
+            return result.error("无操作权限！");
         }
         userService.banUser(u);
+        if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+u.getUsername())!=null){
+            stringRedisTemplate.delete(USER_LOGIN_KEY+u.getUsername());
+        }
         return result.success(newToken(Authorization));
     }
 
@@ -113,20 +128,32 @@ public class UserController {
             return result.error("无操作权限！");
         }
         userService.deleteUser(u);
-        stringRedisTemplate.delete(u.getUser_id());
+        if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+u.getUsername())!=null){
+            stringRedisTemplate.delete(USER_LOGIN_KEY+u.getUsername());
+        }
         return result.success(newToken(Authorization));
     }
 
     @PostMapping("/user/changeinfo")
     public result alterUserInfo(@RequestBody user u, @RequestHeader String Authorization){
         userService.alterUserInfo(u);
-        return result.success(newToken(Authorization));
+        user us=userService.getUserByName(u);
+
+        String token =newToken(Authorization);
+        us.setToken(token);
+        stringRedisTemplate.opsForValue().
+                set(USER_LOGIN_KEY+us.getUsername(),JSONUtil.toJsonStr(us),30,TimeUnit.MINUTES);
+        return result.success(token);
     }
 
     @PostMapping("/user/getinfo")
     public result getUser(@RequestBody user u){
-        if (userService.getUser(u)!=null){
-            return result.success(userService.getUser(u));
+        user us=userService.getUserByName(u);
+        if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+us.getUsername())!=null){
+            return result.success(JSONUtil.toBean(stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+us.getUsername()),user.class));
+        }
+        if (userService.getUserByName(u)!=null){
+            return result.success(userService.getUserByName(u));
         }
         else {
             return result.error("未查找到该用户。");
