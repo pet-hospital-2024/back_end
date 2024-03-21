@@ -1,4 +1,5 @@
 package com.example.pet_hospital.Controller;
+import cn.hutool.json.JSONUtil;
 import com.example.pet_hospital.Entity.paper;
 import com.example.pet_hospital.Entity.question;
 import com.example.pet_hospital.Entity.result;
@@ -6,16 +7,23 @@ import com.example.pet_hospital.Service.PracticeService;
 import com.example.pet_hospital.Util.JWTUtils;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 public class practiceController {
 
     @Autowired
     private PracticeService practiceService;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    String QUESTION_KEY="question:";
 
     public Boolean identitySecure(String target, String Authorization){
         Claims claims = JWTUtils.jwtParser(Authorization);
@@ -42,14 +50,13 @@ public class practiceController {
     }
 
 
-    @PostMapping("/question/add")
+    @PostMapping("/question/add")//已解决非法SQL问题，可正常使用。
     public result addQuestion(@RequestBody question q, @RequestHeader String Authorization) {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (practiceService.getQuestion(q)!=null){
-            result r=new result(0,"该题目已存在！",null);
-            return r;
+        if (practiceService.getQuestionByBody(q)!=null){
+            return result.error("该题目已存在！");
         }
         practiceService.addQuestion(q);
         return result.success(newToken(Authorization));
@@ -60,7 +67,10 @@ public class practiceController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (practiceService.getQuestion(q)==null){
+        if (stringRedisTemplate.opsForValue().get(QUESTION_KEY+q.getId())!=null){
+            stringRedisTemplate.delete(QUESTION_KEY+q.getId());
+        }
+        if (practiceService.getQuestionByID(q)==null){
             return result.error("该题目不存在！");
         }
         practiceService.deleteQuestion(q);
@@ -82,9 +92,15 @@ public class practiceController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限。");
         }
-        if (practiceService.getQuestion(q)==null){
+        if (stringRedisTemplate.opsForValue().get(QUESTION_KEY+q.getId())!=null){
+            stringRedisTemplate.opsForValue().set(QUESTION_KEY+q.getId(), JSONUtil.toJsonStr(q),30, TimeUnit.MINUTES);
+            practiceService.alterQuestion(q);
+            return result.success(newToken(Authorization));
+        }
+        if (practiceService.getQuestionByID(q)==null){
             return result.error("该题目不存在！");
         }
+        stringRedisTemplate.opsForValue().set(QUESTION_KEY+q.getId(), JSONUtil.toJsonStr(q),30, TimeUnit.MINUTES);
         practiceService.alterQuestion(q);
         return result.success(newToken(Authorization));
     }
@@ -92,10 +108,18 @@ public class practiceController {
     @PostMapping("/question/getquestion")
     public result getQuestion(@RequestBody question q) {
         //no identity secure needed.
-        if (practiceService.getQuestion(q)==null){
-            return result.error("该题目不存在！");
+        if (stringRedisTemplate.opsForValue().get(QUESTION_KEY+q.getId())!=null){//缓存命中
+            return result.success(JSONUtil.toBean(stringRedisTemplate.opsForValue().get(QUESTION_KEY+q.getId()), question.class));
         }
-        return result.success(practiceService.getQuestion(q));
+        else {//缓存未命中，进行数据库查询
+            if (practiceService.getQuestionByID(q)==null){
+                return result.error("该题目不存在！");
+            }else{
+                stringRedisTemplate.opsForValue().set(QUESTION_KEY+q.getId(), JSONUtil.toJsonStr(practiceService.getQuestionByID(q)),30, TimeUnit.MINUTES);
+                return result.success(JSONUtil.toBean(stringRedisTemplate.opsForValue().get(QUESTION_KEY+q.getId()), question.class));
+            }
+
+        }
     }
 
     @PostMapping("/paper/create")
@@ -119,7 +143,7 @@ public class practiceController {
         //先查询后修改，防止bad request。
         question q=new question();
         q.setQuestion_id(p.getQuestion_id());
-        if (practiceService.getQuestion(q)==null){
+        if (practiceService.getQuestionByID(q)==null){
             return result.error("该题目不存在！");
         }
         if (practiceService.getPaper(p)==null){
@@ -128,6 +152,7 @@ public class practiceController {
         practiceService.insertNewQuestion(p);
         return result.success(newToken(Authorization));
     }
+
 
     @PostMapping("/paper/getpaper")
     public result getPaper(@RequestBody paper p){

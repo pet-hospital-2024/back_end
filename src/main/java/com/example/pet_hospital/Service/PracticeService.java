@@ -9,7 +9,10 @@ public interface PracticeService {
     void alterQuestion(question q);
     question[] getAllQuestions();
 
-    question getQuestion(question q);
+    question getQuestionByID(question q);
+
+    public question getQuestionByBody(question q);
+
 
     void createNewPaper(paper p);
 

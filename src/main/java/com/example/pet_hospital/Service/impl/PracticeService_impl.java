@@ -33,8 +33,13 @@ public class PracticeService_impl implements PracticeService {
     }
 
     @Override
-    public question getQuestion(question q) {
-        return practiceMapper.getQuestion(q);
+    public question getQuestionByID(question q) {
+        return practiceMapper.getQuestionByID(q);
+    }
+
+    @Override
+    public question getQuestionByBody(question q) {
+        return practiceMapper.getQuestionByBody(q);
     }
 
     @Override

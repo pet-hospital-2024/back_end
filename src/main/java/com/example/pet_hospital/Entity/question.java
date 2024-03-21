@@ -10,13 +10,14 @@ public class question {
     String question_id;
     String question_body;
     String type;
-    String disease_kind;
     String right_choice;
     String A;
     String B;
     String C;
     String D;
     String judgement;
+    String dis_id;//疾病id
+    String kind_id;//所属科室id
 
     public String getId() {
         return question_id;
