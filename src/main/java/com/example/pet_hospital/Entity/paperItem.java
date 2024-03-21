@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class paperItem {
-    private String question_id;
-    private Integer value;
+    String paper_id;
+    String question_id;
+    Integer value;
 }

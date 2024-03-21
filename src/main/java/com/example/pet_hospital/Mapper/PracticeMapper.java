@@ -24,13 +24,6 @@ public interface PracticeMapper {
     @Select("select * from syf.questions where question_body=#{question_body}")
     question getQuestionByBody(question q);
 
-    @Insert("insert into syf.papers values (uuid_short(),#{duration},#{paper_name},null,null)")
-    void createNewPaper(paper p);
 
-    @Insert("insert into syf.papers values (#{paper_id},#{duration},#{paper_name},#{question_number},#{value})")
-    void insertNewQuestion(paper p);
-
-    @Select("select * from syf.papers where paper_id=#{paper_id}")
-    paper getPaper (paper p);
 
 }

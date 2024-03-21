@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class disease {
-    String uuid;
-    String kind_id;
+    String uuid;//疾病id
+    String kind_id;//科室id
     String name;
 
     public String getKind_id() {

@@ -13,9 +13,4 @@ public interface PracticeService {
 
     public question getQuestionByBody(question q);
 
-
-    void createNewPaper(paper p);
-
-    paper getPaper(paper p);
-    void insertNewQuestion(paper p);
 }

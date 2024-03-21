@@ -122,46 +122,7 @@ public class practiceController {
         }
     }
 
-    @PostMapping("/paper/create")
-    public result createNewPaper(@RequestBody paper p, @RequestHeader String Authorization){
-        if (identitySecure("user",Authorization)){
-            return result.error("无操作权限。");
-        }
-        if(practiceService.getPaper(p)!=null){
-            return result.error("该试卷已存在！");
-        }
-        practiceService.createNewPaper(p);
-        return result.success(newToken(Authorization));
-    }
 
-    @PostMapping("/paper/addquestion")
-    public result insertNewQuestion(@RequestBody paper p,@RequestHeader String Authorization){
-        if (identitySecure("user",Authorization)){
-            return result.error("无操作权限。");
-        }
-
-        //先查询后修改，防止bad request。
-        question q=new question();
-        q.setQuestion_id(p.getQuestion_id());
-        if (practiceService.getQuestionByID(q)==null){
-            return result.error("该题目不存在！");
-        }
-        if (practiceService.getPaper(p)==null){
-            return result.error("该试卷不存在！");
-        }
-        practiceService.insertNewQuestion(p);
-        return result.success(newToken(Authorization));
-    }
-
-
-    @PostMapping("/paper/getpaper")
-    public result getPaper(@RequestBody paper p){
-        //no identity secure needed.
-        if (practiceService.getPaper(p)==null){
-            return result.error("该试卷不存在！");
-        }
-        return result.success(practiceService.getPaper(p));
-    }
 
 
 }

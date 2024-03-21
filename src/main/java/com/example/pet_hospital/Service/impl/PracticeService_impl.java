@@ -42,19 +42,5 @@ public class PracticeService_impl implements PracticeService {
         return practiceMapper.getQuestionByBody(q);
     }
 
-    @Override
-    public void createNewPaper(paper p) {
-        //p.setQuestionsJSON(new JSONArray(p.getQuestions()).toString());
-        practiceMapper.createNewPaper(p);
-    }
 
-    @Override
-    public paper getPaper(paper p) {
-        return practiceMapper.getPaper(p);
-    }
-
-    @Override
-    public void insertNewQuestion(paper p) {
-        practiceMapper.insertNewQuestion(p);
-    }
 }
