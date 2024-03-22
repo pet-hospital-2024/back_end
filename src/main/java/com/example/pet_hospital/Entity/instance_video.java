@@ -7,14 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class kind {
-    String kind_id;
+public class instance_video {
+    String ins_video_id;
     String name;
-
-    public String getKind_id() {
-        return kind_id;
-    }
-    public String getName() {
-        return name;
-    }
+    String video_url;
+    String dis_id;
 }

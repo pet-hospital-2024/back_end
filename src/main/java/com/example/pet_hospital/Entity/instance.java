@@ -8,14 +8,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class instance {
-    int id;
+
+    String instance_id;
     String name;
-    int kind;
     String text;
     String result;
     String treatment;
     String medicine;
     String price;
     String intro;
-    instance dis;
+    String dis_id;
+    String kind_id;
+
+    public String getInstance_id() {
+        return instance_id;
+    }
 }

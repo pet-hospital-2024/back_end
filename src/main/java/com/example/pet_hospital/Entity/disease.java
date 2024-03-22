@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class disease {
-    String uuid;//疾病id
+    String dis_id;//疾病id
     String kind_id;//科室id
     String name;
 
@@ -16,7 +16,11 @@ public class disease {
         return kind_id;
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getDis_id() {
+        return dis_id;
+    }
+
+    public String getName(){
+        return name;
     }
 }
