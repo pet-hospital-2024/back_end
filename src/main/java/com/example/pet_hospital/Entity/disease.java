@@ -19,4 +19,8 @@ public class disease {
     public String getUuid() {
         return uuid;
     }
+
+    public String getName(){
+        return name;
+    }
 }

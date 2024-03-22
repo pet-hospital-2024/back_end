@@ -1,6 +1,7 @@
 package com.example.pet_hospital.Service.impl;
 
 import com.example.pet_hospital.Entity.disease;
+import com.example.pet_hospital.Entity.instance;
 import com.example.pet_hospital.Mapper.DiseaseMapper;
 import com.example.pet_hospital.Service.DiseaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +45,6 @@ public class DiseaseService_impl implements DiseaseService {
         return DiseaseMapper.getDisbyName(d);
     }
 
-    /*public kind getKindbyId(disease d) {
-        return DiseaseMapper.getKindbyId(d);
-    }*/
-
     public void deleteDis(disease d) {
         DiseaseMapper.deleteDis(d);
     }
@@ -56,11 +53,39 @@ public class DiseaseService_impl implements DiseaseService {
         DiseaseMapper.changeDis(d);
     }
 
-    public disease getDisbyId(disease d) {
-        return DiseaseMapper.getDisbyId(d);
+    public disease getDisbyId(String uuid) {
+        return DiseaseMapper.getDisbyId(uuid);
     }
 
     public disease[] searchbyKind(String kind_id) {
         return DiseaseMapper.searchbyKind(kind_id);
+    }
+
+    public instance[] getInstancebyDis(String dis_id) {
+        return DiseaseMapper.getInstancebyDis(dis_id);
+    }
+
+    public void addInstance(instance i) {
+        DiseaseMapper.addInstance(i);
+    }
+
+    public instance getInstancebyName(String name) {
+        return DiseaseMapper.getInstancebyName(name);
+    }
+
+    public void deleteInstance(instance i) {
+        DiseaseMapper.deleteInstance(i);
+    }
+
+    public void changeInstance(instance i) {
+        DiseaseMapper.changeInstance(i);
+    }
+
+    public instance getInstancebyId(String uuid) {
+        return DiseaseMapper.getInstancebyId(uuid);
+    }
+
+    public instance[] searchInstance(String name) {
+        return DiseaseMapper.searchInstance(name);
     }
 }
