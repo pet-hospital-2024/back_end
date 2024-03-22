@@ -7,16 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class instance {
-
-    int instance_id;
+public class instance_video {
+    String ins_video_id;
     String name;
-    String text;
-    String result;
-    String treatment;
-    String medicine;
-    String price;
-    String intro;
+    String video_url;
     String dis_id;
-    String kind_id;
 }

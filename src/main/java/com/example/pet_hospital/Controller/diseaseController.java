@@ -69,7 +69,7 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if(diseaseService.getKindbyId(k.getId())==null){
+        if(diseaseService.getKindbyId(k.getKind_id())==null){
             return result.error("该科室不存在！");
         }
         diseaseService.deleteKind(k);
@@ -82,7 +82,7 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if(diseaseService.getKindbyId(k.getId())==null){
+        if(diseaseService.getKindbyId(k.getKind_id())==null){
             return result.error("该科室不存在！");
         }
         diseaseService.changeKind(k);

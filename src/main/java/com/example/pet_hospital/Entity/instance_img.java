@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class disimg {
-    int id;
+public class instance_img {
+    int ins_img_id;
 
 }
