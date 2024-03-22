@@ -7,11 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class kind {
-    String kind_id;
-    String name;
+public class learnorder {
+    String order_id;
+    String actor;
+    String order;
+    String item_id;
 
-    public String getKind_id() {
-        return kind_id;
-    }
+
+
 }

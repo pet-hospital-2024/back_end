@@ -7,12 +7,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class operation {
-    String user_id;
-    String username;
-    String password;
-    String identity;
-    String phone_number;
-    String email;
-    String timestamp;
-    String token;
+   String operation_id;
+   String name;
+    String video_url;
+    String instance_id;
 }
