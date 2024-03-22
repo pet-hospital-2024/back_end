@@ -24,6 +24,7 @@ public class paper {
     String question_id;
     Integer question_number;
     Integer value;
+    Integer order;
     //ArrayList<paperItem> questions;
     //String questionsJSON;
 }

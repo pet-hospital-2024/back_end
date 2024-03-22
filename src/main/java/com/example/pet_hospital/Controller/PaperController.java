@@ -147,6 +147,9 @@ public class PaperController {
     @PostMapping("/paper/getquestionbypaper")//写了，但不知道用途在哪里。。。。。
     public result getQuestionsFromPaper(@RequestBody paper p){
         //no identity secure needed.
+        if (paperService.getPaperByID(p)==null){
+            return result.error("该试卷不存在！");
+        }
         return result.success(paperService.getQuestionsFromPaper(p));
     }
 
