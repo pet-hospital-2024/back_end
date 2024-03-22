@@ -1,8 +1,6 @@
 package com.example.pet_hospital.Controller;
-import com.example.pet_hospital.Entity.disease;
-import com.example.pet_hospital.Entity.instance;
-import com.example.pet_hospital.Entity.kind;
-import com.example.pet_hospital.Entity.result;
+import cn.hutool.json.JSONUtil;
+import com.example.pet_hospital.Entity.*;
 import com.example.pet_hospital.Service.DiseaseService;
 import com.example.pet_hospital.Util.JWTUtils;
 import io.jsonwebtoken.Claims;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 public class diseaseController {
@@ -22,6 +21,10 @@ public class diseaseController {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    String KIND_KEY="kind:";
+    String INSTANCE_KEY="instance:";
+    String DISEASE_KEY="disease:";
 
     public Boolean identitySecure(String target, String Authorization){
         Claims claims = JWTUtils.jwtParser(Authorization);
@@ -69,6 +72,10 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
+        //删除缓存
+        if (stringRedisTemplate.opsForValue().get(KIND_KEY+k.getKind_id())!=null){
+            stringRedisTemplate.delete(KIND_KEY+k.getKind_id());
+        }
         if(diseaseService.getKindbyId(k.getKind_id())==null){
             return result.error("该科室不存在！");
         }
@@ -82,9 +89,15 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
+        if (stringRedisTemplate.opsForValue().get(KIND_KEY+k.getKind_id())!=null){
+            stringRedisTemplate.opsForValue().set(KIND_KEY+k.getKind_id(), JSONUtil.toJsonStr(k),30, TimeUnit.MINUTES);
+            diseaseService.changeKind(k);
+            return result.success(newToken(Authorization));
+        }
         if(diseaseService.getKindbyId(k.getKind_id())==null){
             return result.error("该科室不存在！");
         }
+        stringRedisTemplate.opsForValue().set(KIND_KEY+k.getKind_id(), JSONUtil.toJsonStr(k),30, TimeUnit.MINUTES);
         diseaseService.changeKind(k);
         return result.success(newToken(Authorization));
     }
@@ -120,7 +133,10 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if(diseaseService.getDisbyId(d.getUuid())==null){
+        if (stringRedisTemplate.opsForValue().get(DISEASE_KEY+d.getDis_id())!=null){
+            stringRedisTemplate.delete(DISEASE_KEY+d.getDis_id());
+        }
+        if(diseaseService.getDisbyId(d.getDis_id())==null){
             return result.error("该疾病不存在！");
         }
         diseaseService.deleteDis(d);
@@ -133,7 +149,12 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if(diseaseService.getDisbyId(d.getUuid())==null){
+        if (stringRedisTemplate.opsForValue().get(DISEASE_KEY+d.getDis_id())!=null){
+            stringRedisTemplate.opsForValue().set(DISEASE_KEY+d.getDis_id(), JSONUtil.toJsonStr(d),30, TimeUnit.MINUTES);
+            diseaseService.changeDis(d);
+            return result.success(newToken(Authorization));
+        }
+        if(diseaseService.getDisbyId(d.getDis_id())==null){
             return result.error("该疾病不存在！");
         }
         diseaseService.changeDis(d);
@@ -152,10 +173,10 @@ public class diseaseController {
     //查找某个疾病下的所有病例
     @PostMapping("/disease/getInstancebyDis")
     public result searchInstancebyDis(@RequestBody disease d) {
-        if(diseaseService.getDisbyId(d.getUuid())==null){
+        if(diseaseService.getDisbyId(d.getDis_id())==null){
             return result.error("该疾病不存在！");
         }
-        return result.success(diseaseService.getInstancebyDis(d.getUuid()));
+        return result.success(diseaseService.getInstancebyDis(d.getDis_id()));
     }
 
     //添加病例
@@ -188,6 +209,9 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
+        if (stringRedisTemplate.opsForValue().get(INSTANCE_KEY+i.getInstance_id())!=null){
+            stringRedisTemplate.delete(INSTANCE_KEY+i.getInstance_id());
+        }
         if(diseaseService.getInstancebyName(i.getName())==null){
             return result.error("该病例不存在！");
         }
@@ -201,7 +225,12 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if(diseaseService.getInstancebyId(i.getUuid())==null){
+        if (stringRedisTemplate.opsForValue().get(INSTANCE_KEY+i.getInstance_id())!=null){
+            stringRedisTemplate.opsForValue().set(INSTANCE_KEY+i.getInstance_id(), JSONUtil.toJsonStr(i),30, TimeUnit.MINUTES);
+            diseaseService.changeInstance(i);
+            return result.success(newToken(Authorization));
+        }
+        if(diseaseService.getInstancebyId(i.getInstance_id())==null){
             return result.error("该病例不存在！");
         }
         diseaseService.changeInstance(i);
@@ -211,10 +240,17 @@ public class diseaseController {
     //获取病例文字信息
     @PostMapping("/disease/getInstancebyId")
     public result getInstancebyId(@RequestBody instance i){
-        if(diseaseService.getInstancebyId(i.getUuid())==null){
-            return result.error("该病例不存在！");
+        if (stringRedisTemplate.opsForValue().get(INSTANCE_KEY+i.getInstance_id())!=null){//缓存命中
+            return result.success(JSONUtil.toBean(stringRedisTemplate.opsForValue().get(INSTANCE_KEY+i.getInstance_id()), question.class));
         }
-        return result.success(diseaseService.getInstancebyId(i.getUuid()));
+        else {
+            if(diseaseService.getInstancebyId(i.getInstance_id())==null){
+                return result.error("该病例不存在！");
+            }else{
+                stringRedisTemplate.opsForValue().set(INSTANCE_KEY+i.getInstance_id(), JSONUtil.toJsonStr(diseaseService.getInstancebyId(i.getInstance_id())),30, TimeUnit.MINUTES);
+                return result.success(JSONUtil.toBean(stringRedisTemplate.opsForValue().get(INSTANCE_KEY+i.getInstance_id()), question.class));
+            }
+        }
     }
 
     //根据输入的病例名称模糊搜索病例

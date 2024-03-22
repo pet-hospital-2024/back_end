@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class instance {
 
-    int instance_id;
+    String instance_id;
     String name;
     String text;
     String result;
@@ -19,4 +19,8 @@ public class instance {
     String intro;
     String dis_id;
     String kind_id;
+
+    public String getInstance_id() {
+        return instance_id;
+    }
 }

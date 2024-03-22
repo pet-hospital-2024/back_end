@@ -23,6 +23,6 @@ public interface DiseaseService {
     void deleteInstance(instance i);
     void changeInstance(instance i);
     instance getInstancebyName(String name);
-    instance getInstancebyId(String uuid);
+    instance getInstancebyId(String instance_id);
     instance[] searchInstance(String name);
 }

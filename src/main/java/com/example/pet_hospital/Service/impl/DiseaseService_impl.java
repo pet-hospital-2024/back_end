@@ -81,8 +81,8 @@ public class DiseaseService_impl implements DiseaseService {
         DiseaseMapper.changeInstance(i);
     }
 
-    public instance getInstancebyId(String uuid) {
-        return DiseaseMapper.getInstancebyId(uuid);
+    public instance getInstancebyId(String instance_id) {
+        return DiseaseMapper.getInstancebyId(instance_id);
     }
 
     public instance[] searchInstance(String name) {
