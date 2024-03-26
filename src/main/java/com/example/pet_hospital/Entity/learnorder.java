@@ -13,6 +13,4 @@ public class learnorder {
     String order;
     String item_id;
 
-
-
 }

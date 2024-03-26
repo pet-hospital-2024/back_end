@@ -2,14 +2,12 @@ package com.example.pet_hospital.Controller;
 
 import cn.hutool.json.JSONUtil;
 import com.example.pet_hospital.Entity.paper;
-import com.example.pet_hospital.Entity.paperItem;
 import com.example.pet_hospital.Entity.question;
 import com.example.pet_hospital.Entity.result;
 import com.example.pet_hospital.Service.PaperService;
 import com.example.pet_hospital.Service.PracticeService;
 import com.example.pet_hospital.Util.JWTUtils;
 import io.jsonwebtoken.Claims;
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -61,7 +60,7 @@ public class PaperController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限。");
         }
-        if(paperService.getPaperByID(p)!=null){
+        if(paperService.getPaperByName(p)!=null){
             return result.error("该试卷已存在！");
         }
         paperService.createNewPaper(p);
@@ -150,7 +149,19 @@ public class PaperController {
         if (paperService.getPaperByID(p)==null){
             return result.error("该试卷不存在！");
         }
-        return result.success(paperService.getQuestionsFromPaper(p));
+        //把试卷id对应的所有题目id存储在列表中
+        ArrayList<String> questions_id=paperService.getQuestionsFromPaper(p);
+
+        //循环调用practiceservice的查询方法，把questions存储在列表里返回。
+
+        ArrayList<question> questions=new ArrayList<>();
+
+        for (String id:questions_id){
+            question q=new question();
+            q.setQuestion_id(id);
+            questions.add(practiceService.getQuestionByID(q));
+        }
+        return result.success(questions);
     }
 
 }

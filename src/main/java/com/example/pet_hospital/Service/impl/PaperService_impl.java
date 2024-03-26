@@ -1,7 +1,6 @@
 package com.example.pet_hospital.Service.impl;
 
 import com.example.pet_hospital.Entity.paper;
-import com.example.pet_hospital.Entity.question;
 import com.example.pet_hospital.Mapper.PaperMapper;
 import com.example.pet_hospital.Service.PaperService;
 import com.example.pet_hospital.Util.JWTUtils;
@@ -9,6 +8,7 @@ import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @Service
@@ -51,6 +51,11 @@ public class PaperService_impl implements PaperService {
     }
 
     @Override
+    public paper getPaperByName(paper p) {
+        return paperMapper.getPaperByName(p);
+    }
+
+    @Override
     public void insertNewQuestion(paper p) {
         paperMapper.insertNewQuestion(p);
     }
@@ -67,7 +72,7 @@ public class PaperService_impl implements PaperService {
     }
 
     @Override
-    public question[] getQuestionsFromPaper(paper p) {
+    public ArrayList<String> getQuestionsFromPaper(paper p) {
         return paperMapper.getQuestionsFromPaper(p);
     }
 }
