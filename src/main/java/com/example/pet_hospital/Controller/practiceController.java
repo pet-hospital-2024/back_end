@@ -1,6 +1,6 @@
 package com.example.pet_hospital.Controller;
+
 import cn.hutool.json.JSONUtil;
-import com.example.pet_hospital.Entity.paper;
 import com.example.pet_hospital.Entity.question;
 import com.example.pet_hospital.Entity.result;
 import com.example.pet_hospital.Service.PracticeService;
@@ -11,7 +11,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -80,11 +79,12 @@ public class practiceController {
     @GetMapping("/question/getAll")
     public result getAllQuestions() {
         question[] questions = practiceService.getAllQuestions();
-        Map<String, question> questionMap = new HashMap<>();
-        for (question q : questions) {
+
+        //Map<String, question> questionMap = new HashMap<>();
+        /*for (question q : questions) {
             questionMap.put(q.getId(), q);
-        }
-        return result.success(questionMap);
+        }*/
+        return result.success(questions);
     }
 
     @PostMapping("/question/alter")
