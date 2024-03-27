@@ -3,7 +3,6 @@ package com.example.pet_hospital.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -19,6 +18,10 @@ public class result {
 
     public static result success(){
         return new result(1,"success",null);
+    }
+
+    public static result success(String msg, Object data){
+        return new result(1,msg,data);
     }
 
     public static result error (String message){

@@ -18,8 +18,4 @@ public class question {
     String judgement;
     String dis_id;//疾病id
     String kind_id;//所属科室id
-
-    public String getId() {
-        return question_id;
-    }
 }

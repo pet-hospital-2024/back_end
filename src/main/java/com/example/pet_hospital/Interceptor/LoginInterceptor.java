@@ -19,8 +19,8 @@ public class LoginInterceptor implements HandlerInterceptor {
         String url= request.getRequestURL().toString();
         log.info("请求的url: {}",url);
 
-        if (url.contains("login")){
-            log.info("登录操作，放行");
+        if (url.contains("login") || url.contains("register") ||url.contains("get") || url.contains("search")){
+            log.info("无需鉴权操作，放行。");
             return true;
         }
 
@@ -39,7 +39,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         }catch (Exception e){
             e.printStackTrace();
             log.info("令牌解析失败。");
-            result error =result.error("Token parse failed. Please login.");
+            result error =result.error("The token has expired or it's invalid. Please login.");
             String notLogin= JSONUtil.toJsonStr(error);
             response.getWriter().write(notLogin);
             return false;
@@ -50,8 +50,8 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        System.out.println("postHandler运行了...................");
-        //HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
+        String jwt=request.getHeader("Authorization");
+
     }
 
     @Override

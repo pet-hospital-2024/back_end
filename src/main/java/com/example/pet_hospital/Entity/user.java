@@ -16,4 +16,6 @@ public class user {
     String timestamp;
     String token;
     String code;
+    String newPassword;
+    String OldPassword;
 }

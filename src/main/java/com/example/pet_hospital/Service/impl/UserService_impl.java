@@ -56,4 +56,9 @@ public class UserService_impl implements UserService {
         userMapper.alterUserInfo(u);
     }
 
+    @Override
+    public void ChangePassword(user u) {
+        userMapper.ChangePassword(u);
+    }
+
 }

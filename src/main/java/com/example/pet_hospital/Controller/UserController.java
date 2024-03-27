@@ -88,7 +88,8 @@ public class UserController {
             String token = JWTUtils.jwtGenerater(claims);
             us.setToken(token);
             stringRedisTemplate.opsForValue().
-                    set(USER_LOGIN_KEY+us.getUsername(), JSONUtil.toJsonStr(us),30, TimeUnit.MINUTES);
+                    set(USER_LOGIN_KEY+us.getUsername(), JSONUtil.toJsonStr(us),
+                            30, TimeUnit.MINUTES);
             return result.success(token);
         }
         else {
@@ -148,21 +149,58 @@ public class UserController {
 
         String token =newToken(Authorization);
         us.setToken(token);
-        stringRedisTemplate.opsForValue().
-                set(USER_LOGIN_KEY+us.getUsername(),JSONUtil.toJsonStr(us),30,TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(USER_LOGIN_KEY+us.getUsername(),
+                JSONUtil.toJsonStr(us),30,TimeUnit.MINUTES);
         return result.success(token);
     }
 
     @PostMapping("/user/getinfo")
     public result getUser(@RequestBody user u){
         if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+u.getUsername())!=null){
-            return result.success(JSONUtil.toBean(stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+u.getUsername()),user.class));
+            return result.success(JSONUtil.toBean(stringRedisTemplate.opsForValue().
+                    get(USER_LOGIN_KEY+u.getUsername()),user.class));
         }
         if (userService.getUserByName(u)!=null){
             return result.success(userService.getUserByName(u));
         }
         else {
             return result.error("未查找到该用户。");
+        }
+    }
+
+    @PostMapping("/user/updatePwd")
+    public result ChangePassword(@RequestBody user u, @RequestHeader String Authorization){
+        if (userService.getUserByID(u)==null){
+            return result.error("用户不存在！");
+        }
+        userService.ChangePassword(u);
+        user us=userService.getUserByID(u);
+        stringRedisTemplate.opsForValue().set(USER_LOGIN_KEY+us.getUsername(),
+                JSONUtil.toJsonStr(us),30, TimeUnit.MINUTES);
+        return result.success("修改密码成功。",Authorization);
+    }
+
+    @PostMapping("/user/verifyOldPwd")
+    public result CheckPassword(@RequestBody user u,@RequestHeader String Authorization){
+        if (userService.getUserByID(u)==null){
+            return result.error("用户不存在！");
+        }
+
+        user us=userService.getUserByID(u);
+        if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+us.getUsername())!=null){
+            us= JSONUtil.toBean(stringRedisTemplate.opsForValue().
+                    get(USER_LOGIN_KEY+us.getUsername()), user.class);
+            if (!u.getOldPassword().equals(us.getPassword())){
+                return result.error("密码错误！");
+            }else {
+                return result.success("原密码正确！",Authorization);
+            }
+        }
+
+        if (u.getOldPassword().equals(userService.getUserByID(u).getPassword())){
+            return result.error("密码错误！");
+        }else {
+            return result.success("原密码正确！",Authorization);
         }
     }
 

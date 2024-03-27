@@ -17,4 +17,6 @@ public interface UserService {
     void banUser(user u);
 
     void alterUserInfo(user u);
+
+    void ChangePassword(user u);
 }

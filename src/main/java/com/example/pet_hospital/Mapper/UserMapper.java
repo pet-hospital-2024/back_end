@@ -2,8 +2,6 @@ package com.example.pet_hospital.Mapper;
 
 import com.example.pet_hospital.Entity.user;
 import org.apache.ibatis.annotations.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 
 @Mapper
 public interface UserMapper {
@@ -34,4 +32,7 @@ public interface UserMapper {
 
     @Update("update syf.userdata set username=#{username}, password=#{password}, phone_number=#{phone_number}, email=#{email} where user_id=#{user_id}")
     void alterUserInfo(user u);
+
+    @Update("update syf.userdata set password=#{newPassword} where user_id=#{user_id}")
+    void ChangePassword(user u);
 }
