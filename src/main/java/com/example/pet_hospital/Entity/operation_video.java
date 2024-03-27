@@ -6,9 +6,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class operation {
-   String operation_id;
-   String name;
-    String video_url;
+public class operation_video {
+   String instance_operation_id;
     String instance_id;
+    String instance_operation_url;
+   String instance_operation_name;
+
+
 }

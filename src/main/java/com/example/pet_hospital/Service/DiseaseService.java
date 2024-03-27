@@ -1,9 +1,7 @@
 package com.example.pet_hospital.Service;
 
 
-import com.example.pet_hospital.Entity.disease;
-import com.example.pet_hospital.Entity.instance;
-import com.example.pet_hospital.Entity.kind;
+import com.example.pet_hospital.Entity.*;
 
 public interface DiseaseService {
     void addKind(kind k);
@@ -25,4 +23,36 @@ public interface DiseaseService {
     instance getInstancebyName(String name);
     instance getInstancebyId(String instance_id);
     instance[] searchInstance(String name);
+
+    void  addInstanceImg(instance_img i);
+
+    void deleteInstanceImg(instance_img i);
+
+    instance_img getInstanceImgbyId(String instanceImgId);//根据图片id查找图片
+
+    instance_img[] getInstanceImgbyInstance(String instanceId);
+
+    void addInstanceVideo(instance_video i);
+
+    void deleteInstanceVideo(instance_video i);
+
+    instance_video getInstanceVideobyId(String instanceVideoId);//根据视频id查找视频
+
+    instance_video[] getInstanceVideobyInstance(String instanceId);
+
+    void addIntanceOperationVideo(operation_video o);
+
+    operation_video getOperationVideobyId(String instanceOperationId);
+
+    void deleteInstanceOperationVideo(operation_video o);
+
+    operation_video[] getOperationVideobyInstance(String instanceId);
+
+    void addResultImg(result_img r);
+
+    result_img getResultImgbyId(String instanceResultimgId);
+
+    void deleteResultImg(result_img r);
+
+    result_img[] getInstanceResultImgbyInstance(String instanceId);
 }

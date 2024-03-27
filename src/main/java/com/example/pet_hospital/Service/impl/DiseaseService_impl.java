@@ -1,12 +1,10 @@
 package com.example.pet_hospital.Service.impl;
 
-import com.example.pet_hospital.Entity.disease;
-import com.example.pet_hospital.Entity.instance;
+import com.example.pet_hospital.Entity.*;
 import com.example.pet_hospital.Mapper.DiseaseMapper;
 import com.example.pet_hospital.Service.DiseaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.pet_hospital.Entity.kind;
 
 @Service
 public class DiseaseService_impl implements DiseaseService {
@@ -87,5 +85,88 @@ public class DiseaseService_impl implements DiseaseService {
 
     public instance[] searchInstance(String name) {
         return DiseaseMapper.searchInstance(name);
+    }
+
+    @Override
+    public void addInstanceImg(instance_img i) {
+        DiseaseMapper.addInstanceImg(i);
+    }
+
+    @Override
+    public void deleteInstanceImg(instance_img i) {
+        DiseaseMapper.deleteInstanceImg(i);
+    }
+
+    @Override
+    public instance_img getInstanceImgbyId(String instanceImgId) {
+        return DiseaseMapper.getInstanceImgbyId(instanceImgId);
+    }
+
+    @Override
+    public instance_img[] getInstanceImgbyInstance(String instanceId) {
+        return DiseaseMapper.getInstanceImgbyInstance(instanceId);
+    }
+
+    @Override
+    public void addInstanceVideo(instance_video i) {
+        DiseaseMapper.addInstanceVideo(i);
+    }
+
+    @Override
+    public void deleteInstanceVideo(instance_video i) {
+        DiseaseMapper.deleteInstanceVideo(i);
+    }
+
+    @Override
+    public instance_video getInstanceVideobyId(String instanceVideoId) {
+        return DiseaseMapper.getInstanceVideobyId(instanceVideoId);
+    }
+
+    @Override
+    public instance_video[] getInstanceVideobyInstance(String instanceId) {
+        return DiseaseMapper.getInstanceVideobyInstance(instanceId);
+    }
+
+    @Override
+    public void addIntanceOperationVideo(operation_video o) {
+        DiseaseMapper.addIntanceOperationVideo(o);
+    }
+
+    @Override
+    public operation_video getOperationVideobyId(String instanceOperationId) {
+        return DiseaseMapper.getOperationVideobyId(instanceOperationId);
+    }
+
+    @Override
+    public void deleteInstanceOperationVideo(operation_video o) {
+        DiseaseMapper.deleteInstanceOperationVideo(o);
+
+    }
+
+    @Override
+    public operation_video[] getOperationVideobyInstance(String instanceId) {
+        return DiseaseMapper.getOperationVideobyInstance(instanceId);
+    }
+
+    @Override
+    public void addResultImg(result_img r) {
+        DiseaseMapper.addResultImg(r);
+
+    }
+
+    @Override
+    public result_img getResultImgbyId(String instanceResultimgId) {
+        return DiseaseMapper.getResultImgbyId(instanceResultimgId);
+    }
+
+    @Override
+    public void deleteResultImg(result_img r) {
+        DiseaseMapper.deleteResultImg(r);
+
+    }
+
+    @Override
+    public result_img[] getInstanceResultImgbyInstance(String instanceId) {
+        return DiseaseMapper.getInstanceResultImgbyInstance(instanceId);
     }
 }

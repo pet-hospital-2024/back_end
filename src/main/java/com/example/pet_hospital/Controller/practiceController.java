@@ -105,6 +105,7 @@ public class practiceController {
         return result.success(newToken(Authorization));
     }
 
+
     @PostMapping("/question/getquestion")
     public result getQuestion(@RequestBody question q) {
         //no identity secure needed.

@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class instance_video {
-    String ins_video_id;
-    String name;
-    String video_url;
-    String dis_id;
+    String instance_video_id;
+    String instance_id;
+    String instance_video_url;
+    String instance_video_name;
+
+
 }

@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class instance_img {
-    int ins_img_id;
+    String instance_img_id;
+    String instance_id;
+    String instance_img_url;
+    String instance_img_name;
 
 }
