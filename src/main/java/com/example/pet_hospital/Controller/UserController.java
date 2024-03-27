@@ -115,10 +115,13 @@ public class UserController {
         if (!identitySecure("administrator",Authorization)){
             return result.error("无操作权限！");
         }
-        userService.banUser(u);
         if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+u.getUsername())!=null){
             stringRedisTemplate.delete(USER_LOGIN_KEY+u.getUsername());
         }
+        if (userService.getUserByName(u)==null){
+            return result.error("用户不存在！");
+        }
+        userService.banUser(u);
         return result.success(newToken(Authorization));
     }
 
