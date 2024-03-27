@@ -20,7 +20,7 @@ public class diseaseController {
     private StringRedisTemplate stringRedisTemplate;
 
     String KIND_KEY="kind:";
-    String INSTANCE_KEY="instance:";
+    String CASE_KEY ="case:";
     String DISEASE_KEY="disease:";
 
     public Boolean identitySecure(String target, String Authorization){
@@ -48,147 +48,147 @@ public class diseaseController {
     }
 
     //添加科室
-    @PostMapping("/disease/addKind")
-    public result addKind(@RequestBody kind k, @RequestHeader String Authorization) {
+    @PostMapping("/disease/addDepartment")
+    public result addDepartment(@RequestBody department k, @RequestHeader String Authorization) {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (k.getName().equals("")){
+        if (k.getDepartment_name().equals("")){
             return result.error("科室名不能为空！");
         }
-        if(diseaseService.getKindbyName(k)!=null){
+        if(diseaseService.getDepartmentbyName(k)!=null){
             return result.error("该科室已存在！");
         }
-        diseaseService.addKind(k);
+        diseaseService.addDepartment(k);
         return result.success(newToken(Authorization));
     }
 
     //删除科室
-    @PostMapping("/disease/deleteKind")
-    public result deleteKind(@RequestBody kind k, @RequestHeader String Authorization) {
+    @PostMapping("/disease/deleteDepartment")
+    public result deleteDepartment(@RequestBody department k, @RequestHeader String Authorization) {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
         //删除缓存
-        if (stringRedisTemplate.opsForValue().get(KIND_KEY+k.getKind_id())!=null){
-            stringRedisTemplate.delete(KIND_KEY+k.getKind_id());
+        if (stringRedisTemplate.opsForValue().get(KIND_KEY+k.getDepartment_id())!=null){
+            stringRedisTemplate.delete(KIND_KEY+k.getDepartment_name());
         }
-        if(diseaseService.getKindbyId(k.getKind_id())==null){
+        if(diseaseService.getDepartmentbyId(k.getDepartment_id())==null){
             return result.error("该科室不存在！");
         }
-        diseaseService.deleteKind(k);
+        diseaseService.deleteDepartment(k);
         return result.success(newToken(Authorization));
     }
 
     //修改科室
-    @PostMapping("/disease/changeKind")
-    public result changeKind(@RequestBody kind k, @RequestHeader String Authorization) {
+    @PostMapping("/disease/changeDepartment")
+    public result changeDepartment(@RequestBody department k, @RequestHeader String Authorization) {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (stringRedisTemplate.opsForValue().get(KIND_KEY+k.getKind_id())!=null){
+        if (stringRedisTemplate.opsForValue().get(KIND_KEY+k.getDepartment_id())!=null){
             stringRedisTemplate.opsForValue().
-                    set(KIND_KEY+k.getKind_id(), JSONUtil.toJsonStr(k),
+                    set(KIND_KEY+k.getDepartment_id(), JSONUtil.toJsonStr(k),
                             30, TimeUnit.MINUTES);
-            diseaseService.changeKind(k);
+            diseaseService.changeDepartment(k);
             return result.success(newToken(Authorization));
         }
-        if(diseaseService.getKindbyId(k.getKind_id())==null){
+        if(diseaseService.getDepartmentbyId(k.getDepartment_id())==null){
             return result.error("该科室不存在！");
         }
         stringRedisTemplate.opsForValue().
-                set(KIND_KEY+k.getKind_id(), JSONUtil.toJsonStr(k),
+                set(KIND_KEY+k.getDepartment_id(), JSONUtil.toJsonStr(k),
                         30, TimeUnit.MINUTES);
-        diseaseService.changeKind(k);
+        diseaseService.changeDepartment(k);
         return result.success(newToken(Authorization));
     }
 
     //获取所有科室
-    @PostMapping("/disease/getAllKind")
-    public result getAllKind() {
-        return result.success(diseaseService.getAllKind());
+    @PostMapping("/disease/getAllDepartment")
+    public result getAllDepartment() {
+        return result.success(diseaseService.getAllDepartment());
     }
 
     //添加疾病
-    @PostMapping("/disease/addDis")
+    @PostMapping("/disease/addDisease")
     public result addDis(@RequestBody disease d, @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (d.getName().equals("")){
+        if (d.getDisease_name().equals("")){
             return result.error("疾病名不能为空！");
         }
-        if(diseaseService.getKindbyId(d.getKind_id())==null){
+        if(diseaseService.getDepartmentbyId(d.getDepartment_id())==null){
             return result.error("该科室不存在！");
         }
-        if(diseaseService.getDisbyName(d)!=null){
+        if(diseaseService.getDiseasebyName(d)!=null){
             return result.error("该疾病已存在！");
         }
-        diseaseService.addDis(d);
+        diseaseService.addDisease(d);
         return result.success(newToken(Authorization));
     }
 
     //删除疾病
-    @PostMapping("/disease/deleteDis")
+    @PostMapping("/disease/deleteDisease")
     public result deleteDis(@RequestBody disease d, @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (stringRedisTemplate.opsForValue().get(DISEASE_KEY+d.getDis_id())!=null){
-            stringRedisTemplate.delete(DISEASE_KEY+d.getDis_id());
+        if (stringRedisTemplate.opsForValue().get(DISEASE_KEY+d.getDisease_id())!=null){
+            stringRedisTemplate.delete(DISEASE_KEY+d.getDisease_id());
         }
-        if(diseaseService.getDisbyId(d.getDis_id())==null){
+        if(diseaseService.getDiseasebyId(d.getDisease_id())==null){
             return result.error("该疾病不存在！");
         }
-        diseaseService.deleteDis(d);
+        diseaseService.deleteDisease(d);
         return result.success(newToken(Authorization));
     }
 
     //修改疾病
-    @PostMapping("/disease/changeDis")
+    @PostMapping("/disease/changeDisease")
     public result changeDis(@RequestBody disease d, @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (stringRedisTemplate.opsForValue().get(DISEASE_KEY+d.getDis_id())!=null){
+        if (stringRedisTemplate.opsForValue().get(DISEASE_KEY+d.getDisease_id())!=null){
             stringRedisTemplate.opsForValue().
-                    set(DISEASE_KEY+d.getDis_id(), JSONUtil.toJsonStr(d),
+                    set(DISEASE_KEY+d.getDisease_id(), JSONUtil.toJsonStr(d),
                             30, TimeUnit.MINUTES);
-            diseaseService.changeDis(d);
+            diseaseService.changeDiseaseName(d);
             return result.success(newToken(Authorization));
         }
-        if(diseaseService.getDisbyId(d.getDis_id())==null){
+        if(diseaseService.getDiseasebyId(d.getDisease_id())==null){
             return result.error("该疾病不存在！");
         }
-        diseaseService.changeDis(d);
+        diseaseService.changeDiseaseName(d);
         return result.success(newToken(Authorization));
     }
 
     //查找某个科室下的所有疾病
-    @PostMapping("/disease/searchbyKind")
-    public result searchbyKind(@RequestBody disease d) {
-        if(diseaseService.getKindbyId(d.getKind_id())==null){
+    @PostMapping("/disease/getDiseasebyDepartment")
+    public result getDiseasebyDepartment(@RequestBody disease d) {
+        if(diseaseService.getDepartmentbyId(d.getDisease_id())==null){
             return result.error("该科室不存在！");
         }
-        return result.success(diseaseService.searchbyKind(d.getKind_id()));
+        return result.success(diseaseService.getDiseasebyDepartment(d.getDisease_id()));
     }
 
     //查找某个疾病下的所有病例
-    @PostMapping("/disease/getInstancebyDis")
-    public result searchInstancebyDis(@RequestBody disease d) {
-        if(diseaseService.getDisbyId(d.getDis_id())==null){
+    @PostMapping("/disease/getCasebyDisease")
+    public result searchCasebyDis(@RequestBody disease d) {
+        if(diseaseService.getDiseasebyId(d.getDisease_id())==null){
             return result.error("该疾病不存在！");
         }
-        return result.success(diseaseService.getInstancebyDis(d.getDis_id()));
+        return result.success(diseaseService.getCasebyDis(d.getDisease_id()));
     }
 
     //添加病例
-    @PostMapping("/disease/addInstance")
-    public result addInstance(@RequestBody instance i, @RequestHeader String Authorization){
+    @PostMapping("/disease/addCase")
+    public result addCase(@RequestBody cases i, @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (diseaseService.getInstancebyName(i.getName())!=null){
+        if (diseaseService.getCasebyName(i.getCase_name())!=null){
             return result.error("该病例已存在！");
         }
         /*
@@ -196,94 +196,94 @@ public class diseaseController {
             return result.error("病例介绍不能为空！");
         }
         */
-        if (i.getName().equals("")){
+        if (i.getCase_name().equals("")){
             return result.error("病例名不能为空！");
         }
-        if(diseaseService.getDisbyId(i.getDis_id())==null){
+        if(diseaseService.getDiseasebyId(i.getDisease_id())==null){
             return result.error("该疾病不存在！");
         }
-        diseaseService.addInstance(i);
+        diseaseService.addCase(i);
         return result.success(newToken(Authorization));
     }
 
     //删除病例
-    @PostMapping("/disease/deleteInstance")
-    public result deleteInstance(@RequestBody instance i, @RequestHeader String Authorization){
+    @PostMapping("/disease/deleteCase")
+    public result deleteCase(@RequestBody cases i, @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
         if (stringRedisTemplate.opsForValue().
-                get(INSTANCE_KEY+i.getInstance_id())!=null){
-            stringRedisTemplate.delete(INSTANCE_KEY+i.getInstance_id());
+                get(CASE_KEY +i.getCase_id())!=null){
+            stringRedisTemplate.delete(CASE_KEY +i.getCase_id());
         }
-        if(diseaseService.getInstancebyName(i.getName())==null){
+        if(diseaseService.getCasebyName(i.getCase_name())==null){
             return result.error("该病例不存在！");
         }
-        diseaseService.deleteInstance(i);
+        diseaseService.deleteCase(i);
         return result.success(newToken(Authorization));
     }
 
     //修改病例文字信息
-    @PostMapping("/disease/changeInstance")
-    public result changeInstance(@RequestBody instance i, @RequestHeader String Authorization){
+    @PostMapping("/disease/changeCaseText")
+    public result changeCase(@RequestBody cases i, @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (stringRedisTemplate.opsForValue().get(INSTANCE_KEY+i.getInstance_id())!=null){
+        if (stringRedisTemplate.opsForValue().get(CASE_KEY +i.getCase_id())!=null){
             stringRedisTemplate.opsForValue().
-                    set(INSTANCE_KEY+i.getInstance_id(),
+                    set(CASE_KEY +i.getCase_id(),
                             JSONUtil.toJsonStr(i),30, TimeUnit.MINUTES);
-            diseaseService.changeInstance(i);
+            diseaseService.changeCase(i);
             return result.success(newToken(Authorization));
         }
-        if(diseaseService.getInstancebyId(i.getInstance_id())==null){
+        if(diseaseService.getCasebyId(i.getCase_id())==null){
             return result.error("该病例不存在！");
         }
-        diseaseService.changeInstance(i);
+        diseaseService.changeCase(i);
         return result.success(newToken(Authorization));
     }
 
     //获取病例文字信息
-    @PostMapping("/disease/getInstancebyId")
-    public result getInstancebyId(@RequestBody instance i){
+    @PostMapping("/disease/getCaseTextbyId")
+    public result getCasebyId(@RequestBody cases i){
         if (stringRedisTemplate.opsForValue().
-                get(INSTANCE_KEY+i.getInstance_id())!=null){//缓存命中
+                get(CASE_KEY +i.getCase_id())!=null){//缓存命中
             return result.success(JSONUtil.toBean(stringRedisTemplate.
-                    opsForValue().get(INSTANCE_KEY+i.getInstance_id()), question.class));
+                    opsForValue().get(CASE_KEY +i.getCase_id()), cases.class));
         }
         else {
-            if(diseaseService.getInstancebyId(i.getInstance_id())==null){
+            if(diseaseService.getCasebyId(i.getCase_id())==null){
                 return result.error("该病例不存在！");
             }else{
                 stringRedisTemplate.opsForValue().
-                        set(INSTANCE_KEY+i.getInstance_id(),
-                                JSONUtil.toJsonStr(diseaseService.getInstancebyId(i.getInstance_id())),30, TimeUnit.MINUTES);
+                        set(CASE_KEY +i.getCase_id(),
+                                JSONUtil.toJsonStr(diseaseService.getCasebyId(i.getCase_id())),30, TimeUnit.MINUTES);
                 return result.success(JSONUtil.
                         toBean(stringRedisTemplate.opsForValue().
-                                get(INSTANCE_KEY+i.getInstance_id()), question.class));
+                                get(CASE_KEY +i.getCase_id()), cases.class));
             }
         }
     }
 
     //根据输入的病例名称模糊搜索病例
-    @PostMapping("/disease/searchInstance")
-    public result searchInstancebyName(@RequestBody instance i){
-        return result.success(diseaseService.searchInstance(i.getName()));
+    @PostMapping("/disease/searchCase")
+    public result searchCasebyName(@RequestBody cases i){
+        return result.success(diseaseService.searchCase(i.getCase_name()));
     }
 
     //增加病例症状图片
-    @PostMapping("/disease/addInstanceImg")
-    public result addInstanceImg(@RequestBody instance_img i, @RequestHeader String Authorization){
+    @PostMapping("/disease/addCaseImg")
+    public result addCaseImg(@RequestBody case_img i, @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (i.getInstance_img_name().equals("")){
+        if (i.getCase_img_name().equals("")){
             return result.error("图片名不能为空！");
         }
-        if(diseaseService.getInstancebyId(i.getInstance_id())==null){
+        if(diseaseService.getCasebyId(i.getCase_id())==null){
             return result.error("该病例不存在！");
         }
-        diseaseService.addInstanceImg(i);
+        diseaseService.addCaseImg(i);
         return result.success(newToken(Authorization));
 
 
@@ -291,63 +291,63 @@ public class diseaseController {
     }
 
     //删除病例症状图片
-    @PostMapping("/disease/deleteInstanceImg")
-    public result deleteInstanceImg(@RequestBody instance_img i, @RequestHeader String Authorization){
+    @PostMapping("/disease/deleteCaseImg")
+    public result deleteCaseImg(@RequestBody case_img i, @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if(diseaseService.getInstanceImgbyId(i.getInstance_img_id())==null){
+        if(diseaseService.getCaseImgbyId(i.getCase_img_id())==null){
             return result.error("该图片不存在！");
         }
-        if (stringRedisTemplate.opsForValue().get(INSTANCE_KEY+i.getInstance_id())!=null){
-            stringRedisTemplate.delete(INSTANCE_KEY+i.getInstance_id());
+        if (stringRedisTemplate.opsForValue().get(CASE_KEY +i.getCase_id())!=null){
+            stringRedisTemplate.delete(CASE_KEY +i.getCase_id());
         }
-        diseaseService.deleteInstanceImg(i);
+        diseaseService.deleteCaseImg(i);
         return result.success(newToken(Authorization));
     }
 
     //根据病例获取病例症状所有图片
-    @GetMapping("/disease/getInstanceImgbyInstance")
-    public result getInstanceImgbyInstance(@RequestBody instance i){
-        return result.success(diseaseService.getInstanceImgbyInstance(i.getInstance_id()));
+    @GetMapping("/disease/getCaseImgbyCase")
+    public result getCaseImgbyCase(@RequestBody cases i){
+        return result.success(diseaseService.getCaseImgbyCase(i.getCase_id()));
     }
 
     //增加病例介绍视频
-    @PostMapping("/disease/addInstanceVideo")
-    public result addInstanceVideo(@RequestBody instance_video i, @RequestHeader String Authorization){
+    @PostMapping("/disease/addCaseVideo")
+    public result addCaseVideo(@RequestBody case_video i, @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (i.getInstance_video_name().equals("")){
+        if (i.getCase_video_name().equals("")){
             return result.error("视频名不能为空！");
         }
-        if(diseaseService.getInstancebyId(i.getInstance_id())==null){
+        if(diseaseService.getCasebyId(i.getCase_id())==null){
             return result.error("该病例不存在！");
         }
-        diseaseService.addInstanceVideo(i);
+        diseaseService.addCaseVideo(i);
         return result.success(newToken(Authorization));
     }
 
     //删除病例介绍视频
-    @PostMapping("/disease/deleteInstanceVideo")
-    public result deleteInstanceVideo(@RequestBody instance_video i, @RequestHeader String Authorization){
+    @PostMapping("/disease/deleteCaseVideo")
+    public result deleteCaseVideo(@RequestBody case_video i, @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if(diseaseService.getInstanceVideobyId(i.getInstance_video_id())==null){
+        if(diseaseService.getCaseVideobyId(i.getCase_video_id())==null){
             return result.error("该视频不存在！");
         }
-        if (stringRedisTemplate.opsForValue().get(INSTANCE_KEY+i.getInstance_id())!=null){
-            stringRedisTemplate.delete(INSTANCE_KEY+i.getInstance_id());
+        if (stringRedisTemplate.opsForValue().get(CASE_KEY +i.getCase_id())!=null){
+            stringRedisTemplate.delete(CASE_KEY +i.getCase_id());
         }
-        diseaseService.deleteInstanceVideo(i);
+        diseaseService.deleteCaseVideo(i);
         return result.success(newToken(Authorization));
     }
 
     //根据病例获取病例症状所有视频
-    @GetMapping("/disease/getInstanceVideobyInstance")
-    public result getInstanceVideobyInstance(@RequestBody instance i){
-        return result.success(diseaseService.getInstanceVideobyInstance(i.getInstance_id()));
+    @GetMapping("/disease/getCaseVideobyCase")
+    public result getCaseVideobyCase(@RequestBody cases i){
+        return result.success(diseaseService.getCaseVideobyCase(i.getCase_id()));
     }
 
     //增加手术视频
@@ -356,13 +356,13 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (o.getInstance_operation_name().equals("")){
+        if (o.getCase_operation_name().equals("")){
             return result.error("视频名不能为空！");
         }
-        if(diseaseService.getInstancebyId(o.getInstance_id())==null){
+        if(diseaseService.getCasebyId(o.getCase_id())==null){
             return result.error("该病例不存在！");
         }
-        diseaseService.addIntanceOperationVideo(o);
+        diseaseService.addOperationVideo(o);
         return result.success(newToken(Authorization));
     }
 
@@ -372,21 +372,21 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if(diseaseService.getOperationVideobyId(o.getInstance_operation_id())==null){
+        if(diseaseService.getOperationVideobyId(o.getCase_operation_id())==null){
             return result.error("该视频不存在！");
         }
-        if (stringRedisTemplate.opsForValue().get(INSTANCE_KEY+o.getInstance_id())!=null){
-            stringRedisTemplate.delete(INSTANCE_KEY+o.getInstance_id());
+        if (stringRedisTemplate.opsForValue().get(CASE_KEY +o.getCase_id())!=null){
+            stringRedisTemplate.delete(CASE_KEY +o.getCase_id());
         }
 
-        diseaseService.deleteInstanceOperationVideo(o);
+        diseaseService.deleteCaseOperationVideo(o);
         return result.success(newToken(Authorization));
     }
 
     //根据病例获取手术视频
-    @GetMapping("/disease/getOperationVideobyInstance")
-    public result getOperationVideobyInstance(@RequestBody operation_video o){
-        return result.success(diseaseService.getOperationVideobyInstance(o.getInstance_id()));
+    @GetMapping("/disease/getOperationVideobyCase")
+    public result getOperationVideobyCase(@RequestBody operation_video o){
+        return result.success(diseaseService.getOperationVideobyCase(o.getCase_id()));
     }
 
     //增加病例诊断结果图片
@@ -395,10 +395,10 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (r.getInstance_resultimg_name().equals("")){
+        if (r.getCase_resultimg_name().equals("")){
             return result.error("图片名不能为空！");
         }
-        if(diseaseService.getInstancebyId(r.getInstance_id())==null){
+        if(diseaseService.getCasebyId(r.getCase_id())==null){
             return result.error("该病例不存在！");
         }
         diseaseService.addResultImg(r);
@@ -411,20 +411,20 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if(diseaseService.getResultImgbyId(r.getInstance_resultimg_id())==null){
+        if(diseaseService.getResultImgbyId(r.getCase_resultimg_id())==null){
             return result.error("该图片不存在！");
         }
-        if (stringRedisTemplate.opsForValue().get(INSTANCE_KEY+r.getInstance_id())!=null){
-            stringRedisTemplate.delete(INSTANCE_KEY+r.getInstance_id());
+        if (stringRedisTemplate.opsForValue().get(CASE_KEY +r.getCase_id())!=null){
+            stringRedisTemplate.delete(CASE_KEY +r.getCase_id());
         }
         diseaseService.deleteResultImg(r);
         return result.success(newToken(Authorization));
     }
 
     //根据病例获取诊断结果图片
-    @GetMapping("/disease/getResultImgbyInstance")
-    public result getResultImgbyInstance(@RequestBody result_img r){
-        return result.success(diseaseService.getInstanceResultImgbyInstance(r.getInstance_id()));
+    @GetMapping("/disease/getResultImgbyCase")
+    public result getResultImgbyCase(@RequestBody result_img r){
+        return result.success(diseaseService.getCaseResultImgbyCase(r.getCase_id()));
     }
 
 }

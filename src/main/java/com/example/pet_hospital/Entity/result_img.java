@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class result_img {
 
-    String instance_resultimg_id;
-    String instance_id;
-    String instance_resultimg_url;
-    String instance_resultimg_name;
+    String case_resultimg_id;
+    String case_id;
+    String case_resultimg_url;
+    String case_resultimg_name;
 }

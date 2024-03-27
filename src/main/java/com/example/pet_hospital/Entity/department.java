@@ -7,14 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class kind {
-    String kind_id;
-    String name;
+public class department {
+    String department_id;
+    String department_name;
 
-    public String getKind_id() {
-        return kind_id;
-    }
-    public String getName() {
-        return name;
-    }
+
 }

@@ -66,8 +66,8 @@ public class practiceController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (stringRedisTemplate.opsForValue().get(QUESTION_KEY+q.getId())!=null){
-            stringRedisTemplate.delete(QUESTION_KEY+q.getId());
+        if (stringRedisTemplate.opsForValue().get(QUESTION_KEY+q.getQuestion_id())!=null){
+            stringRedisTemplate.delete(QUESTION_KEY+q.getQuestion_id());
         }
         if (practiceService.getQuestionByID(q)==null){
             return result.error("该题目不存在！");
@@ -92,15 +92,15 @@ public class practiceController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限。");
         }
-        if (stringRedisTemplate.opsForValue().get(QUESTION_KEY+q.getId())!=null){
-            stringRedisTemplate.opsForValue().set(QUESTION_KEY+q.getId(), JSONUtil.toJsonStr(q),30, TimeUnit.MINUTES);
+        if (stringRedisTemplate.opsForValue().get(QUESTION_KEY+q.getQuestion_id())!=null){
+            stringRedisTemplate.opsForValue().set(QUESTION_KEY+q.getQuestion_id(), JSONUtil.toJsonStr(q),30, TimeUnit.MINUTES);
             practiceService.alterQuestion(q);
             return result.success(newToken(Authorization));
         }
         if (practiceService.getQuestionByID(q)==null){
             return result.error("该题目不存在！");
         }
-        stringRedisTemplate.opsForValue().set(QUESTION_KEY+q.getId(), JSONUtil.toJsonStr(q),30, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(QUESTION_KEY+q.getQuestion_id(), JSONUtil.toJsonStr(q),30, TimeUnit.MINUTES);
         practiceService.alterQuestion(q);
         return result.success(newToken(Authorization));
     }
@@ -109,15 +109,15 @@ public class practiceController {
     @PostMapping("/question/getquestion")
     public result getQuestion(@RequestBody question q) {
         //no identity secure needed.
-        if (stringRedisTemplate.opsForValue().get(QUESTION_KEY+q.getId())!=null){//缓存命中
-            return result.success(JSONUtil.toBean(stringRedisTemplate.opsForValue().get(QUESTION_KEY+q.getId()), question.class));
+        if (stringRedisTemplate.opsForValue().get(QUESTION_KEY+q.getQuestion_id())!=null){//缓存命中
+            return result.success(JSONUtil.toBean(stringRedisTemplate.opsForValue().get(QUESTION_KEY+q.getQuestion_id()), question.class));
         }
         else {//缓存未命中，进行数据库查询
             if (practiceService.getQuestionByID(q)==null){
                 return result.error("该题目不存在！");
             }else{
-                stringRedisTemplate.opsForValue().set(QUESTION_KEY+q.getId(), JSONUtil.toJsonStr(practiceService.getQuestionByID(q)),30, TimeUnit.MINUTES);
-                return result.success(JSONUtil.toBean(stringRedisTemplate.opsForValue().get(QUESTION_KEY+q.getId()), question.class));
+                stringRedisTemplate.opsForValue().set(QUESTION_KEY+q.getQuestion_id(), JSONUtil.toJsonStr(practiceService.getQuestionByID(q)),30, TimeUnit.MINUTES);
+                return result.success(JSONUtil.toBean(stringRedisTemplate.opsForValue().get(QUESTION_KEY+q.getQuestion_id()), question.class));
             }
 
         }

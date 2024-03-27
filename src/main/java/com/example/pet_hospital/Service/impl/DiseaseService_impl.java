@@ -11,141 +11,141 @@ public class DiseaseService_impl implements DiseaseService {
     @Autowired
     private DiseaseMapper DiseaseMapper;
 
-    public void addKind(kind k) {
-        DiseaseMapper.addKind(k);
+    public void addDepartment(department k) {
+        DiseaseMapper.addDepartment(k);
     }
 
-    public kind getKindbyName(kind k) {
-        return DiseaseMapper.getKindbyName(k);
+    public department getDepartmentbyName(department k) {
+        return DiseaseMapper.getDepartmentbyName(k);
     }
 
-    public kind getKindbyId(String id) {
-        return DiseaseMapper.getKindbyId(id);
+    public department getDepartmentbyId(String id) {
+        return DiseaseMapper.getDepartmentbyId(id);
     }
 
-    public kind[] getAllKind() {
-        return DiseaseMapper.getAllKind();
+    public department[] getAllDepartment() {
+        return DiseaseMapper.getAllDepartment();
     }
 
-    public void deleteKind(kind k) {
-        DiseaseMapper.deleteKind(k);
+    public void deleteDepartment(department k) {
+        DiseaseMapper.deleteDepartment(k);
     }
 
-    public void changeKind(kind k) {
-        DiseaseMapper.changeKind(k);
+    public void changeDepartment(department k) {
+        DiseaseMapper.changeDepartment(k);
     }
 
-    public void addDis(disease d) {
-        DiseaseMapper.addDis(d);
+    public void addDisease(disease d) {
+        DiseaseMapper.addDisease(d);
     }
 
-    public disease getDisbyName(disease d) {
-        return DiseaseMapper.getDisbyName(d);
+    public disease getDiseasebyName(disease d) {
+        return DiseaseMapper.getDiseasebyName(d);
     }
 
-    public void deleteDis(disease d) {
-        DiseaseMapper.deleteDis(d);
+    public void deleteDisease(disease d) {
+        DiseaseMapper.deleteDisease(d);
     }
 
-    public void changeDis(disease d) {
-        DiseaseMapper.changeDis(d);
+    public void changeDiseaseName(disease d) {
+        DiseaseMapper.changeDiseaseName(d);
     }
 
-    public disease getDisbyId(String uuid) {
-        return DiseaseMapper.getDisbyId(uuid);
+    public disease getDiseasebyId(String disease_id) {
+        return DiseaseMapper.getDiseasebyId(disease_id);
     }
 
-    public disease[] searchbyKind(String kind_id) {
-        return DiseaseMapper.searchbyKind(kind_id);
+    public disease[] getDiseasebyDepartment(String department_id) {
+        return DiseaseMapper.getDiseasebyDepartment(department_id);
     }
 
-    public instance[] getInstancebyDis(String dis_id) {
-        return DiseaseMapper.getInstancebyDis(dis_id);
+    public cases[] getCasebyDis(String disease_id) {
+        return DiseaseMapper.getCasebyDis(disease_id);
     }
 
-    public void addInstance(instance i) {
-        DiseaseMapper.addInstance(i);
+    public void addCase(cases i) {
+        DiseaseMapper.addCase(i);
     }
 
-    public instance getInstancebyName(String name) {
-        return DiseaseMapper.getInstancebyName(name);
+    public cases getCasebyName(String case_name) {
+        return DiseaseMapper.getCasebyName(case_name);
     }
 
-    public void deleteInstance(instance i) {
-        DiseaseMapper.deleteInstance(i);
+    public void deleteCase(cases i) {
+        DiseaseMapper.deleteCase(i);
     }
 
-    public void changeInstance(instance i) {
-        DiseaseMapper.changeInstance(i);
+    public void changeCase(cases i) {
+        DiseaseMapper.changeCase(i);
     }
 
-    public instance getInstancebyId(String instance_id) {
-        return DiseaseMapper.getInstancebyId(instance_id);
+    public cases getCasebyId(String case_id) {
+        return DiseaseMapper.getCasebyId(case_id);
     }
 
-    public instance[] searchInstance(String name) {
-        return DiseaseMapper.searchInstance(name);
-    }
-
-    @Override
-    public void addInstanceImg(instance_img i) {
-        DiseaseMapper.addInstanceImg(i);
+    public cases[] searchCase(String case_name) {
+        return DiseaseMapper.searchCase(case_name);
     }
 
     @Override
-    public void deleteInstanceImg(instance_img i) {
-        DiseaseMapper.deleteInstanceImg(i);
+    public void addCaseImg(case_img i) {
+        DiseaseMapper.addCaseImg(i);
     }
 
     @Override
-    public instance_img getInstanceImgbyId(String instanceImgId) {
-        return DiseaseMapper.getInstanceImgbyId(instanceImgId);
+    public void deleteCaseImg(case_img i) {
+        DiseaseMapper.deleteCaseImg(i);
     }
 
     @Override
-    public instance_img[] getInstanceImgbyInstance(String instanceId) {
-        return DiseaseMapper.getInstanceImgbyInstance(instanceId);
+    public case_img getCaseImgbyId(String case_imgage_id) {
+        return DiseaseMapper.getCaseImgbyId(case_imgage_id);
     }
 
     @Override
-    public void addInstanceVideo(instance_video i) {
-        DiseaseMapper.addInstanceVideo(i);
+    public case_img[] getCaseImgbyCase(String case_id) {
+        return DiseaseMapper.getCaseImgbyCase(case_id);
     }
 
     @Override
-    public void deleteInstanceVideo(instance_video i) {
-        DiseaseMapper.deleteInstanceVideo(i);
+    public void addCaseVideo(case_video i) {
+        DiseaseMapper.addCaseVideo(i);
     }
 
     @Override
-    public instance_video getInstanceVideobyId(String instanceVideoId) {
-        return DiseaseMapper.getInstanceVideobyId(instanceVideoId);
+    public void deleteCaseVideo(case_video i) {
+        DiseaseMapper.deleteCaseVideo(i);
     }
 
     @Override
-    public instance_video[] getInstanceVideobyInstance(String instanceId) {
-        return DiseaseMapper.getInstanceVideobyInstance(instanceId);
+    public case_video getCaseVideobyId(String caseVideoId) {
+        return DiseaseMapper.getCaseVideobyId(caseVideoId);
     }
 
     @Override
-    public void addIntanceOperationVideo(operation_video o) {
-        DiseaseMapper.addIntanceOperationVideo(o);
+    public case_video[] getCaseVideobyCase(String case_id) {
+        return DiseaseMapper.getCaseVideobyCase(case_id);
     }
 
     @Override
-    public operation_video getOperationVideobyId(String instanceOperationId) {
-        return DiseaseMapper.getOperationVideobyId(instanceOperationId);
+    public void addOperationVideo(operation_video o) {
+        DiseaseMapper.addOperationVideo(o);
     }
 
     @Override
-    public void deleteInstanceOperationVideo(operation_video o) {
-        DiseaseMapper.deleteInstanceOperationVideo(o);
+    public operation_video getOperationVideobyId(String case_operation_id) {
+        return DiseaseMapper.getOperationVideobyId(case_operation_id);
+    }
+
+    @Override
+    public void deleteCaseOperationVideo(operation_video o) {
+        DiseaseMapper.deleteCaseOperationVideo(o);
 
     }
 
     @Override
-    public operation_video[] getOperationVideobyInstance(String instanceId) {
-        return DiseaseMapper.getOperationVideobyInstance(instanceId);
+    public operation_video[] getOperationVideobyCase(String case_id) {
+        return DiseaseMapper.getOperationVideobyCase(case_id);
     }
 
     @Override
@@ -155,8 +155,8 @@ public class DiseaseService_impl implements DiseaseService {
     }
 
     @Override
-    public result_img getResultImgbyId(String instanceResultimgId) {
-        return DiseaseMapper.getResultImgbyId(instanceResultimgId);
+    public result_img getResultImgbyId(String case_result_img_id) {
+        return DiseaseMapper.getResultImgbyId(case_result_img_id);
     }
 
     @Override
@@ -166,7 +166,7 @@ public class DiseaseService_impl implements DiseaseService {
     }
 
     @Override
-    public result_img[] getInstanceResultImgbyInstance(String instanceId) {
-        return DiseaseMapper.getInstanceResultImgbyInstance(instanceId);
+    public result_img[] getCaseResultImgbyCase(String case_id) {
+        return DiseaseMapper.getCaseResultImgbyCase(case_id);
     }
 }

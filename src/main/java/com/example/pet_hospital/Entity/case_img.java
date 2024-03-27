@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class instance_img {
-    String instance_img_id;
-    String instance_id;
-    String instance_img_url;
-    String instance_img_name;
+public class case_img {
+    String case_img_id;
+    String case_id;
+    String case_img_url;
+    String case_img_name;
 
 }
