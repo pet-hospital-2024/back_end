@@ -3,6 +3,8 @@ package com.example.pet_hospital.Mapper;
 import com.example.pet_hospital.Entity.*;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 
 @Mapper
 public interface DiseaseMapper {
@@ -114,4 +116,23 @@ public interface DiseaseMapper {
 
     @Select("select * from syf.result_img where case_id=#{case_id}")
     result_img[] getCaseResultImgbyCase(String case_id);
+
+    @Select("SELECT department.department_id, department.department_name, d.disease_id, d.disease_name " +
+            "FROM syf.department " +
+            "LEFT JOIN syf.disease d ON department.department_id = d.department_id " +
+            "ORDER BY department.department_id, d.disease_id")
+    @Results(value = {
+            @Result(property = "department_id", column = "department_id"),
+            @Result(property = "department_name", column = "department_name"),
+            @Result(property = "diseases", column = "department_id", javaType = List.class,
+                    many = @Many(select = "selectDiseasesForDepartment"))
+    })
+    List<department> findAllDepartments();
+
+    @Select("SELECT disease_id, disease_name FROM syf.disease WHERE department_id = #{department_id}")
+    @Results(value = {
+            @Result(property = "disease_id", column = "disease_id"),
+            @Result(property = "disease_name", column = "disease_name"),
+    })
+    List<disease> selectDiseasesForDepartment(String departmentId);
 }

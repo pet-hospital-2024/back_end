@@ -6,6 +6,8 @@ import com.example.pet_hospital.Service.DiseaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DiseaseService_impl implements DiseaseService {
     @Autowired
@@ -168,5 +170,10 @@ public class DiseaseService_impl implements DiseaseService {
     @Override
     public result_img[] getCaseResultImgbyCase(String case_id) {
         return DiseaseMapper.getCaseResultImgbyCase(case_id);
+    }
+
+    @Override
+    public List<department> findAllDepartments() {
+        return DiseaseMapper.findAllDepartments();
     }
 }

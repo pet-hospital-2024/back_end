@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -269,6 +271,26 @@ public class diseaseController {
     @PostMapping("/disease/searchCase")
     public result searchCasebyName(@RequestBody cases i){
         return result.success(diseaseService.searchCase(i.getCase_name()));
+    }
+
+    //返回科室疾病目录
+//    @GetMapping("/disease/getCatalog")
+//    public Map<String, Object> getCatalog() {
+//        Map<String, Object> response = new HashMap<>();
+//        List<department> departments = diseaseService.findAllDepartments();
+//
+//        response.put("code", 1);
+//        response.put("message", "success");
+//        response.put("data", departments);
+//
+//        return response;
+//    }
+
+    @GetMapping("/disease/getCatalog")
+    public result getCatalog() {
+        List<department> departments = diseaseService.findAllDepartments();
+
+        return result.success(departments);
     }
 
     //增加病例症状图片

@@ -3,25 +3,46 @@ package com.example.pet_hospital.Service;
 
 import com.example.pet_hospital.Entity.*;
 
+import java.util.List;
+
 public interface DiseaseService {
+
     void addDepartment(department k);
+
     void deleteDepartment(department k);
+
     void changeDepartment(department k);
+
     department getDepartmentbyName(department k);//在科室表中根据科室名字查找科室
+
     department getDepartmentbyId(String id);//在科室表中根据科室id查找科室
+
     department[] getAllDepartment();
+
     void addDisease(disease d);
+
     void deleteDisease(disease d);
+
     void changeDiseaseName(disease d);
+
     disease getDiseasebyName(disease d);
+
     disease getDiseasebyId(String disease_id);
+
     disease[] getDiseasebyDepartment(String department_id);//在疾病表中查找某一科室的所有疾病
+
     cases[] getCasebyDis(String disease_id);//在病例表中查找某一疾病的所有病例
+
     void addCase(cases i);
+
     void deleteCase(cases i);
+
     void changeCase(cases i);
+
     cases getCasebyName(String case_name);
+
     cases getCasebyId(String case_id);
+
     cases[] searchCase(String name);
 
     void addCaseImg(case_img i);
@@ -55,4 +76,6 @@ public interface DiseaseService {
     void deleteResultImg(result_img r);
 
     result_img[] getCaseResultImgbyCase(String caseId);
+
+    List<department> findAllDepartments();
 }
