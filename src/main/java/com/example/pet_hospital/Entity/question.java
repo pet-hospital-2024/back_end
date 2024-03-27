@@ -16,10 +16,6 @@ public class question {
     String C;
     String D;
     String judgement;
-    String dis_id;//疾病id
-    String kind_id;//所属科室id
-<<<<<<< Updated upstream
+    String disease_id;//疾病id
+    String department_id;//所属科室id
 }
-=======
-}
->>>>>>> Stashed changes
