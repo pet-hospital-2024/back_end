@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -59,7 +60,7 @@ public class PaperController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限。");
         }
-        if(paperService.getPaperByID(p)!=null){
+        if(paperService.getPaperByName(p)!=null){
             return result.error("该试卷已存在！");
         }
         paperService.createNewPaper(p);

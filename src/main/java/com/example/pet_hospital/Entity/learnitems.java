@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class learnitems {
      String item_id;
-        String url;
-        String lacation;
+     String url;
+     String lacation;
 }

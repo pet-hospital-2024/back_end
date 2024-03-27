@@ -136,6 +136,10 @@ public class UserController {
 
     @PostMapping("/user/changeinfo")
     public result alterUserInfo(@RequestBody user u, @RequestHeader String Authorization){
+        if (userService.getUserByID(u)==null){
+            return result.error("用户不存在！");
+        }
+
         userService.alterUserInfo(u);
         user us=userService.getUserByName(u);
 
@@ -148,9 +152,8 @@ public class UserController {
 
     @PostMapping("/user/getinfo")
     public result getUser(@RequestBody user u){
-        user us=userService.getUserByName(u);
-        if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+us.getUsername())!=null){
-            return result.success(JSONUtil.toBean(stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+us.getUsername()),user.class));
+        if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+u.getUsername())!=null){
+            return result.success(JSONUtil.toBean(stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+u.getUsername()),user.class));
         }
         if (userService.getUserByName(u)!=null){
             return result.success(userService.getUserByName(u));

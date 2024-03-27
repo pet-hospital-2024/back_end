@@ -1,15 +1,12 @@
 package com.example.pet_hospital.Util;
 
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
+@Slf4j
 @WebFilter(urlPatterns = "/*")
 public class Filters implements Filter {
 
@@ -21,9 +18,10 @@ public class Filters implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+
         // Filter logic here
         // For example, logging request info:
-        System.out.println("Request received for: " + request.getRemoteAddr());
+        System.out.println("Request received for: " + request.getRemoteAddr()+ "  "+ request.getLocalName());
 
         // To continue the filter chain, call chain.doFilter
         chain.doFilter(request, response);

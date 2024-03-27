@@ -10,8 +10,9 @@ import java.util.Map;
 public class JWTUtils {
 
     private static String signKey = "stargazing0115";
-    private static Long expire = 4320000L; //12 hours
+    private static Long expire = 43200000L; //12 hours
 
+    private static Long expire_short = 1L; //1 m_second
     /**
      * 生成JWT令牌
      * @param claims  JWT第二部分负载
