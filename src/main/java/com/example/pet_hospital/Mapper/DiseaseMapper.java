@@ -38,7 +38,7 @@ public interface DiseaseMapper {
     @Delete("delete from syf.disease where disease_id=#{disease_id}")
     void deleteDisease(disease d);
 
-    @Update("update syf.disease set name=#{disease_name} where dis_id=#{disease_id}")
+    @Update("update syf.disease set disease_name=#{disease_name} where disease_id=#{disease_id}")
     void changeDiseaseName(disease d);
 
     @Select("select * from syf.disease where disease_id=#{disease_id}")
