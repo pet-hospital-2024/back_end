@@ -29,7 +29,7 @@ public interface DiseaseService {
 
     disease getDiseasebyId(String disease_id);
 
-    disease[] getDiseasebyDepartment(String department_id);//在疾病表中查找某一科室的所有疾病
+    diseases[] getDiseasebyDepartment(String department_id);//在疾病表中查找某一科室的所有疾病
 
     cases[] getCasebyDis(String disease_id);//在病例表中查找某一疾病的所有病例
 

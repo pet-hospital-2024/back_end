@@ -57,7 +57,7 @@ public class DiseaseService_impl implements DiseaseService {
         return DiseaseMapper.getDiseasebyId(disease_id);
     }
 
-    public disease[] getDiseasebyDepartment(String department_id) {
+    public diseases[] getDiseasebyDepartment(String department_id) {
         return DiseaseMapper.getDiseasebyDepartment(department_id);
     }
 

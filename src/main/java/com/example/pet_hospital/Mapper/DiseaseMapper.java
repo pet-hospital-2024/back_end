@@ -29,7 +29,7 @@ public interface DiseaseMapper {
     @Update("update syf.department set department_name=#{department_name} where department_id=#{department_id}")
     void changeDepartment(department k);
 
-    @Insert("insert into syf.disease values(uuid_short(),#{department_id},#{department_name})")
+    @Insert("insert into syf.disease values(uuid_short(),#{department_id},#{disease_name})")
     void addDisease(disease d);
 
     @Select("select * from syf.disease where disease_name=#{disease_name} and department_id=#{department_id}")
@@ -38,14 +38,14 @@ public interface DiseaseMapper {
     @Delete("delete from syf.disease where disease_id=#{disease_id}")
     void deleteDisease(disease d);
 
-    @Update("update syf.disease set name=#{disease_name} where dis_id=#{disease_id}")
+    @Update("update syf.disease set disease_name=#{disease_name} where disease_id=#{disease_id}")
     void changeDiseaseName(disease d);
 
     @Select("select * from syf.disease where disease_id=#{disease_id}")
     disease getDiseasebyId(String disease_id);
 
-    @Select("select * from syf.disease where department_id=#{department_id}")
-    disease[] getDiseasebyDepartment(String Department_id);
+    @Select("select disease_id, disease_name from syf.disease where department_id=#{department_id}")
+    diseases[] getDiseasebyDepartment(String Department_id);
 
     @Select("select case_id, case_name, case_introduction from syf.cases where disease_id=#{disease_id}")
     cases[] getCasebyDis(String disease_id);
@@ -134,5 +134,5 @@ public interface DiseaseMapper {
             @Result(property = "disease_id", column = "disease_id"),
             @Result(property = "disease_name", column = "disease_name"),
     })
-    List<disease> selectDiseasesForDepartment(String departmentId);
+    List<diseases> selectDiseasesForDepartment(String departmentId);
 }

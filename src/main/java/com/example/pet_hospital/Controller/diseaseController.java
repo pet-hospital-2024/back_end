@@ -10,7 +10,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -147,7 +146,7 @@ public class diseaseController {
     }
 
     //修改疾病
-    @PostMapping("/disease/changeDisease")
+    @PostMapping("/disease/changeDiseaseName")
     public result changeDis(@RequestBody disease d, @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
@@ -168,11 +167,11 @@ public class diseaseController {
 
     //查找某个科室下的所有疾病
     @PostMapping("/disease/getDiseasebyDepartment")
-    public result getDiseasebyDepartment(@RequestBody disease d) {
-        if(diseaseService.getDepartmentbyId(d.getDisease_id())==null){
+    public result getDiseasebyDepartment(@RequestBody department d) {
+        if(diseaseService.getDepartmentbyId(d.getDepartment_id())==null){
             return result.error("该科室不存在！");
         }
-        return result.success(diseaseService.getDiseasebyDepartment(d.getDisease_id()));
+        return result.success(diseaseService.getDiseasebyDepartment(d.getDepartment_id()));
     }
 
     //查找某个疾病下的所有病例
