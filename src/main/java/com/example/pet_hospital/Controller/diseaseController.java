@@ -175,12 +175,12 @@ public class diseaseController {
     }
 
     //查找某个疾病下的所有病例
-    @PostMapping("/disease/getCasebyDisease")
-    public result searchCasebyDis(@RequestBody disease d) {
-        if(diseaseService.getDiseasebyId(d.getDisease_id())==null){
+    @GetMapping("/disease/getCasebyDisease")
+    public result searchCasebyDis(@RequestParam(name = "disease_id") String disease_id) {
+        if(diseaseService.getDiseasebyId(disease_id)==null){
             return result.error("该疾病不存在！");
         }
-        return result.success(diseaseService.getCasebyDis(d.getDisease_id()));
+        return result.success(diseaseService.getCasebyDis(disease_id));
     }
 
     //添加病例
@@ -203,6 +203,9 @@ public class diseaseController {
         if(diseaseService.getDiseasebyId(i.getDisease_id())==null){
             return result.error("该疾病不存在！");
         }
+        if(diseaseService.getDepartmentbyId(i.getDepartment_id())==null){
+            return result.error("该科室不存在！");
+        }
         diseaseService.addCase(i);
         return result.success(newToken(Authorization));
     }
@@ -217,7 +220,7 @@ public class diseaseController {
                 get(CASE_KEY +i.getCase_id())!=null){
             stringRedisTemplate.delete(CASE_KEY +i.getCase_id());
         }
-        if(diseaseService.getCasebyName(i.getCase_name())==null){
+        if(diseaseService.getCasebyId(i.getCase_id())==null){
             return result.error("该病例不存在！");
         }
         diseaseService.deleteCase(i);
@@ -225,7 +228,7 @@ public class diseaseController {
     }
 
     //修改病例文字信息
-    @PostMapping("/disease/changeCaseText")
+    @PostMapping("/disease/changeCaseTextbyId")
     public result changeCase(@RequestBody cases i, @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
@@ -240,28 +243,34 @@ public class diseaseController {
         if(diseaseService.getCasebyId(i.getCase_id())==null){
             return result.error("该病例不存在！");
         }
+        if(diseaseService.getDiseasebyId(i.getDisease_id())==null){
+            return result.error("不能修改到不存在的疾病之下！");
+        }
+        if(diseaseService.getDepartmentbyId(i.getDepartment_id())==null){
+            return result.error("不能修改到不存在的科室之下！");
+        }
         diseaseService.changeCase(i);
         return result.success(newToken(Authorization));
     }
 
     //获取病例文字信息
-    @PostMapping("/disease/getCaseTextbyId")
-    public result getCasebyId(@RequestBody cases i){
+    @GetMapping("/disease/getCaseTextbyId")
+    public result getCasebyId(@RequestParam(name = "case_id") String case_id){
         if (stringRedisTemplate.opsForValue().
-                get(CASE_KEY +i.getCase_id())!=null){//缓存命中
+                get(CASE_KEY +case_id)!=null){//缓存命中
             return result.success(JSONUtil.toBean(stringRedisTemplate.
-                    opsForValue().get(CASE_KEY +i.getCase_id()), cases.class));
+                    opsForValue().get(CASE_KEY +case_id), cases.class));
         }
         else {
-            if(diseaseService.getCasebyId(i.getCase_id())==null){
+            if(diseaseService.getCasebyId(case_id)==null){
                 return result.error("该病例不存在！");
             }else{
                 stringRedisTemplate.opsForValue().
-                        set(CASE_KEY +i.getCase_id(),
-                                JSONUtil.toJsonStr(diseaseService.getCasebyId(i.getCase_id())),30, TimeUnit.MINUTES);
+                        set(CASE_KEY +case_id,
+                                JSONUtil.toJsonStr(diseaseService.getCasebyId(case_id)),30, TimeUnit.MINUTES);
                 return result.success(JSONUtil.
                         toBean(stringRedisTemplate.opsForValue().
-                                get(CASE_KEY +i.getCase_id()), cases.class));
+                                get(CASE_KEY +case_id), cases.class));
             }
         }
     }
@@ -272,24 +281,16 @@ public class diseaseController {
         return result.success(diseaseService.searchCase(i.getCase_name()));
     }
 
-    //返回科室疾病目录
-//    @GetMapping("/disease/getCatalog")
-//    public Map<String, Object> getCatalog() {
-//        Map<String, Object> response = new HashMap<>();
-//        List<department> departments = diseaseService.findAllDepartments();
-//
-//        response.put("code", 1);
-//        response.put("message", "success");
-//        response.put("data", departments);
-//
-//        return response;
-//    }
-
     @GetMapping("/disease/getCatalog")
     public result getCatalog() {
         List<department> departments = diseaseService.findAllDepartments();
 
         return result.success(departments);
+    }
+
+    @GetMapping("/disease/getCaseList")
+    public result CaseList(){
+        return result.success(diseaseService.CaseList());
     }
 
     //增加病例症状图片
@@ -329,8 +330,8 @@ public class diseaseController {
 
     //根据病例获取病例症状所有图片
     @GetMapping("/disease/getCaseImgbyCase")
-    public result getCaseImgbyCase(@RequestBody cases i){
-        return result.success(diseaseService.getCaseImgbyCase(i.getCase_id()));
+    public result getCaseImgbyCase(@RequestParam(name = "case_id") String case_id){
+        return result.success(diseaseService.getCaseImgbyCase(case_id));
     }
 
     //增加病例介绍视频
@@ -367,8 +368,8 @@ public class diseaseController {
 
     //根据病例获取病例症状所有视频
     @GetMapping("/disease/getCaseVideobyCase")
-    public result getCaseVideobyCase(@RequestBody cases i){
-        return result.success(diseaseService.getCaseVideobyCase(i.getCase_id()));
+    public result getCaseVideobyCase(@RequestParam(name = "case_id") String case_id){
+        return result.success(diseaseService.getCaseVideobyCase(case_id));
     }
 
     //增加手术视频
@@ -406,8 +407,8 @@ public class diseaseController {
 
     //根据病例获取手术视频
     @GetMapping("/disease/getOperationVideobyCase")
-    public result getOperationVideobyCase(@RequestBody operation_video o){
-        return result.success(diseaseService.getOperationVideobyCase(o.getCase_id()));
+    public result getOperationVideobyCase(@RequestParam(name = "case_id") String case_id){
+        return result.success(diseaseService.getOperationVideobyCase(case_id));
     }
 
     //增加病例诊断结果图片
@@ -444,8 +445,8 @@ public class diseaseController {
 
     //根据病例获取诊断结果图片
     @GetMapping("/disease/getResultImgbyCase")
-    public result getResultImgbyCase(@RequestBody result_img r){
-        return result.success(diseaseService.getCaseResultImgbyCase(r.getCase_id()));
+    public result getResultImgbyCase(@RequestParam(name = "case_id") String case_id){
+        return result.success(diseaseService.getCaseResultImgbyCase(case_id));
     }
 
 }

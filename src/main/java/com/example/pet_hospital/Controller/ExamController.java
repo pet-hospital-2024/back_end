@@ -1,5 +1,6 @@
 package com.example.pet_hospital.Controller;
 
+import cn.hutool.json.JSONUtil;
 import com.example.pet_hospital.Entity.Exam;
 import com.example.pet_hospital.Entity.paper;
 import com.example.pet_hospital.Entity.result;
@@ -8,12 +9,11 @@ import com.example.pet_hospital.Service.PaperService;
 import com.example.pet_hospital.Util.JWTUtils;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 public class ExamController {
@@ -48,6 +48,11 @@ public class ExamController {
     @Autowired
     private PaperService paperService;
 
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
+
+    String EXAM_KEY="exam:";
+
     @PostMapping("/exam/addexam")
     public result AddNewExam(@RequestBody Exam e , @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
@@ -59,7 +64,12 @@ public class ExamController {
             return result.error("该试卷不存在！");
         }
         examService.createExam(e);
-        return result.success(newToken(Authorization));
+        if (JWTUtils.refreshTokenNeeded(Authorization)){
+            return result.success(newToken(Authorization));
+        }
+        else {
+            return result.success(Authorization);
+        }
     }
 
     @PostMapping("/exam/deleteexam")
@@ -71,7 +81,13 @@ public class ExamController {
             return result.error("该考试不存在！");
         }
         examService.deleteExam(e);
-        return result.success(newToken(Authorization));
+        stringRedisTemplate.delete(EXAM_KEY+e.getExam_id());
+        if (JWTUtils.refreshTokenNeeded(Authorization)){
+            return result.success(newToken(Authorization));
+        }
+        else {
+            return result.success(Authorization);
+        }
     }
 
 
@@ -89,17 +105,38 @@ public class ExamController {
             return result.error("该试卷不存在！");
         }
         examService.updateExam(e);
-        return result.success(newToken(Authorization));
+        stringRedisTemplate.opsForValue().set(EXAM_KEY+e.getExam_id(),
+                e.getExam_id(),30,TimeUnit.MINUTES);
+
+        if (JWTUtils.refreshTokenNeeded(Authorization)){
+            return result.success(newToken(Authorization));
+        }
+        else {
+            return result.success(Authorization);
+        }
     }
 
 
     @PostMapping("/exam/getexam")
     public result GetExam(@RequestBody Exam e){
+        if (stringRedisTemplate.opsForValue().get(EXAM_KEY+e.getExam_id())!=null){//缓存命中
+            stringRedisTemplate.expire(EXAM_KEY+e.getExam_id(),30, TimeUnit.MINUTES);
+            return result.success(JSONUtil.toBean(stringRedisTemplate.opsForValue().
+                    get(EXAM_KEY+e.getExam_id()),Exam.class));
+        }
+
         if (examService.getExamById(e)==null){
             return result.error("未找到该考试！");
         }
+        stringRedisTemplate.opsForValue().set(EXAM_KEY+e.getExam_id(),
+                JSONUtil.toJsonStr(examService.getExamById(e)), 30, TimeUnit.MINUTES);
 
         return result.success(examService.getExamById(e));
+    }
+
+    @GetMapping("/exam/getExamList")
+    public result GetExamList(){
+        return result.success(examService.getExamList());
     }
 
 }

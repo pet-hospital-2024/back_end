@@ -31,7 +31,7 @@ public interface DiseaseService {
 
     diseases[] getDiseasebyDepartment(String department_id);//在疾病表中查找某一科室的所有疾病
 
-    cases[] getCasebyDis(String disease_id);//在病例表中查找某一疾病的所有病例
+    case_base[] getCasebyDis(String disease_id);//在病例表中查找某一疾病的所有病例
 
     void addCase(cases i);
 
@@ -44,6 +44,8 @@ public interface DiseaseService {
     cases getCasebyId(String case_id);
 
     cases[] searchCase(String name);
+
+    case_base[] CaseList();
 
     void addCaseImg(case_img i);
 

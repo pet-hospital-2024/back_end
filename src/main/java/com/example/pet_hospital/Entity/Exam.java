@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 public class Exam {
     String exam_id;
     String paper_id;
-    String start;
-    String end;
-    String name;
+    String exam_start;
+    String exam_end;
+    String exam_name;
 
 }
