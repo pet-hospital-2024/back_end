@@ -89,6 +89,10 @@ public class DiseaseService_impl implements DiseaseService {
         return DiseaseMapper.searchCase(case_name);
     }
 
+    public cases[] CaseList() {
+        return DiseaseMapper.CaseList();
+    }
+
     @Override
     public void addCaseImg(case_img i) {
         DiseaseMapper.addCaseImg(i);

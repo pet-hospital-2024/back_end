@@ -175,7 +175,7 @@ public class diseaseController {
     }
 
     //查找某个疾病下的所有病例
-    @PostMapping("/disease/getCasebyDisease")
+    @GetMapping("/disease/getCasebyDisease")
     public result searchCasebyDis(@RequestBody disease d) {
         if(diseaseService.getDiseasebyId(d.getDisease_id())==null){
             return result.error("该疾病不存在！");
@@ -203,6 +203,9 @@ public class diseaseController {
         if(diseaseService.getDiseasebyId(i.getDisease_id())==null){
             return result.error("该疾病不存在！");
         }
+        if(diseaseService.getDepartmentbyId(i.getDepartment_id())==null){
+            return result.error("该科室不存在！");
+        }
         diseaseService.addCase(i);
         return result.success(newToken(Authorization));
     }
@@ -217,7 +220,7 @@ public class diseaseController {
                 get(CASE_KEY +i.getCase_id())!=null){
             stringRedisTemplate.delete(CASE_KEY +i.getCase_id());
         }
-        if(diseaseService.getCasebyName(i.getCase_name())==null){
+        if(diseaseService.getCasebyId(i.getCase_id())==null){
             return result.error("该病例不存在！");
         }
         diseaseService.deleteCase(i);
@@ -225,7 +228,7 @@ public class diseaseController {
     }
 
     //修改病例文字信息
-    @PostMapping("/disease/changeCaseText")
+    @PostMapping("/disease/changeCaseTextbyId")
     public result changeCase(@RequestBody cases i, @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
@@ -239,6 +242,12 @@ public class diseaseController {
         }
         if(diseaseService.getCasebyId(i.getCase_id())==null){
             return result.error("该病例不存在！");
+        }
+        if(diseaseService.getDiseasebyId(i.getDisease_id())==null){
+            return result.error("不能修改到不存在的疾病之下！");
+        }
+        if(diseaseService.getDepartmentbyId(i.getDepartment_id())==null){
+            return result.error("不能修改到不存在的科室之下！");
         }
         diseaseService.changeCase(i);
         return result.success(newToken(Authorization));
@@ -290,6 +299,11 @@ public class diseaseController {
         List<department> departments = diseaseService.findAllDepartments();
 
         return result.success(departments);
+    }
+
+    @GetMapping("/disease/getCaseList")
+    public result CaseList(){
+        return result.success(diseaseService.CaseList());
     }
 
     //增加病例症状图片

@@ -45,6 +45,8 @@ public interface DiseaseService {
 
     cases[] searchCase(String name);
 
+    cases[] CaseList();
+
     void addCaseImg(case_img i);
 
     void deleteCaseImg(case_img i);

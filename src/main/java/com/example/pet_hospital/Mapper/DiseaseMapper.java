@@ -69,6 +69,10 @@ public interface DiseaseMapper {
     @Select("select * from syf.cases where case_name like CONCAT('%', #{case_name}, '%')")
     cases[] searchCase(String case_name);
 
+    //查询所有病例
+    @Select("select * from syf.cases")
+    cases[] CaseList();
+
     @Insert("insert into syf.case_img values(uuid_short(),#{case_id},#{case_img_url},#{case_img_name})")
     void addCaseImg(case_img i);
 
