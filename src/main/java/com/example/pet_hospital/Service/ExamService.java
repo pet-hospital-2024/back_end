@@ -2,6 +2,8 @@ package com.example.pet_hospital.Service;
 
 import com.example.pet_hospital.Entity.Exam;
 
+import java.util.ArrayList;
+
 public interface ExamService {
 
     void createExam(Exam exam);
@@ -11,6 +13,7 @@ public interface ExamService {
 
     void deleteExam(Exam exam);
 
-
     Exam getExamById(Exam exam);
+
+    ArrayList<Exam> getExamList();
 }

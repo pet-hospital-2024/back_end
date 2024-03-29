@@ -19,14 +19,15 @@ public class LoginInterceptor implements HandlerInterceptor {
         String url= request.getRequestURL().toString();
         log.info("请求的url: {}",url);
 
-        if (url.contains("login") || url.contains("register") ||url.contains("get") || url.contains("search")){
+        if (url.contains("login") || url.contains("register") ||
+                request.getMethod().equals("GET")){
             log.info("无需鉴权操作，放行。");
             return true;
         }
 
         String jwt= request.getHeader("Authorization");
 
-        if (jwt.length()==0||jwt==null){
+        if (jwt.length()==0||jwt.equals(null)){
             log.info("请求头为空，返回未登录界面。");
             result error =result.error("Didn't login. Please login first.");
             String notLogin= JSONUtil.toJsonStr(error);
@@ -50,7 +51,6 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        String jwt=request.getHeader("Authorization");
 
     }
 

@@ -10,16 +10,13 @@ import com.example.pet_hospital.Util.JWTUtils;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-@RestController
+@RestController//
 public class PaperController {
 
     @Autowired
@@ -64,7 +61,13 @@ public class PaperController {
             return result.error("该试卷已存在！");
         }
         paperService.createNewPaper(p);
-        return result.success(newToken(Authorization));
+        if (JWTUtils.refreshTokenNeeded(Authorization)){
+            return result.success(newToken(Authorization));
+        }
+        else {
+            return result.success(Authorization);
+        }
+
     }
 
     @PostMapping("/paper/addquestion")
@@ -83,7 +86,12 @@ public class PaperController {
             return result.error("该试卷不存在！");
         }
         paperService.insertNewQuestion(p);
-        return result.success(newToken(Authorization));
+        if (JWTUtils.refreshTokenNeeded(Authorization)){
+            return result.success(newToken(Authorization));
+        }
+        else {
+            return result.success(Authorization);
+        }
     }
 
 
@@ -123,7 +131,12 @@ public class PaperController {
             return result.error("该试卷不存在！");
         }
         paperService.deletePaper(p);
-        return result.success(newToken(Authorization));
+        if (JWTUtils.refreshTokenNeeded(Authorization)){
+            return result.success(newToken(Authorization));
+        }
+        else {
+            return result.success(Authorization);
+        }
     }
 
     @PostMapping("/paper/deletequestion")
@@ -140,17 +153,37 @@ public class PaperController {
             return result.error("该试卷不存在！");
         }
         paperService.deleteQuestionFromPaper(p);
-        return result.success(newToken(Authorization));
+        if (JWTUtils.refreshTokenNeeded(Authorization)){
+            return result.success(newToken(Authorization));
+        }
+        else {
+            return result.success(Authorization);
+        }
     }
 
-    @PostMapping("/paper/getquestionbypaper")//写了，但不知道用途在哪里。。。。。
-    public result getQuestionsFromPaper(@RequestBody paper p){
+    @GetMapping("/paper/getpaperbyid")
+    public result getQuestionsFromPaper(@RequestParam(name = "paper_id") String paper_id){
+        paper p=new paper();
+        p.setPaper_id(paper_id);
         //no identity secure needed.
         if (paperService.getPaperByID(p)==null){
             return result.error("该试卷不存在！");
         }
+        ArrayList<String> questions_id =paperService.getQuestionsFromPaper(p);
+        ArrayList<question> questions=new ArrayList<>();
 
-        return result.success(paperService.getQuestionsFromPaper(p));
+        for (String qid:questions_id){
+            question q=new question();
+            q.setQuestion_id(qid);
+            questions.add(practiceService.getQuestionByID(q));
+        }
+        return result.success(questions);
     }
+
+    @GetMapping("/paper/getPaperList")
+    public result GetPaperList(){
+        return result.success(paperService.getPaperList());
+    }
+
 
 }

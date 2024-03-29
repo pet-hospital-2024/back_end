@@ -6,6 +6,8 @@ import com.example.pet_hospital.Service.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class ExamService_impl implements ExamService {
 
@@ -29,6 +31,11 @@ public class ExamService_impl implements ExamService {
     @Override
     public Exam getExamById(Exam exam) {
         return examMapper.getExamById(exam);
+    }
+
+    @Override
+    public ArrayList<Exam> getExamList() {
+        return examMapper.getExamList();
     }
 
 
