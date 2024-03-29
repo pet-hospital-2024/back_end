@@ -3,6 +3,8 @@ import cn.hutool.json.JSONUtil;
 import com.example.pet_hospital.Entity.*;
 import com.example.pet_hospital.Service.DiseaseService;
 import com.example.pet_hospital.Util.JWTUtils;
+import com.example.pet_hospital.model.PageResult;
+import com.github.pagehelper.PageInfo;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -288,10 +290,19 @@ public class diseaseController {
         return result.success(departments);
     }
 
+//    @GetMapping("/disease/getCaseList")
+//    public result CaseList(){
+//        return result.success(diseaseService.CaseList());
+//    }
+
+    //分页查询
     @GetMapping("/disease/getCaseList")
-    public result CaseList(){
-        return result.success(diseaseService.CaseList());
+    public result getCaseList(@RequestParam(name = "page") int page,
+                              @RequestParam(name = "pageSize") int size){
+        PageInfo<case_base> pageResult = diseaseService.findPaginated(page, size);
+        return result.success(pageResult);
     }
+
 
     //增加病例症状图片
     @PostMapping("/disease/addCaseImg")

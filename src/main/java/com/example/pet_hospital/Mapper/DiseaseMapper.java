@@ -1,6 +1,7 @@
 package com.example.pet_hospital.Mapper;
 
 import com.example.pet_hospital.Entity.*;
+import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -70,8 +71,8 @@ public interface DiseaseMapper {
     cases[] searchCase(String case_name);
 
     //查询所有病例
-    @Select("select case_id, case_name, case_introduction from syf.cases")
-    case_base[] CaseList();
+    @Select("select case_id, case_name, case_introduction from syf.cases ")
+    List<case_base> CaseList();
 
     @Insert("insert into syf.case_img values(uuid_short(),#{case_id},#{case_img_url},#{case_img_name})")
     void addCaseImg(case_img i);

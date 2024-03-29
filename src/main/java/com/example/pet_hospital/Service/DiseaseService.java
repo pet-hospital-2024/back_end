@@ -2,6 +2,8 @@ package com.example.pet_hospital.Service;
 
 
 import com.example.pet_hospital.Entity.*;
+import com.example.pet_hospital.model.PageResult;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -45,7 +47,9 @@ public interface DiseaseService {
 
     cases[] searchCase(String name);
 
-    case_base[] CaseList();
+    //case_base[] CaseList();
+    PageInfo<case_base> findPaginated(int page, int size);
+
 
     void addCaseImg(case_img i);
 
