@@ -48,8 +48,11 @@ public interface DiseaseMapper {
     @Select("select disease_id, disease_name from syf.disease where department_id=#{department_id}")
     diseases[] getDiseasebyDepartment(String Department_id);
 
+//    @Select("select case_id, case_name, case_introduction from syf.cases where disease_id=#{disease_id}")
+//    List<case_base> getCasebyDis(String disease_id);
+
     @Select("select case_id, case_name, case_introduction from syf.cases where disease_id=#{disease_id}")
-    List<case_base> getCasebyDis(String disease_id);
+    case_base[] getCasebyDis(String disease_id);
 
     @Insert("insert into syf.cases values(uuid_short(),#{case_name},#{case_examination},#{case_result},#{case_treatment},#{case_medicine},#{case_cost},#{case_introduction},#{disease_id},#{department_id})")
     void addCase(cases i);

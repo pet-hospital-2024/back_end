@@ -79,7 +79,7 @@ public class DiseaseService_impl implements DiseaseService {
 
     @Override
     public case_base[] getCasebyDis(String disease_id) {
-        return null;
+        return DiseaseMapper.getCasebyDis(disease_id);
     }
 
     @Override
@@ -124,13 +124,13 @@ public class DiseaseService_impl implements DiseaseService {
         return pageInfo;
     }
 
-    @Override
-    public PageInfo<case_base> findPaginatedbyDis(String disease_id, int page, int size) {
-        PageHelper.startPage(page, size);
-        List<case_base> list = DiseaseMapper.getCasebyDis(disease_id);
-        PageInfo<case_base> pageInfo = new PageInfo<>(list, 5);
-        return pageInfo;
-    }
+//    @Override
+//    public PageInfo<case_base> findPaginatedbyDis(String disease_id, int page, int size) {
+//        PageHelper.startPage(page, size);
+//        List<case_base> list = DiseaseMapper.getCasebyDis(disease_id);
+//        PageInfo<case_base> pageInfo = new PageInfo<>(list, 5);
+//        return pageInfo;
+//    }
 
 
 //    public case_base[] CaseList() {
