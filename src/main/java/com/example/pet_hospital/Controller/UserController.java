@@ -90,7 +90,7 @@ public class UserController {
             stringRedisTemplate.opsForValue().
                     set(USER_LOGIN_KEY+us.getUsername(), JSONUtil.toJsonStr(us),
                             30, TimeUnit.MINUTES);
-            return result.success(token);
+            return result.success("登录成功",token);
         }
         else {
             return result.error("用户名或密码错误");
