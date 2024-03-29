@@ -8,10 +8,7 @@ import com.example.pet_hospital.Util.JWTUtils;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -161,8 +158,10 @@ public class UserController {
 
     }
 
-    @PostMapping("/user/getinfo")
-    public result getUser(@RequestBody user u){
+    @GetMapping("/user/getinfo")
+    public result getUser(@RequestParam(name = "username") String username){
+        user u=new user();
+        u.setUsername(username);
         if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+u.getUsername())!=null){
             return result.success(JSONUtil.toBean(stringRedisTemplate.opsForValue().
                     get(USER_LOGIN_KEY+u.getUsername()),user.class));
