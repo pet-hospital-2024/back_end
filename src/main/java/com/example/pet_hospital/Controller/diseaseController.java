@@ -177,12 +177,16 @@ public class diseaseController {
     }
 
     //查找某个疾病下的所有病例
+    //分页查找
     @GetMapping("/disease/getCasebyDisease")
-    public result searchCasebyDis(@RequestParam(name = "disease_id") String disease_id) {
+    public result searchCasebyDis(@RequestParam(name = "disease_id") String disease_id,
+                                  @RequestParam(name = "page") int page,
+                                  @RequestParam(name = "pageSize") int size) {
         if(diseaseService.getDiseasebyId(disease_id)==null){
             return result.error("该疾病不存在！");
         }
-        return result.success(diseaseService.getCasebyDis(disease_id));
+        PageInfo<case_base> pageResult = diseaseService.findPaginatedbyDis(disease_id, page, size);
+        return result.success(pageResult);
     }
 
     //添加病例
@@ -295,7 +299,7 @@ public class diseaseController {
 //        return result.success(diseaseService.CaseList());
 //    }
 
-    //分页查询
+    //分页查询病例列表
     @GetMapping("/disease/getCaseList")
     public result getCaseList(@RequestParam(name = "page") int page,
                               @RequestParam(name = "pageSize") int size){
