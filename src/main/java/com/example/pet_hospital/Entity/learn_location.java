@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class learnorder {
-    String order_id;
-    String actor;
-    String order;
-    String item_id;
-
+public class learn_location {
+     String learn_location_id;
+     String learn_location_name;
+     String learn_location_introduction;
 }

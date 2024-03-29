@@ -2,7 +2,6 @@ package com.example.pet_hospital.Service;
 
 
 import com.example.pet_hospital.Entity.*;
-import com.example.pet_hospital.model.PageResult;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -85,4 +84,6 @@ public interface DiseaseService {
     result_img[] getCaseResultImgbyCase(String caseId);
 
     List<department> findAllDepartments();
+
+
 }
