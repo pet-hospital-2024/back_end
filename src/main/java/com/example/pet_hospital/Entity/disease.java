@@ -1,5 +1,7 @@
 package com.example.pet_hospital.Entity;
 
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,19 +10,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class disease {
-    String dis_id;//疾病id
-    String kind_id;//科室id
-    String name;
+    String disease_id;//疾病id
+    String department_id;//科室id
+    String disease_name;
 
-    public String getKind_id() {
-        return kind_id;
+    @ManyToOne
+    @JoinColumn(name = "department_id", nullable = false)
+    department department;
+    public String getDepartment_id() {
+        return department_id;
     }
 
-    public String getDis_id() {
-        return dis_id;
-    }
-
-    public String getName(){
-        return name;
-    }
 }

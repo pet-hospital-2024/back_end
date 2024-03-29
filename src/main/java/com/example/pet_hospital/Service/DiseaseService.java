@@ -3,56 +3,81 @@ package com.example.pet_hospital.Service;
 
 import com.example.pet_hospital.Entity.*;
 
+import java.util.List;
+
 public interface DiseaseService {
-    void addKind(kind k);
-    void deleteKind(kind k);
-    void changeKind(kind k);
-    kind getKindbyName(kind k);//在科室表中根据科室名字查找科室
-    kind getKindbyId(String id);//在科室表中根据科室id查找科室
-    kind[] getAllKind();
-    void addDis(disease d);
-    void deleteDis(disease d);
-    void changeDis(disease d);
-    disease getDisbyName(disease d);
-    disease getDisbyId(String uuid);
-    disease[] searchbyKind(String kind_id);//在疾病表中查找某一科室的所有疾病
-    instance[] getInstancebyDis(String dis_id);//在病例表中查找某一疾病的所有病例
-    void addInstance(instance i);
-    void deleteInstance(instance i);
-    void changeInstance(instance i);
-    instance getInstancebyName(String name);
-    instance getInstancebyId(String instance_id);
-    instance[] searchInstance(String name);
 
-    void  addInstanceImg(instance_img i);
+    void addDepartment(department k);
 
-    void deleteInstanceImg(instance_img i);
+    void deleteDepartment(department k);
 
-    instance_img getInstanceImgbyId(String instanceImgId);//根据图片id查找图片
+    void changeDepartment(department k);
 
-    instance_img[] getInstanceImgbyInstance(String instanceId);
+    department getDepartmentbyName(department k);//在科室表中根据科室名字查找科室
 
-    void addInstanceVideo(instance_video i);
+    department getDepartmentbyId(String id);//在科室表中根据科室id查找科室
 
-    void deleteInstanceVideo(instance_video i);
+    department[] getAllDepartment();
 
-    instance_video getInstanceVideobyId(String instanceVideoId);//根据视频id查找视频
+    void addDisease(disease d);
 
-    instance_video[] getInstanceVideobyInstance(String instanceId);
+    void deleteDisease(disease d);
 
-    void addIntanceOperationVideo(operation_video o);
+    void changeDiseaseName(disease d);
 
-    operation_video getOperationVideobyId(String instanceOperationId);
+    disease getDiseasebyName(disease d);
 
-    void deleteInstanceOperationVideo(operation_video o);
+    disease getDiseasebyId(String disease_id);
 
-    operation_video[] getOperationVideobyInstance(String instanceId);
+    diseases[] getDiseasebyDepartment(String department_id);//在疾病表中查找某一科室的所有疾病
+
+    case_base[] getCasebyDis(String disease_id);//在病例表中查找某一疾病的所有病例
+
+    void addCase(cases i);
+
+    void deleteCase(cases i);
+
+    void changeCase(cases i);
+
+    cases getCasebyName(String case_name);
+
+    cases getCasebyId(String case_id);
+
+    cases[] searchCase(String name);
+
+    case_base[] CaseList();
+
+    void addCaseImg(case_img i);
+
+    void deleteCaseImg(case_img i);
+
+    case_img getCaseImgbyId(String caseImgId);//根据图片id查找图片
+
+    case_img[] getCaseImgbyCase(String case_id);
+
+    void addCaseVideo(case_video i);
+
+    void deleteCaseVideo(case_video i);
+
+    case_video getCaseVideobyId(String caseVideoId);//根据视频id查找视频
+
+    case_video[] getCaseVideobyCase(String case_id);
+
+    void addOperationVideo(operation_video o);
+
+    operation_video getOperationVideobyId(String case_operation_id);
+
+    void deleteCaseOperationVideo(operation_video o);
+
+    operation_video[] getOperationVideobyCase(String caseId);
 
     void addResultImg(result_img r);
 
-    result_img getResultImgbyId(String instanceResultimgId);
+    result_img getResultImgbyId(String caseResultimgId);
 
     void deleteResultImg(result_img r);
 
-    result_img[] getInstanceResultImgbyInstance(String instanceId);
+    result_img[] getCaseResultImgbyCase(String caseId);
+
+    List<department> findAllDepartments();
 }

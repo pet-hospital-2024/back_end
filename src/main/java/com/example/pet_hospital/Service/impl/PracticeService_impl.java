@@ -1,6 +1,5 @@
 package com.example.pet_hospital.Service.impl;
 
-import com.example.pet_hospital.Entity.paper;
 import com.example.pet_hospital.Entity.question;
 import com.example.pet_hospital.Mapper.PracticeMapper;
 import com.example.pet_hospital.Service.PracticeService;

@@ -1,6 +1,5 @@
 package com.example.pet_hospital.Entity;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,10 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class result_img {
-
-    String case_resultimg_id;
+public class case_base {
     String case_id;
-    String case_resultimg_url;
-    String case_resultimg_name;
+    String case_name;
+    String case_introduction;
 }

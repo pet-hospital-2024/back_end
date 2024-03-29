@@ -1,6 +1,5 @@
 package com.example.pet_hospital.Service;
 
-import com.example.pet_hospital.Entity.paper;
 import com.example.pet_hospital.Entity.question;
 
 public interface PracticeService {

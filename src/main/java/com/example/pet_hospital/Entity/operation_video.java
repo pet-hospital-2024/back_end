@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class operation_video {
-   String instance_operation_id;
-    String instance_id;
-    String instance_operation_url;
-   String instance_operation_name;
+    String case_operation_id;
+    String case_id;
+    String case_operation_url;
+    String case_operation_name;
 
 
 }
