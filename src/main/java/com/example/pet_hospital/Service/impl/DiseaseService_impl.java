@@ -61,7 +61,7 @@ public class DiseaseService_impl implements DiseaseService {
         return DiseaseMapper.getDiseasebyDepartment(department_id);
     }
 
-    public cases[] getCasebyDis(String disease_id) {
+    public case_base[] getCasebyDis(String disease_id) {
         return DiseaseMapper.getCasebyDis(disease_id);
     }
 
@@ -89,7 +89,7 @@ public class DiseaseService_impl implements DiseaseService {
         return DiseaseMapper.searchCase(case_name);
     }
 
-    public cases[] CaseList() {
+    public case_base[] CaseList() {
         return DiseaseMapper.CaseList();
     }
 
