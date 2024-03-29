@@ -4,15 +4,11 @@ import cn.hutool.json.JSONUtil;
 import com.example.pet_hospital.Entity.result;
 import com.example.pet_hospital.Entity.user;
 import com.example.pet_hospital.Service.UserService;
-import com.example.pet_hospital.Service.impl.MailService;
 import com.example.pet_hospital.Util.JWTUtils;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,9 +19,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private MailService mailService;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -90,7 +83,7 @@ public class UserController {
             stringRedisTemplate.opsForValue().
                     set(USER_LOGIN_KEY+us.getUsername(), JSONUtil.toJsonStr(us),
                             30, TimeUnit.MINUTES);
-            return result.success(token);
+            return result.success("登录成功",token);
         }
         else {
             return result.error("用户名或密码错误");
@@ -123,7 +116,12 @@ public class UserController {
             return result.error("用户不存在！");
         }
         userService.banUser(u);
-        return result.success(newToken(Authorization));
+        if (JWTUtils.refreshTokenNeeded(Authorization)){
+            return result.success(newToken(Authorization));
+        }
+        else {
+            return result.success(Authorization);
+        }
     }
 
     @PostMapping("/user/delete")
@@ -135,7 +133,12 @@ public class UserController {
         if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+u.getUsername())!=null){
             stringRedisTemplate.delete(USER_LOGIN_KEY+u.getUsername());
         }
-        return result.success(newToken(Authorization));
+        if (JWTUtils.refreshTokenNeeded(Authorization)){
+            return result.success(newToken(Authorization));
+        }
+        else {
+            return result.success(Authorization);
+        }
     }
 
     @PostMapping("/user/changeinfo")
@@ -151,11 +154,14 @@ public class UserController {
         us.setToken(token);
         stringRedisTemplate.opsForValue().set(USER_LOGIN_KEY+us.getUsername(),
                 JSONUtil.toJsonStr(us),30,TimeUnit.MINUTES);
-        return result.success(token);
+        return result.success(newToken(Authorization));
+
     }
 
-    @PostMapping("/user/getinfo")
-    public result getUser(@RequestBody user u){
+    @GetMapping("/user/getinfo")
+    public result getUser(@RequestParam(name = "username") String username){
+        user u=new user();
+        u.setUsername(username);
         if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+u.getUsername())!=null){
             return result.success(JSONUtil.toBean(stringRedisTemplate.opsForValue().
                     get(USER_LOGIN_KEY+u.getUsername()),user.class));
@@ -177,7 +183,12 @@ public class UserController {
         user us=userService.getUserByID(u);
         stringRedisTemplate.opsForValue().set(USER_LOGIN_KEY+us.getUsername(),
                 JSONUtil.toJsonStr(us),30, TimeUnit.MINUTES);
-        return result.success("修改密码成功。",Authorization);
+        if (JWTUtils.refreshTokenNeeded(Authorization)){
+            return result.success(newToken(Authorization));
+        }
+        else {
+            return result.success(Authorization);
+        }
     }
 
     @PostMapping("/user/verifyOldPwd")
@@ -187,20 +198,30 @@ public class UserController {
         }
 
         user us=userService.getUserByID(u);
-        if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+us.getUsername())!=null){
+        if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+us.getUsername())!=null){//缓存命中
             us= JSONUtil.toBean(stringRedisTemplate.opsForValue().
                     get(USER_LOGIN_KEY+us.getUsername()), user.class);
             if (!u.getOldPassword().equals(us.getPassword())){
                 return result.error("密码错误！");
             }else {
-                return result.success("原密码正确！",Authorization);
+                if (JWTUtils.refreshTokenNeeded(Authorization)){
+                    return result.success(newToken(Authorization));
+                }
+                else {
+                    return result.success(Authorization);
+                }
             }
         }
 
-        if (u.getOldPassword().equals(userService.getUserByID(u).getPassword())){
+        if (!u.getOldPassword().equals(us.getPassword())){
             return result.error("密码错误！");
         }else {
-            return result.success("原密码正确！",Authorization);
+            if (JWTUtils.refreshTokenNeeded(Authorization)){
+                return result.success(newToken(Authorization));
+            }
+            else {
+                return result.success(Authorization);
+            }
         }
     }
 

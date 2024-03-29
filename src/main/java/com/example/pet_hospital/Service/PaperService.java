@@ -12,6 +12,8 @@ public interface PaperService {
 
     paper getPaperByName(paper p);
 
+    ArrayList<paper> getPaperList ();
+
     void insertNewQuestion(paper p);
 
     void deletePaper(paper p);

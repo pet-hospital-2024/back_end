@@ -23,6 +23,9 @@ public interface PaperMapper {
     @Select("select * from syf.papers where paper_name=#{paper_name}")
     paper getPaperByName (paper p);
 
+    @Select("select * from syf.papers")
+    ArrayList<paper> getPaperList ();
+
     @Delete("delete from syf.papers where paper_id=#{paper_id}")
     void deletePaperFromPapers(paper p);
 

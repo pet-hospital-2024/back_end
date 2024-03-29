@@ -56,6 +56,11 @@ public class PaperService_impl implements PaperService {
     }
 
     @Override
+    public ArrayList<paper> getPaperList() {
+        return paperMapper.getPaperList();
+    }
+
+    @Override
     public void insertNewQuestion(paper p) {
         paperMapper.insertNewQuestion(p);
     }

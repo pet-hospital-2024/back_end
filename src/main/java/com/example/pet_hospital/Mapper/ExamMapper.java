@@ -3,6 +3,8 @@ package com.example.pet_hospital.Mapper;
 import com.example.pet_hospital.Entity.Exam;
 import org.apache.ibatis.annotations.*;
 
+import java.util.ArrayList;
+
 @Mapper
 public interface ExamMapper {
 
@@ -17,6 +19,9 @@ public interface ExamMapper {
 
     @Select("select * from syf.exams where exam_id = #{exam_id}")
     Exam getExamById(Exam exam);
+
+    @Select("select * from syf.exams")
+    ArrayList<Exam> getExamList();
 
 
 }
