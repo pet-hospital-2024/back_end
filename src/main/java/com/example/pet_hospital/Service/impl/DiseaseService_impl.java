@@ -3,8 +3,6 @@ package com.example.pet_hospital.Service.impl;
 import com.example.pet_hospital.Entity.*;
 import com.example.pet_hospital.Mapper.DiseaseMapper;
 import com.example.pet_hospital.Service.DiseaseService;
-import com.example.pet_hospital.model.PageResult;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -224,4 +222,7 @@ public class DiseaseService_impl implements DiseaseService {
     public List<department> findAllDepartments() {
         return DiseaseMapper.findAllDepartments();
     }
+
+
+
 }

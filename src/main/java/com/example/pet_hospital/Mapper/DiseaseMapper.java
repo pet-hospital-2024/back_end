@@ -1,7 +1,6 @@
 package com.example.pet_hospital.Mapper;
 
 import com.example.pet_hospital.Entity.*;
-import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -140,4 +139,7 @@ public interface DiseaseMapper {
             @Result(property = "disease_name", column = "disease_name"),
     })
     List<diseases> selectDiseasesForDepartment(String departmentId);
+
+
+
 }
