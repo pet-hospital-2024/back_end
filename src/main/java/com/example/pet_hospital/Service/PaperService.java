@@ -1,6 +1,7 @@
 package com.example.pet_hospital.Service;
 
 import com.example.pet_hospital.Entity.paper;
+import com.example.pet_hospital.Entity.paperDetail;
 
 import java.util.ArrayList;
 
@@ -20,5 +21,5 @@ public interface PaperService {
 
     void deleteQuestionFromPaper(paper p);
 
-    ArrayList<String> getQuestionsFromPaper(paper p);
+    paperDetail getQuestionsFromPaper(String paper_id);
 }

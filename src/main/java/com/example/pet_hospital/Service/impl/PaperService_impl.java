@@ -1,6 +1,7 @@
 package com.example.pet_hospital.Service.impl;
 
 import com.example.pet_hospital.Entity.paper;
+import com.example.pet_hospital.Entity.paperDetail;
 import com.example.pet_hospital.Mapper.PaperMapper;
 import com.example.pet_hospital.Service.PaperService;
 import com.example.pet_hospital.Util.JWTUtils;
@@ -77,7 +78,7 @@ public class PaperService_impl implements PaperService {
     }
 
     @Override
-    public ArrayList<String> getQuestionsFromPaper(paper p) {
-        return paperMapper.getQuestionsFromPaper(p);
+    public paperDetail getQuestionsFromPaper(String paper_id) {
+        return paperMapper.getQuestionsFromPaper(paper_id);
     }
 }

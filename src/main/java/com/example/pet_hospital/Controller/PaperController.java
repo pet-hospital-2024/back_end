@@ -161,23 +161,34 @@ public class PaperController {
         }
     }
 
-    @GetMapping("/paper/getpaperbyid")
-    public result getQuestionsFromPaper(@RequestParam(name = "paper_id") String paper_id){
+//    @GetMapping("/paper/getpaperbyid")
+//    public result getQuestionsFromPaper(@RequestParam(name = "paper_id") String paper_id){
+//        paper p=new paper();
+//        p.setPaper_id(paper_id);
+//        //no identity secure needed.
+//        if (paperService.getPaperByID(p)==null){
+//            return result.error("该试卷不存在！");
+//        }
+//        ArrayList<String> questions_id =paperService.getQuestionsFromPaper(p);
+//        ArrayList<question> questions=new ArrayList<>();
+//
+//        for (String qid:questions_id){
+//            question q=new question();
+//            q.setQuestion_id(qid);
+//            questions.add(practiceService.getQuestionByID(q));
+//        }
+//        return result.success(questions);
+//    }
+
+    @GetMapping("/paper/getPaperById")
+    public result GetPaperById(@RequestParam(name = "paper_id") String paper_id){
         paper p=new paper();
         p.setPaper_id(paper_id);
         //no identity secure needed.
         if (paperService.getPaperByID(p)==null){
             return result.error("该试卷不存在！");
         }
-        ArrayList<String> questions_id =paperService.getQuestionsFromPaper(p);
-        ArrayList<question> questions=new ArrayList<>();
-
-        for (String qid:questions_id){
-            question q=new question();
-            q.setQuestion_id(qid);
-            questions.add(practiceService.getQuestionByID(q));
-        }
-        return result.success(questions);
+        return result.success(paperService.getQuestionsFromPaper(paper_id));
     }
 
     @GetMapping("/paper/getPaperList")
