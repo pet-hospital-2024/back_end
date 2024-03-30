@@ -49,7 +49,7 @@ public interface DiseaseService {
     //case_base[] CaseList();
     PageInfo<case_base> findPaginated(int page, int size);
 
-    PageInfo<case_base> findPaginatedbyDis(String disease_id, int page, int size);
+    //PageInfo<case_base> findPaginatedbyDis(String disease_id, int page, int size);
 
     void addCaseImg(case_img i);
 
