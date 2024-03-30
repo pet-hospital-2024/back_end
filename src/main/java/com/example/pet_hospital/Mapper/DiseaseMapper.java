@@ -124,10 +124,7 @@ public interface DiseaseMapper {
     @Select("select * from syf.result_img where case_id=#{case_id}")
     result_img[] getCaseResultImgbyCase(String case_id);
 
-    @Select("SELECT department.department_id, department.department_name, d.disease_id, d.disease_name " +
-            "FROM syf.department " +
-            "LEFT JOIN syf.disease d ON department.department_id = d.department_id " +
-            "ORDER BY department.department_id, d.disease_id")
+    @Select("SELECT department_id, department_name FROM syf.department ORDER BY department_id")
     @Results(value = {
             @Result(property = "department_id", column = "department_id"),
             @Result(property = "department_name", column = "department_name"),
@@ -135,6 +132,7 @@ public interface DiseaseMapper {
                     many = @Many(select = "selectDiseasesForDepartment"))
     })
     List<department> findAllDepartments();
+
 
     @Select("SELECT disease_id, disease_name FROM syf.disease WHERE department_id = #{department_id}")
     @Results(value = {
