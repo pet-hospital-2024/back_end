@@ -39,5 +39,11 @@ public class LearnController {
         return result.success(learnService.getLocations());
     }
 
+    //根据地点和角色返回学习视频和文字
+    @GetMapping("/learn/getItem")
+    public result getItem(@RequestParam("learn_location_name") String location_name, @RequestParam("learn_role") String role){
+        return result.success(learnService.getLearnItem(location_name, role));
+    }
+
 
 }

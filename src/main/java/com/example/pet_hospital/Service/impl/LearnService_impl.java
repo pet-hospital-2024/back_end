@@ -1,5 +1,6 @@
 package com.example.pet_hospital.Service.impl;
 
+import com.example.pet_hospital.Entity.learn_item;
 import com.example.pet_hospital.Entity.learn_location;
 import com.example.pet_hospital.Entity.learn_order;
 import com.example.pet_hospital.Mapper.LearnMapper;
@@ -22,5 +23,10 @@ public class LearnService_impl implements LearnService {
     @Override
     public learn_location[] getLocations() {
         return learnMapper.getLocations();
+    }
+
+    @Override
+    public learn_item getLearnItem(String locationName, String role) {
+        return learnMapper.getLearnItem(locationName, role);
     }
 }
