@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Select;
 public interface LearnMapper {
 
     @Select("select ll.learn_location_name,learn_location_id,learn_duty from syf.learn_order left join syf.learn_location ll on learn_order.learn_location_name = ll.learn_location_name where learn_role=#{role}")
-    @Result(column = "learn_location_name", property = "location")
+    @Result(column = "learn_location_name", property = "location_name")
     @Result(column = "learn_location_id", property = "location_id")
     @Result(column = "learn_duty", property = "learn_duty")
     learn_order[] getLearnOrder(String role);

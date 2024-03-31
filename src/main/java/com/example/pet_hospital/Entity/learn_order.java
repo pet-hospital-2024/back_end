@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class learn_order {
     String location_id;
-    String location;
+    String location_name;
     String learn_duty;
 
 }
