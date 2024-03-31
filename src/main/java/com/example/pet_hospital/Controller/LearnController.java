@@ -13,8 +13,8 @@ public class LearnController {
     @Autowired
     private LearnService learnService;
 
-    //根据角色返回学习顺序和每个地方的职责和每个地方的学习材料
-    @GetMapping("/learn/getOrder")
+    //根据角色返回岗位职责
+    @GetMapping("/learn/getDuty")
     public result grtOrder(@RequestParam("learn_role_id") String role_id){
         if (role_id == null || role_id.isEmpty()){
             return result.error("角色不能为空");
