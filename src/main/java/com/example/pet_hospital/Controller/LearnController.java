@@ -15,13 +15,22 @@ public class LearnController {
 
     //根据角色返回学习顺序和每个地方的职责和每个地方的学习材料
     @GetMapping("/learn/getOrder")
-    public result grtOrder(@RequestParam("learn_role") String role){
-        if (role == null || role.isEmpty()){
+    public result grtOrder(@RequestParam("learn_role_id") String role_id){
+        if (role_id == null || role_id.isEmpty()){
             return result.error("角色不能为空");
         }
-        if (learnService.getLearnOrder(role).length == 0){
+        String role ="";
+        if (role_id.equals("1")){
+            role = "兽医";
+
+        }else if (role_id.equals("2")){
+            role = "助理";
+        }else if (role_id.equals("3")){
+            role = "前台";
+        }else{
             return result.error("角色不存在");
         }
+
 
         return result.success(learnService.getLearnOrder(role));
     }
@@ -41,8 +50,61 @@ public class LearnController {
 
     //根据地点和角色返回学习视频和文字
     @GetMapping("/learn/getItem")
-    public result getItem(@RequestParam("learn_location_name") String location_name, @RequestParam("learn_role") String role){
+    public result getItem(@RequestParam("learn_location_id") String location_id, @RequestParam("learn_role_id") String role_id){
+
+
+        if (role_id == null || role_id.isEmpty()){
+            return result.error("角色不能为空");
+        }
+        if (location_id == null || location_id.isEmpty()){
+            return result.error("地点id不能为空");
+        }
+        if (role_id == null || role_id.isEmpty()){
+            return result.error("角色不能为空");
+        }
+        String role ="";
+        if (role_id.equals("1")){
+            role = "兽医";
+
+        }else if (role_id.equals("2")){
+            role = "助理";
+        }else if (role_id.equals("3")){
+            role = "前台";
+        }else{
+            return result.error("角色不存在");
+        }
+
+        String location_name = learnService.getLocationName(location_id);
+        if(learnService.getLearnItem(location_name, role) == null){
+            return result.error("地点不存在");
+        }
+
         return result.success(learnService.getLearnItem(location_name, role));
+    }
+
+    //根据角色名称返回工作流程
+    @GetMapping("/learn/getProcess")
+    public result getProcess(@RequestParam("learn_role_id") String role_id){
+
+        if (role_id == null || role_id.isEmpty()){
+            return result.error("角色不能为空");
+        }
+        String role ="";
+        if (role_id.equals("1")){
+            role = "兽医";
+
+        }else if (role_id.equals("2")){
+            role = "助理";
+        }else if (role_id.equals("3")){
+            role = "前台";
+        }else{
+            return result.error("角色不存在");
+        }
+
+
+
+
+        return result.success(learnService.getLearnProcess(role));
     }
 
 
