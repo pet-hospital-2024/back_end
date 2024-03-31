@@ -19,8 +19,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         String url= request.getRequestURL().toString();
         log.info("请求的url: {}",url);
 
-        if (url.contains("login") || url.contains("register") ||
-                request.getMethod().equals("GET")){
+        if (url.contains("login") || url.contains("register")){
             log.info("无需鉴权操作，放行。");
             return true;
         }
@@ -40,7 +39,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         }catch (Exception e){
             e.printStackTrace();
             log.info("令牌解析失败。");
-            result error =result.error("The token has expired or it's invalid. Please login.");
+            result error =result.tokenError("The token has expired or it's invalid. Please login.");
             String notLogin= JSONUtil.toJsonStr(error);
             response.getWriter().write(notLogin);
             return false;

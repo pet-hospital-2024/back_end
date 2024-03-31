@@ -27,4 +27,8 @@ public class result {
     public static result error (String message){
         return new result(0,message,null);
     }
+
+    public static result tokenError(String message){
+        return new result(-1,message,null);
+    }
 }
