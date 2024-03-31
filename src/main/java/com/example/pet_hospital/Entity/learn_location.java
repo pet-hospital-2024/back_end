@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class learn_location {
-     String learn_location_id;
-     String learn_location_name;
-     String learn_location_introduction;
+     String location_id;
+     String location_name;
+     String location_introduction;
 }

@@ -18,6 +18,9 @@ public interface LearnMapper {
     learn_order[] getLearnOrder(String role);
 
     @Select("select * from syf.learn_location")
+    @Result(column = "learn_location_id", property = "location_id")
+    @Result(column = "learn_location_name", property = "location_name")
+    @Result(column = "learn_location_introduction", property = "location_introduction")
     learn_location[] getLocations();
 
 

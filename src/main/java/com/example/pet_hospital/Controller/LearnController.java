@@ -15,7 +15,7 @@ public class LearnController {
 
     //根据角色返回岗位职责
     @GetMapping("/learn/getDuty")
-    public result grtOrder(@RequestParam("learn_role_id") String role_id){
+    public result grtOrder(@RequestParam("role_id") String role_id){
         if (role_id == null || role_id.isEmpty()){
             return result.error("角色不能为空");
         }
@@ -50,7 +50,7 @@ public class LearnController {
 
     //根据地点和角色返回学习视频和文字
     @GetMapping("/learn/getItem")
-    public result getItem(@RequestParam("learn_location_id") String location_id, @RequestParam("learn_role_id") String role_id){
+    public result getItem(@RequestParam("location_id") String location_id, @RequestParam("role_id") String role_id){
 
 
         if (role_id == null || role_id.isEmpty()){
@@ -84,7 +84,7 @@ public class LearnController {
 
     //根据角色名称返回工作流程
     @GetMapping("/learn/getProcess")
-    public result getProcess(@RequestParam("learn_role_id") String role_id){
+    public result getProcess(@RequestParam("role_id") String role_id){
 
         if (role_id == null || role_id.isEmpty()){
             return result.error("角色不能为空");
