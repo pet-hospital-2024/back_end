@@ -220,7 +220,8 @@ public class PaperController {
         for (paper_question question : questions) {
             // 对于每个问题，根据question_id获取选项内容
             option optionResult = paperService.selectOptionsForQuestion(question.getQuestion_id());
-            if (optionResult != null) {
+            if(optionResult != null){
+                if (question.getType().equals("choice")) {
                 // 将选项内容转换为Option对象的列表
                 List<singleoption> optionsList = new ArrayList<>();
                 optionsList.add(new singleoption("A", optionResult.getA()));
@@ -231,6 +232,21 @@ public class PaperController {
                 // 将转换后的列表设置为问题的options属性
                 question.setOptions(optionsList);
             }
+
+               if (question.getType().equals("judge")) {
+                   // 将选项内容转换为Option对象的列表
+                   List<singleoption> optionsList = new ArrayList<>();
+                   optionsList.add(new singleoption("A", optionResult.getA()));
+                   optionsList.add(new singleoption("B", optionResult.getB()));
+
+
+                   // 将转换后的列表设置为问题的options属性
+                    question.setOptions(optionsList);
+                }
+
+            }
+
+
         }
 
         return result.success(r);
