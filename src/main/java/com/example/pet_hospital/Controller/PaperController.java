@@ -1,9 +1,7 @@
 package com.example.pet_hospital.Controller;
 
 import cn.hutool.json.JSONUtil;
-import com.example.pet_hospital.Entity.paper;
-import com.example.pet_hospital.Entity.question;
-import com.example.pet_hospital.Entity.result;
+import com.example.pet_hospital.Entity.*;
 import com.example.pet_hospital.Service.PaperService;
 import com.example.pet_hospital.Service.PracticeService;
 import com.example.pet_hospital.Util.JWTUtils;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @RestController//
@@ -76,8 +75,13 @@ public class PaperController {
             return result.error("无操作权限。");
         }
 
+        //检查是不是已经有了这个题目
+        if (paperService.ifPaperContainsQueston(p)!=null){
+            return result.error("该题目已经在试卷中！");
+        }
+
         //先查询后修改，防止bad request。
-        question q=new question();
+        question q =new question();
         q.setQuestion_id(p.getQuestion_id());
         if (practiceService.getQuestionByID(q)==null){
             return result.error("该题目不存在！");
@@ -85,7 +89,12 @@ public class PaperController {
         if (paperService.getPaperByID(p)==null){
             return result.error("该试卷不存在！");
         }
+
+
+        //插入paper_questions表
         paperService.insertNewQuestion(p);
+        //更新papers的题目数量和总分数
+        paperService.updatePaper(p);
         if (JWTUtils.refreshTokenNeeded(Authorization)){
             return result.success(newToken(Authorization));
         }
@@ -188,7 +197,25 @@ public class PaperController {
         if (paperService.getPaperByID(p)==null){
             return result.error("该试卷不存在！");
         }
-        return result.success(paperService.getQuestionsFromPaper(paper_id));
+        paperDetail r = paperService.getQuestionsFromPaper(paper_id);
+        List<paper_question> questions = r.getQuestions();
+        for (paper_question question : questions) {
+            // 对于每个问题，根据question_id获取选项内容
+            option optionResult = paperService.selectOptionsForQuestion(question.getQuestion_id());
+            if (optionResult != null) {
+                // 将选项内容转换为Option对象的列表
+                List<singleoption> optionsList = new ArrayList<>();
+                optionsList.add(new singleoption("A", optionResult.getA()));
+                optionsList.add(new singleoption("B", optionResult.getB()));
+                optionsList.add(new singleoption("C", optionResult.getC()));
+                optionsList.add(new singleoption("D", optionResult.getD()));
+
+                // 将转换后的列表设置为问题的options属性
+                question.setOptions(optionsList);
+            }
+        }
+
+        return result.success(r);
     }
 
     @GetMapping("/paper/getPaperList")

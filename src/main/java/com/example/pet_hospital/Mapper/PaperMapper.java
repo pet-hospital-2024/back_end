@@ -1,9 +1,6 @@
 package com.example.pet_hospital.Mapper;
 
-import com.example.pet_hospital.Entity.paper;
-import com.example.pet_hospital.Entity.paperDetail;
-import com.example.pet_hospital.Entity.paper_question;
-import com.example.pet_hospital.Entity.question;
+import com.example.pet_hospital.Entity.*;
 import org.apache.ibatis.annotations.*;
 
 import java.util.ArrayList;
@@ -12,7 +9,7 @@ import java.util.List;
 
 @Mapper
 public interface PaperMapper {
-    @Insert("insert into syf.papers values (uuid_short(),#{duration},#{paper_name},null,null)")
+    @Insert("insert into syf.papers values (uuid_short(),#{duration},#{paper_name},0,0)")
     void createNewPaper(paper p);
 
     @Insert("insert into syf.paper_questions values (#{paper_id},#{question_id},#{value},#{order},null)")
@@ -34,7 +31,25 @@ public interface PaperMapper {
     paperDetail getQuestionsFromPaper(String paper_id);
 
     @Select("SELECT q.* FROM syf.questions q INNER JOIN syf.paper_questions pq ON q.question_id = pq.question_id WHERE pq.paper_id = #{paper_id}")
+    @Results(value = {
+            @Result(property = "question_id", column = "question_id"),
+            @Result(property = "question_body", column = "question_body"),
+            @Result(property = "type", column = "type"),
+
+            @Result(property = "right_choice", column = "right_choice"),
+            @Result(property = "judgement", column = "judgement"),
+            @Result(property = "value", column = "value")
+    })
     List<paper_question> selectQuestionsForPaper(String paper_id);
+
+    @Select("SELECT a,b,c,d FROM syf.questions WHERE question_id = #{question_id}")
+    @Results(value = {
+            @Result(property = "A", column = "a"),
+            @Result(property = "B", column = "b"),
+            @Result(property = "C", column = "c"),
+            @Result(property = "D", column = "d")
+    })
+    option selectOptionsForQuestion(String question_id);
 
 
     @Select("select * from syf.papers where paper_name=#{paper_name}")
@@ -51,6 +66,13 @@ public interface PaperMapper {
 
     @Delete("delete from syf.paper_questions where paper_id=#{paper_id} and question_id=#{question_id}")
     void deleteQuestionFromPaper_Questions(paper p);
+
+
+    @Update("update syf.papers set question_number=question_number+1,value=value+#{value} where paper_id=#{paper_id}")
+    void updatePaper(paper p);
+
+    @Select("select * from syf.paper_questions where paper_id=#{paper_id} and question_id=#{question_id}")
+    questonifexist ifPaperContainsQueston(paper p);
 
 //    @Select("select question_id from syf.paper_questions where paper_id=#{paper_id}")
 //    ArrayList<String> getQuestionsFromPaper(paper p);

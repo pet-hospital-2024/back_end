@@ -1,7 +1,9 @@
 package com.example.pet_hospital.Service;
 
+import com.example.pet_hospital.Entity.option;
 import com.example.pet_hospital.Entity.paper;
 import com.example.pet_hospital.Entity.paperDetail;
+import com.example.pet_hospital.Entity.questonifexist;
 
 import java.util.ArrayList;
 
@@ -22,4 +24,11 @@ public interface PaperService {
     void deleteQuestionFromPaper(paper p);
 
     paperDetail getQuestionsFromPaper(String paper_id);
+
+    void updatePaper(paper p);
+
+    questonifexist ifPaperContainsQueston(paper p);
+
+    option selectOptionsForQuestion(String question_id);
+
 }

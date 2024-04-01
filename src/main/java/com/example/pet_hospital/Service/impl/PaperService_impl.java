@@ -1,7 +1,9 @@
 package com.example.pet_hospital.Service.impl;
 
+import com.example.pet_hospital.Entity.option;
 import com.example.pet_hospital.Entity.paper;
 import com.example.pet_hospital.Entity.paperDetail;
+import com.example.pet_hospital.Entity.questonifexist;
 import com.example.pet_hospital.Mapper.PaperMapper;
 import com.example.pet_hospital.Service.PaperService;
 import com.example.pet_hospital.Util.JWTUtils;
@@ -80,5 +82,20 @@ public class PaperService_impl implements PaperService {
     @Override
     public paperDetail getQuestionsFromPaper(String paper_id) {
         return paperMapper.getQuestionsFromPaper(paper_id);
+    }
+
+    @Override
+    public void updatePaper(paper p) {
+        paperMapper.updatePaper(p);
+    }
+
+    @Override
+    public questonifexist ifPaperContainsQueston(paper p) {
+        return paperMapper.ifPaperContainsQueston(p);
+    }
+
+    @Override
+    public option selectOptionsForQuestion(String question_id) {
+        return paperMapper.selectOptionsForQuestion(question_id);
     }
 }
