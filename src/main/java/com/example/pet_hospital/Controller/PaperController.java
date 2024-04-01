@@ -213,6 +213,10 @@ public class PaperController {
         }
         paperDetail r = paperService.getQuestionsFromPaper(paper_id);
         List<paper_question> questions = r.getQuestions();
+        if(questions.size() == 0){
+            return result.error("该试卷没有题目！");
+        }
+        //System.out.println(questions);
         for (paper_question question : questions) {
             // 对于每个问题，根据question_id获取选项内容
             option optionResult = paperService.selectOptionsForQuestion(question.getQuestion_id());

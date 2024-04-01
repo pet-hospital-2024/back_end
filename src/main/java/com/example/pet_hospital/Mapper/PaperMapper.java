@@ -30,15 +30,16 @@ public interface PaperMapper {
     })
     paperDetail getQuestionsFromPaper(String paper_id);
 
-    @Select("SELECT q.* FROM syf.questions q INNER JOIN syf.paper_questions pq ON q.question_id = pq.question_id WHERE pq.paper_id = #{paper_id}")
+    @Select("SELECT * FROM syf.questions q INNER JOIN syf.paper_questions pq ON q.question_id = pq.question_id WHERE pq.paper_id = #{paper_id}")
     @Results(value = {
             @Result(property = "question_id", column = "question_id"),
             @Result(property = "question_body", column = "question_body"),
             @Result(property = "type", column = "type"),
-
+            @Result(property = "order", column = "order"),
             @Result(property = "right_choice", column = "right_choice"),
             @Result(property = "judgement", column = "judgement"),
             @Result(property = "value", column = "value")
+
     })
     List<paper_question> selectQuestionsForPaper(String paper_id);
 
