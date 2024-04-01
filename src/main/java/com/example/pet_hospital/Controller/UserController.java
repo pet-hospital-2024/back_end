@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 public class UserController {
@@ -47,19 +49,17 @@ public class UserController {
         return token;
     }
 
-    public Map<String,Object> CreateNewClaims (user u){
-        Map<String,Object> claims=new HashMap<>();
-
-        claims.put("username",u.getUsername());
-        claims.put("user_id",u.getUser_id());
-        claims.put("identity",u.getIdentity());
-        claims.put("password",u.getPassword());
-        claims.put("phone_number",u.getPhone_number());
-        claims.put("email",u.getEmail());
-        claims.put("timestamp",u.getTimestamp());
-        claims.put("token",u.getToken());
-        claims.put("code",u.getCode());
-        return claims;
+    public static boolean checkEmail(String email) {
+        boolean flag = false;
+        try {
+            String check = "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+            Pattern regex = Pattern.compile(check);
+            Matcher matcher = regex.matcher(email);
+            flag = matcher.matches();
+        } catch (Exception e) {
+            flag = false;
+        }
+        return flag;
     }
 
     String USER_LOGIN_KEY="LOGIN_USER:";
@@ -95,8 +95,29 @@ public class UserController {
         Boolean j = userService.findUser(u);
         if (!j)//没找到，代表可以进行注册
         {
+            String pwd=u.getPassword();
+            String name =u.getUsername();
+            if (name.length()<4|| name.length()>16){
+                return result.error("用户名长度不符合要求");
+            }
+            for (int i=0;i<name.length();i++){
+                if (!Character.isLetterOrDigit(name.charAt(i))){
+                    return result.error("用户名仅可包含字母和数字。");
+                }
+            }
+            if (pwd.length()<6|| pwd.length()>15){
+                return result.error("密码长度不符合要求");
+            }
+            if (!pwd.matches(".*[a-zA-Z]+.*")||!pwd.matches(".*[0-9]+.*")){
+                return result.error("密码必须包含字母和数字。");
+            }
+            if (!checkEmail(u.getEmail())){
+                return result.error("邮箱格式错误。");
+            }
+            if (u.getPhone_number().length()!=11){
+                return result.error("手机号长度不符合要求。");
+            }
             userService.register(u);
-            user us=userService.getUserByName(u);
             return result.success();
         }
         else {
