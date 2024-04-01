@@ -90,6 +90,20 @@ public class PaperController {
             return result.error("该试卷不存在！");
         }
 
+        //判断order是否合法和不为
+        if (p.getOrder()==null){
+            return result.error("order不能为空！");
+        }
+        if (p.getOrder()<1){
+            return result.error("order不能小于1！");
+        }
+
+        //判断order是否已存在
+        if(paperService.ifOrderExist(p)!=null){
+            return result.error("order已存在！");
+        }
+
+
 
         //插入paper_questions表
         paperService.insertNewQuestion(p);

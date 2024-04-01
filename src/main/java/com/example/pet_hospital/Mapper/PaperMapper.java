@@ -74,6 +74,9 @@ public interface PaperMapper {
     @Select("select * from syf.paper_questions where paper_id=#{paper_id} and question_id=#{question_id}")
     questonifexist ifPaperContainsQueston(paper p);
 
+    @Select("select paper_id,question_id from syf.paper_questions where paper_id=#{paper_id} and `order` = #{order}")
+    questonifexist ifOrderExist(paper p);
+
 //    @Select("select question_id from syf.paper_questions where paper_id=#{paper_id}")
 //    ArrayList<String> getQuestionsFromPaper(paper p);
 

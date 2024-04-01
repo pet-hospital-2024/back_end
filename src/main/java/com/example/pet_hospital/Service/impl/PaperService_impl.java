@@ -98,4 +98,9 @@ public class PaperService_impl implements PaperService {
     public option selectOptionsForQuestion(String question_id) {
         return paperMapper.selectOptionsForQuestion(question_id);
     }
+
+    @Override
+    public questonifexist ifOrderExist(paper p) {
+        return paperMapper.ifOrderExist(p);
+    }
 }
