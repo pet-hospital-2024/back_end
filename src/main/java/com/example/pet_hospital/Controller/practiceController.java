@@ -27,11 +27,7 @@ public class practiceController {
     public Boolean identitySecure(String target, String Authorization){
         Claims claims = JWTUtils.jwtParser(Authorization);
         String identity=(String) claims.get("identity");
-        if (target.equals(identity)){
-            return true;
-        }else {
-            return false;
-        }
+        return target.equals(identity);
     }
 
     public String newToken(String Authorization){
@@ -44,8 +40,7 @@ public class practiceController {
         newclaim.put("username",username);
         newclaim.put("user_id",user_id);
         newclaim.put("identity",identity);
-        String token =JWTUtils.jwtGenerater(newclaim);
-        return token;
+        return JWTUtils.jwtGenerater(newclaim);
     }
 
 
@@ -56,6 +51,23 @@ public class practiceController {
         }
         if (practiceService.getQuestionByBody(q)!=null){
             return result.error("该题目已存在！");
+        }
+        String type=q.getType();
+        if (!type.equals("choice") && !type.equals("judge")){
+            return result.error("题目类型只能是choice或者judge！");
+        }
+        if(type.equals("judge")){
+            if (!(q.getA().equals("对") && q.getB().equals("错") )){
+                return result.error("判断题选项只能是A是对，B是错！");
+            }
+            if(!(q.getRight_choice().equals("a") || q.getRight_choice().equals("b"))){
+                return result.error("判断题答案只能是a或者b！");
+            }
+        }else {
+            if(!(q.getRight_choice().equals("a") || q.getRight_choice().equals("b") ||
+                    q.getRight_choice().equals("c") || q.getRight_choice().equals("d"))){
+                return result.error("选择题答案只能是a,b,c,d中的一个！");
+            }
         }
         practiceService.addQuestion(q);
         if (JWTUtils.refreshTokenNeeded(Authorization)){
@@ -96,6 +108,23 @@ public class practiceController {
     public result alterQuestion(@RequestBody question q, @RequestHeader String Authorization) {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限。");
+        }
+        String type=q.getType();
+        if (!type.equals("choice") && !type.equals("judge")){
+            return result.error("题目类型只能是choice或者judge！");
+        }
+        if(type.equals("judge")){
+            if (!(q.getA().equals("对") && q.getB().equals("错") )){
+                return result.error("判断题选项只能是A是对，B是错！");
+            }
+            if(!(q.getRight_choice().equals("a") || q.getRight_choice().equals("b"))){
+                return result.error("判断题答案只能是a或者b！");
+            }
+        }else {
+            if(!(q.getRight_choice().equals("a") || q.getRight_choice().equals("b") ||
+                    q.getRight_choice().equals("c") || q.getRight_choice().equals("d"))){
+                return result.error("选择题答案只能是a,b,c,d中的一个！");
+            }
         }
         if (stringRedisTemplate.opsForValue().get(QUESTION_KEY+q.getQuestion_id())!=null){
             stringRedisTemplate.opsForValue().set(QUESTION_KEY+q.getQuestion_id(),
