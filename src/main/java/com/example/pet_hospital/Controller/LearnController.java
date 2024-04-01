@@ -70,7 +70,10 @@ public class LearnController {
             role = "助理";
         }else if (role_id.equals("3")){
             role = "前台";
-        }else{
+        }else if (role_id.equals("0")){
+            role = "游客";
+        }
+        else{
             return result.error("角色不存在");
         }
 
