@@ -8,7 +8,7 @@ public interface PracticeMapper {
     @Delete("delete from syf.questions where question_id=#{question_id}")
     void deleteQuestion(question q);
 
-    @Insert("insert into syf.questions values(uuid_short(),#{type},#{question_body},#{A},#{B},#{C},#{D},#{right_choice},#{judgement},#{dis_id},#{kind_id})")
+    @Insert("insert into syf.questions values(uuid_short(),#{type},#{question_body},#{A},#{B},#{C},#{D},#{right_choice},#{judgement},#{disease_id},#{department_id})")
     void addQuestion(question q);
 
     @Update("update syf.questions set  type=#{type}, question_body=#{question_body}, a=#{a}, b=#{b}, c=#{c}, d=#{d}, right_choice=#{right_choice}, judgement=#{judgement} where question_id=#{question_id}")
