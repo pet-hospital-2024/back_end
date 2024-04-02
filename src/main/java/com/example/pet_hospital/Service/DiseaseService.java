@@ -2,6 +2,8 @@ package com.example.pet_hospital.Service;
 
 
 import com.example.pet_hospital.Entity.*;
+import com.example.pet_hospital.Vo.case_base;
+import com.example.pet_hospital.Vo.diseases;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;

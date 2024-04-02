@@ -1,9 +1,9 @@
 package com.example.pet_hospital.Service.impl;
 
-import com.example.pet_hospital.Entity.option;
+import com.example.pet_hospital.Dto.option;
 import com.example.pet_hospital.Entity.paper;
-import com.example.pet_hospital.Entity.paperDetail;
-import com.example.pet_hospital.Entity.questonifexist;
+import com.example.pet_hospital.Vo.paperDetail;
+import com.example.pet_hospital.Dto.questonifexist;
 import com.example.pet_hospital.Mapper.PaperMapper;
 import com.example.pet_hospital.Service.PaperService;
 import com.example.pet_hospital.Util.JWTUtils;

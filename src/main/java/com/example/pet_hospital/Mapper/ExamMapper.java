@@ -1,7 +1,7 @@
 package com.example.pet_hospital.Mapper;
 
 import com.example.pet_hospital.Entity.Exam;
-import com.example.pet_hospital.Entity.examList;
+import com.example.pet_hospital.Vo.examList;
 import org.apache.ibatis.annotations.*;
 
 import java.util.ArrayList;

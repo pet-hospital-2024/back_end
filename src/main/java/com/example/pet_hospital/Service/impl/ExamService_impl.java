@@ -1,7 +1,7 @@
 package com.example.pet_hospital.Service.impl;
 
 import com.example.pet_hospital.Entity.Exam;
-import com.example.pet_hospital.Entity.examList;
+import com.example.pet_hospital.Vo.examList;
 import com.example.pet_hospital.Mapper.ExamMapper;
 import com.example.pet_hospital.Service.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;

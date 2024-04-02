@@ -1,10 +1,15 @@
 package com.example.pet_hospital.Controller;
 
 import cn.hutool.json.JSONUtil;
+import com.example.pet_hospital.Dto.option;
+import com.example.pet_hospital.Dto.singleoption;
 import com.example.pet_hospital.Entity.*;
 import com.example.pet_hospital.Service.PaperService;
 import com.example.pet_hospital.Service.PracticeService;
 import com.example.pet_hospital.Util.JWTUtils;
+import com.example.pet_hospital.Dto.paper_question;
+import com.example.pet_hospital.Vo.paperDetail;
+import com.example.pet_hospital.Vo.result;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;

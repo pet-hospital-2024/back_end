@@ -1,6 +1,10 @@
 package com.example.pet_hospital.Mapper;
 
+import com.example.pet_hospital.Dto.option;
+import com.example.pet_hospital.Dto.questonifexist;
 import com.example.pet_hospital.Entity.*;
+import com.example.pet_hospital.Dto.paper_question;
+import com.example.pet_hospital.Vo.paperDetail;
 import org.apache.ibatis.annotations.*;
 
 import java.util.ArrayList;

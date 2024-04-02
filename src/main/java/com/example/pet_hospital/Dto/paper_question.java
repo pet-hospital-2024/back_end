@@ -1,4 +1,4 @@
-package com.example.pet_hospital.Entity;
+package com.example.pet_hospital.Dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

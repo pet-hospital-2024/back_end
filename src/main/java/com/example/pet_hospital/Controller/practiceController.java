@@ -2,7 +2,7 @@ package com.example.pet_hospital.Controller;
 
 import cn.hutool.json.JSONUtil;
 import com.example.pet_hospital.Entity.question;
-import com.example.pet_hospital.Entity.result;
+import com.example.pet_hospital.Vo.result;
 import com.example.pet_hospital.Service.PracticeService;
 import com.example.pet_hospital.Util.JWTUtils;
 import io.jsonwebtoken.Claims;

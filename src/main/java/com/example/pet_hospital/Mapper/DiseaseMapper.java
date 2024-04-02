@@ -1,6 +1,8 @@
 package com.example.pet_hospital.Mapper;
 
 import com.example.pet_hospital.Entity.*;
+import com.example.pet_hospital.Vo.case_base;
+import com.example.pet_hospital.Vo.diseases;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

@@ -1,5 +1,6 @@
-package com.example.pet_hospital.Entity;
+package com.example.pet_hospital.Vo;
 
+import com.example.pet_hospital.Dto.paper_question;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

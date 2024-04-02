@@ -1,6 +1,6 @@
 package com.example.pet_hospital.Controller;
 
-import com.example.pet_hospital.Entity.result;
+import com.example.pet_hospital.Vo.result;
 import com.example.pet_hospital.Service.LearnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

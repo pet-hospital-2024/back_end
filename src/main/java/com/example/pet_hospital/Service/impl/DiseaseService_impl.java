@@ -3,6 +3,8 @@ package com.example.pet_hospital.Service.impl;
 import com.example.pet_hospital.Entity.*;
 import com.example.pet_hospital.Mapper.DiseaseMapper;
 import com.example.pet_hospital.Service.DiseaseService;
+import com.example.pet_hospital.Vo.case_base;
+import com.example.pet_hospital.Vo.diseases;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
