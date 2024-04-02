@@ -25,11 +25,13 @@ public interface PaperService {
 
     paperDetail getQuestionsFromPaper(String paper_id);
 
-    void updatePaper(paper p);
+
 
     questonifexist ifPaperContainsQueston(paper p);
 
     option selectOptionsForQuestion(String question_id);
 
     questonifexist ifOrderExist(paper p);
+
+    void updatePaperValueAndQuestionNumber(String paperId, int value, int questionNumber);
 }

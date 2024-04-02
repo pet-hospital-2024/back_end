@@ -107,8 +107,7 @@ public class PaperController {
 
         //插入paper_questions表
         paperService.insertNewQuestion(p);
-        //更新papers的题目数量和总分数
-        paperService.updatePaper(p);
+
         if (JWTUtils.refreshTokenNeeded(Authorization)){
             return result.success(newToken(Authorization));
         }
@@ -213,6 +212,8 @@ public class PaperController {
         }
         paperDetail r = paperService.getQuestionsFromPaper(paper_id);
         List<paper_question> questions = r.getQuestions();
+        int question_number = questions.size();
+        int value = 0;
         if(questions.size() == 0){
             return result.error("该试卷没有题目！");
         }
@@ -244,10 +245,16 @@ public class PaperController {
                     question.setOptions(optionsList);
                 }
 
+               value += question.getValue();
+
             }
 
 
         }
+        r.setQuestion_number(question_number);
+        r.setValue(value);
+        //更新paper的value和question_number
+        paperService.updatePaperValueAndQuestionNumber(paper_id, value, question_number);
 
         return result.success(r);
     }

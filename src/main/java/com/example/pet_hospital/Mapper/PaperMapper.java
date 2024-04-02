@@ -69,14 +69,16 @@ public interface PaperMapper {
     void deleteQuestionFromPaper_Questions(paper p);
 
 
-    @Update("update syf.papers set question_number=question_number+1,value=value+#{value} where paper_id=#{paper_id}")
-    void updatePaper(paper p);
+
 
     @Select("select * from syf.paper_questions where paper_id=#{paper_id} and question_id=#{question_id}")
     questonifexist ifPaperContainsQueston(paper p);
 
     @Select("select paper_id,question_id from syf.paper_questions where paper_id=#{paper_id} and `order` = #{order}")
     questonifexist ifOrderExist(paper p);
+
+    @Update("update syf.papers set value=#{value},question_number=#{questionNumber} where paper_id=#{paperId}")
+    void updatePaperValueAndQuestionNumber(String paperId, int value, int questionNumber);
 
 //    @Select("select question_id from syf.paper_questions where paper_id=#{paper_id}")
 //    ArrayList<String> getQuestionsFromPaper(paper p);

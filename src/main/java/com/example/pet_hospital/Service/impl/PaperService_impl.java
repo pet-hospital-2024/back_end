@@ -84,10 +84,7 @@ public class PaperService_impl implements PaperService {
         return paperMapper.getQuestionsFromPaper(paper_id);
     }
 
-    @Override
-    public void updatePaper(paper p) {
-        paperMapper.updatePaper(p);
-    }
+
 
     @Override
     public questonifexist ifPaperContainsQueston(paper p) {
@@ -102,5 +99,10 @@ public class PaperService_impl implements PaperService {
     @Override
     public questonifexist ifOrderExist(paper p) {
         return paperMapper.ifOrderExist(p);
+    }
+
+    @Override
+    public void updatePaperValueAndQuestionNumber(String paperId, int value, int questionNumber) {
+        paperMapper.updatePaperValueAndQuestionNumber(paperId, value, questionNumber);
     }
 }
