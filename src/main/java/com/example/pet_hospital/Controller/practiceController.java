@@ -99,7 +99,7 @@ public class practiceController {
     }
 
     @GetMapping("/question/getAll")
-    public result getAllQuestions() {
+    public result getAllQuestions( @RequestHeader String Authorization) {
         question[] questions = practiceService.getAllQuestions();
         return result.success(questions);
     }

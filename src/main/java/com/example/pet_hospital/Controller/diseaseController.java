@@ -30,11 +30,7 @@ public class diseaseController {
     public Boolean identitySecure(String target, String Authorization){
         Claims claims = JWTUtils.jwtParser(Authorization);
         String identity=(String) claims.get("identity");
-        if (target.equals(identity)){
-            return true;
-        }else {
-            return false;
-        }
+        return target.equals(identity);
     }
 
     public String newToken(String Authorization){
@@ -47,8 +43,7 @@ public class diseaseController {
         newclaim.put("username",username);
         newclaim.put("user_id",user_id);
         newclaim.put("identity",identity);
-        String token =JWTUtils.jwtGenerater(newclaim);
-        return token;
+        return JWTUtils.jwtGenerater(newclaim);
     }
 
     //添加科室
@@ -57,7 +52,7 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (k.getDepartment_name().equals("")){
+        if (k.getDepartment_name().isEmpty()){
             return result.error("科室名不能为空！");
         }
         if(diseaseService.getDepartmentbyName(k)!=null){
@@ -108,8 +103,8 @@ public class diseaseController {
     }
 
     //获取所有科室
-    @PostMapping("/disease/getAllDepartment")
-    public result getAllDepartment() {
+    @GetMapping("/disease/getAllDepartment")
+    public result getAllDepartment(@RequestHeader String Authorization) {
         return result.success(diseaseService.getAllDepartment());
     }
 
@@ -119,7 +114,7 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (d.getDisease_name().equals("")){
+        if (d.getDisease_name().isEmpty()){
             return result.error("疾病名不能为空！");
         }
         if(diseaseService.getDepartmentbyId(d.getDepartment_id())==null){
@@ -169,8 +164,12 @@ public class diseaseController {
     }
 
     //查找某个科室下的所有疾病
-    @PostMapping("/disease/getDiseasebyDepartment")
-    public result getDiseasebyDepartment(@RequestBody department d) {
+    @GetMapping("/disease/getDiseasebyDepartment")
+    public result getDiseasebyDepartment(@RequestParam(name="department_id") String department_id,@RequestHeader String Authorization) {
+
+        department d = new department();
+        d.setDepartment_id(department_id);
+
         if(diseaseService.getDepartmentbyId(d.getDepartment_id())==null){
             return result.error("该科室不存在！");
         }
@@ -192,7 +191,7 @@ public class diseaseController {
 
     //查找某个疾病下的所有病例
     @GetMapping("/disease/getCasebyDisease")
-    public result searchCasebyDis(@RequestParam(name = "disease_id") String disease_id) {
+    public result searchCasebyDis(@RequestParam(name = "disease_id") String disease_id,@RequestHeader String Authorization) {
         if(diseaseService.getDiseasebyId(disease_id)==null){
             return result.error("该疾病不存在！");
         }
@@ -213,7 +212,7 @@ public class diseaseController {
             return result.error("病例介绍不能为空！");
         }
         */
-        if (i.getCase_name().equals("")){
+        if (i.getCase_name().isEmpty()){
             return result.error("病例名不能为空！");
         }
         if(diseaseService.getDiseasebyId(i.getDisease_id())==null){
@@ -271,7 +270,7 @@ public class diseaseController {
 
     //获取病例文字信息
     @GetMapping("/disease/getCaseTextbyId")
-    public result getCasebyId(@RequestParam(name = "case_id") String case_id){
+    public result getCasebyId(@RequestParam(name = "case_id") String case_id,@RequestHeader String Authorization){
         if (stringRedisTemplate.opsForValue().
                 get(CASE_KEY +case_id)!=null){//缓存命中
             return result.success(JSONUtil.toBean(stringRedisTemplate.
@@ -298,7 +297,7 @@ public class diseaseController {
     }
 
     @GetMapping("/disease/getCatalog")
-    public result getCatalog() {
+    public result getCatalog(@RequestHeader String Authorization) {
         List<department> departments = diseaseService.findAllDepartments();
 
         return result.success(departments);
@@ -312,7 +311,8 @@ public class diseaseController {
     //分页查询病例列表
     @GetMapping("/disease/getCaseList")
     public result getCaseList(@RequestParam(name = "page") int page,
-                              @RequestParam(name = "pageSize") int size){
+                              @RequestParam(name = "pageSize") int size,
+                              @RequestHeader String Authorization){
         PageInfo<cases> pageResult = diseaseService.findPaginated(page, size);
         return result.success(pageResult);
     }
@@ -324,7 +324,7 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (i.getCase_img_name().equals("")){
+        if (i.getCase_img_name().isEmpty()){
             return result.error("图片名不能为空！");
         }
         if(diseaseService.getCasebyId(i.getCase_id())==null){
@@ -355,7 +355,7 @@ public class diseaseController {
 
     //根据病例获取病例症状所有图片
     @GetMapping("/disease/getCaseImgbyCase")
-    public result getCaseImgbyCase(@RequestParam(name = "case_id") String case_id){
+    public result getCaseImgbyCase(@RequestParam(name = "case_id") String case_id,@RequestHeader String Authorization){
         return result.success(diseaseService.getCaseImgbyCase(case_id));
     }
 
@@ -365,7 +365,7 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (i.getCase_video_name().equals("")){
+        if (i.getCase_video_name().isEmpty()){
             return result.error("视频名不能为空！");
         }
         if(diseaseService.getCasebyId(i.getCase_id())==null){
@@ -393,7 +393,7 @@ public class diseaseController {
 
     //根据病例获取病例症状所有视频
     @GetMapping("/disease/getCaseVideobyCase")
-    public result getCaseVideobyCase(@RequestParam(name = "case_id") String case_id){
+    public result getCaseVideobyCase(@RequestParam(name = "case_id") String case_id,@RequestHeader String Authorization){
         return result.success(diseaseService.getCaseVideobyCase(case_id));
     }
 
@@ -403,7 +403,7 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (o.getCase_operation_name().equals("")){
+        if (o.getCase_operation_name().isEmpty()){
             return result.error("视频名不能为空！");
         }
         if(diseaseService.getCasebyId(o.getCase_id())==null){
@@ -432,7 +432,7 @@ public class diseaseController {
 
     //根据病例获取手术视频
     @GetMapping("/disease/getOperationVideobyCase")
-    public result getOperationVideobyCase(@RequestParam(name = "case_id") String case_id){
+    public result getOperationVideobyCase(@RequestParam(name = "case_id") String case_id,@RequestHeader String Authorization){
         return result.success(diseaseService.getOperationVideobyCase(case_id));
     }
 
@@ -442,7 +442,7 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (r.getCase_resultimg_name().equals("")){
+        if (r.getCase_resultimg_name().isEmpty()){
             return result.error("图片名不能为空！");
         }
         if(diseaseService.getCasebyId(r.getCase_id())==null){
@@ -470,7 +470,7 @@ public class diseaseController {
 
     //根据病例获取诊断结果图片
     @GetMapping("/disease/getResultImgbyCase")
-    public result getResultImgbyCase(@RequestParam(name = "case_id") String case_id){
+    public result getResultImgbyCase(@RequestParam(name = "case_id") String case_id,@RequestHeader String Authorization){
         return result.success(diseaseService.getCaseResultImgbyCase(case_id));
     }
 

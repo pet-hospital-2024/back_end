@@ -28,11 +28,7 @@ public class UserController {
     public Boolean identitySecure(String target, String Authorization){
         Claims claims = JWTUtils.jwtParser(Authorization);
         String identity=(String) claims.get("identity");
-        if (target.equals(identity)){
-            return true;
-        }else {
-            return false;
-        }
+        return target.equals(identity);
     }
 
     public String newToken(String Authorization){
@@ -45,12 +41,11 @@ public class UserController {
         newclaim.put("username",username);
         newclaim.put("user_id",user_id);
         newclaim.put("identity",identity);
-        String token =JWTUtils.jwtGenerater(newclaim);
-        return token;
+        return JWTUtils.jwtGenerater(newclaim);
     }
 
     public static boolean checkEmail(String email) {
-        boolean flag = false;
+        boolean flag;
         try {
             String check = "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
             Pattern regex = Pattern.compile(check);
@@ -180,7 +175,11 @@ public class UserController {
     }
 
     @GetMapping("/user/getinfo")
-    public result getUser(@RequestParam(name = "username") String username){
+    public result getUser(@RequestParam(name = "username") String username,@RequestHeader String Authorization){
+        if (!identitySecure("administrator",Authorization)){
+            return result.error("无操作权限！");
+        }
+
         user u=new user();
         u.setUsername(username);
         if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+u.getUsername())!=null){

@@ -34,11 +34,7 @@ public class PaperController {
     public Boolean identitySecure(String target, String Authorization){
         Claims claims = JWTUtils.jwtParser(Authorization);
         String identity=(String) claims.get("identity");
-        if (target.equals(identity)){
-            return true;
-        }else {
-            return false;
-        }
+        return target.equals(identity);
     }
 
     public String newToken(String Authorization){
@@ -51,8 +47,7 @@ public class PaperController {
         newclaim.put("username",username);
         newclaim.put("user_id",user_id);
         newclaim.put("identity",identity);
-        String token =JWTUtils.jwtGenerater(newclaim);
-        return token;
+        return JWTUtils.jwtGenerater(newclaim);
     }
     @PostMapping("/paper/create")
     public result createNewPaper(@RequestBody paper p, @RequestHeader String Authorization){
@@ -79,7 +74,8 @@ public class PaperController {
         }
 
         //检查是不是已经有了这个题目
-        if (paperService.ifPaperContainsQueston(p)!=null && paperService.ifPaperContainsQueston(p).size()>0){
+        if (paperService.ifPaperContainsQueston(p)!=null &&
+                !paperService.ifPaperContainsQueston(p).isEmpty()){
             return result.error("该题目已经在试卷中！");
         }
 
@@ -102,7 +98,7 @@ public class PaperController {
         }
 
         //判断order是否已存在
-        if(paperService.ifOrderExist(p)!=null && paperService.ifOrderExist(p).size()>0){
+        if(paperService.ifOrderExist(p)!=null && !paperService.ifOrderExist(p).isEmpty()){
             return result.error("order已存在！");
         }
 
@@ -166,8 +162,7 @@ public class PaperController {
 
     @PostMapping("/paper/deletequestion")
     public result deleteQuestionFromPaper(@RequestBody paper p, @RequestHeader String Authorization){
-        if (identitySecure("user",Authorization))
-        return result.error("无操作权限！");
+        if (identitySecure("user",Authorization)) return result.error("无操作权限！");
 
         question q=new question();
         q.setQuestion_id(p.getQuestion_id());
@@ -206,7 +201,7 @@ public class PaperController {
 //    }
 
     @GetMapping("/paper/getPaperById")
-    public result GetPaperById(@RequestParam(name = "paper_id") String paper_id){
+    public result GetPaperById(@RequestParam(name = "paper_id") String paper_id, @RequestHeader String Authorization){
         paper p=new paper();
         p.setPaper_id(paper_id);
         //no identity secure needed.
@@ -217,7 +212,7 @@ public class PaperController {
         List<question> questions = r.getQuestions();
         int question_number = questions.size();
         int value = 0;
-        if(questions.size() == 0){
+        if(questions.isEmpty()){
             return result.error("该试卷没有题目！");
         }
         //System.out.println(questions);
@@ -244,7 +239,7 @@ public class PaperController {
     }
 
     @GetMapping("/paper/getPaperList")
-    public result GetPaperList(){
+    public result GetPaperList( @RequestHeader String Authorization){
         return result.success(paperService.getPaperList());
     }
 

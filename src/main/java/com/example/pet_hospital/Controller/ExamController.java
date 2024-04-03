@@ -21,11 +21,7 @@ public class ExamController {
     public Boolean identitySecure(String target, String Authorization){
         Claims claims = JWTUtils.jwtParser(Authorization);
         String identity=(String) claims.get("identity");
-        if (target.equals(identity)){
-            return true;
-        }else {
-            return false;
-        }
+        return target.equals(identity);
     }
 
     public String newToken(String Authorization){
@@ -38,8 +34,7 @@ public class ExamController {
         newclaim.put("username",username);
         newclaim.put("user_id",user_id);
         newclaim.put("identity",identity);
-        String token =JWTUtils.jwtGenerater(newclaim);
-        return token;
+        return JWTUtils.jwtGenerater(newclaim);
     }
 
     @Autowired
@@ -135,7 +130,7 @@ public class ExamController {
     }
 
     @GetMapping("/exam/getExamList")
-    public result GetExamList(){
+    public result GetExamList(@RequestHeader String Authorization){
         return result.success(examService.getExamList());
     }
 
