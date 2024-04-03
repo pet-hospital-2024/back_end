@@ -1,8 +1,6 @@
 package com.example.pet_hospital.Mapper;
 
 import com.example.pet_hospital.Entity.*;
-import com.example.pet_hospital.Vo.case_base;
-import com.example.pet_hospital.Vo.diseases;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -46,14 +44,14 @@ public interface DiseaseMapper {
     @Select("select * from syf.disease where disease_id=#{disease_id}")
     disease getDiseasebyId(String disease_id);
 
-    @Select("select disease_id, disease_name from syf.disease where department_id=#{department_id}")
-    diseases[] getDiseasebyDepartment(String Department_id);
+    @Select("select * from syf.disease where department_id=#{department_id}")
+    disease[] getDiseasebyDepartment(String Department_id);
 
 //    @Select("select case_id, case_name, case_introduction from syf.cases where disease_id=#{disease_id}")
 //    List<case_base> getCasebyDis(String disease_id);
 
-    @Select("select case_id, case_name, case_introduction from syf.cases where disease_id=#{disease_id}")
-    case_base[] getCasebyDis(String disease_id);
+    @Select("select * from syf.cases where disease_id=#{disease_id}")
+    cases[] getCasebyDis(String disease_id);
 
     @Insert("insert into syf.cases values(uuid_short(),#{case_name},#{case_examination},#{case_result},#{case_treatment},#{case_medicine},#{case_cost},#{case_introduction},#{disease_id},#{department_id})")
     void addCase(cases i);
@@ -75,8 +73,8 @@ public interface DiseaseMapper {
     cases[] searchCase(String case_name);
 
     //查询所有病例
-    @Select("select case_id, case_name, case_introduction from syf.cases ")
-    List<case_base> CaseList();
+    @Select("select * from syf.cases ")
+    List<cases> CaseList();
 
     @Insert("insert into syf.case_img values(uuid_short(),#{case_id},#{case_img_url},#{case_img_name})")
     void addCaseImg(case_img i);
@@ -136,12 +134,9 @@ public interface DiseaseMapper {
     List<department> findAllDepartments();
 
 
-    @Select("SELECT disease_id, disease_name FROM syf.disease WHERE department_id = #{department_id}")
-    @Results(value = {
-            @Result(property = "disease_id", column = "disease_id"),
-            @Result(property = "disease_name", column = "disease_name"),
-    })
-    List<diseases> selectDiseasesForDepartment(String departmentId);
+    @Select("SELECT * FROM syf.disease WHERE department_id = #{department_id}")
+
+    List<disease> selectDiseasesForDepartment(String departmentId);
 
 
 

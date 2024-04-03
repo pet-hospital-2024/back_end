@@ -1,9 +1,6 @@
 package com.example.pet_hospital.Service.impl;
 
-import com.example.pet_hospital.Dto.option;
 import com.example.pet_hospital.Entity.paper;
-import com.example.pet_hospital.Vo.paperDetail;
-import com.example.pet_hospital.Dto.questonifexist;
 import com.example.pet_hospital.Mapper.PaperMapper;
 import com.example.pet_hospital.Service.PaperService;
 import com.example.pet_hospital.Util.JWTUtils;
@@ -13,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class PaperService_impl implements PaperService {
@@ -79,25 +78,48 @@ public class PaperService_impl implements PaperService {
         paperMapper.deleteQuestionFromPaper_Questions(p);
     }
 
-    @Override
-    public paperDetail getQuestionsFromPaper(String paper_id) {
-        return paperMapper.getQuestionsFromPaper(paper_id);
-    }
 
 
 
     @Override
-    public questonifexist ifPaperContainsQueston(paper p) {
+    public List<Map<String,String>> ifPaperContainsQueston(paper p) {
         return paperMapper.ifPaperContainsQueston(p);
     }
 
     @Override
-    public option selectOptionsForQuestion(String question_id) {
-        return paperMapper.selectOptionsForQuestion(question_id);
+    public List<Map<String, String>> selectOptionsForQuestion(String question_id) {
+
+
+        Map<String, String> simpleMap=paperMapper.selectOptionsForQuestion(question_id);
+        List<Map<String, String>> complexList = new ArrayList<>();
+
+        for (Map.Entry<String, String> entry : simpleMap.entrySet()) {
+            Map<String, String> option = new HashMap<>();
+            option.put("optCode", entry.getKey());
+            option.put("optContents", entry.getValue());
+            complexList.add(option);
+        }
+
+
+
+
+
+
+        return complexList;
+
+
+    }
+
+
+    @Override
+    public paper getQuestionsFromPaper(String paper_id) {
+
+        paper r = paperMapper.getQuestionsFromPaper(paper_id);
+        return r;
     }
 
     @Override
-    public questonifexist ifOrderExist(paper p) {
+    public List<Map<String,String>> ifOrderExist(paper p) {
         return paperMapper.ifOrderExist(p);
     }
 

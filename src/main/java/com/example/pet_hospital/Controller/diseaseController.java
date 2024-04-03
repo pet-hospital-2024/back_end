@@ -1,15 +1,15 @@
 package com.example.pet_hospital.Controller;
+
 import cn.hutool.json.JSONUtil;
 import com.example.pet_hospital.Entity.*;
 import com.example.pet_hospital.Service.DiseaseService;
 import com.example.pet_hospital.Util.JWTUtils;
-import com.example.pet_hospital.Vo.case_base;
-import com.example.pet_hospital.Vo.result;
+import com.example.pet_hospital.Entity.result;
 import com.github.pagehelper.PageInfo;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -313,7 +313,7 @@ public class diseaseController {
     @GetMapping("/disease/getCaseList")
     public result getCaseList(@RequestParam(name = "page") int page,
                               @RequestParam(name = "pageSize") int size){
-        PageInfo<case_base> pageResult = diseaseService.findPaginated(page, size);
+        PageInfo<cases> pageResult = diseaseService.findPaginated(page, size);
         return result.success(pageResult);
     }
 

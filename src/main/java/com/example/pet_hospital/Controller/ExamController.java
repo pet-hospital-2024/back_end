@@ -3,7 +3,7 @@ package com.example.pet_hospital.Controller;
 import cn.hutool.json.JSONUtil;
 import com.example.pet_hospital.Entity.Exam;
 import com.example.pet_hospital.Entity.paper;
-import com.example.pet_hospital.Vo.result;
+import com.example.pet_hospital.Entity.result;
 import com.example.pet_hospital.Service.ExamService;
 import com.example.pet_hospital.Service.PaperService;
 import com.example.pet_hospital.Util.JWTUtils;

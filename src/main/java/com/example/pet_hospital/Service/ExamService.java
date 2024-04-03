@@ -1,7 +1,6 @@
 package com.example.pet_hospital.Service;
 
 import com.example.pet_hospital.Entity.Exam;
-import com.example.pet_hospital.Vo.examList;
 
 import java.util.ArrayList;
 
@@ -16,5 +15,5 @@ public interface ExamService {
 
     Exam getExamById(Exam exam);
 
-    ArrayList<examList> getExamList();
+    ArrayList<Exam> getExamList();
 }

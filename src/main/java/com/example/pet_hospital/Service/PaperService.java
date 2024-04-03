@@ -1,11 +1,10 @@
 package com.example.pet_hospital.Service;
 
-import com.example.pet_hospital.Dto.option;
 import com.example.pet_hospital.Entity.paper;
-import com.example.pet_hospital.Vo.paperDetail;
-import com.example.pet_hospital.Dto.questonifexist;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 public interface PaperService {
@@ -23,15 +22,15 @@ public interface PaperService {
 
     void deleteQuestionFromPaper(paper p);
 
-    paperDetail getQuestionsFromPaper(String paper_id);
+    paper getQuestionsFromPaper(String paper_id);
 
 
 
-    questonifexist ifPaperContainsQueston(paper p);
+    List<Map<String,String>> ifPaperContainsQueston(paper p);
 
-    option selectOptionsForQuestion(String question_id);
+    List<Map<String, String>> selectOptionsForQuestion(String question_id);
 
-    questonifexist ifOrderExist(paper p);
+    List<Map<String,String>> ifOrderExist(paper p);
 
     void updatePaperValueAndQuestionNumber(String paperId, int value, int questionNumber);
 }

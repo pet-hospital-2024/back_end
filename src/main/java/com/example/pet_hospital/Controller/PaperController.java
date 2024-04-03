@@ -1,15 +1,12 @@
 package com.example.pet_hospital.Controller;
 
 import cn.hutool.json.JSONUtil;
-import com.example.pet_hospital.Dto.option;
-import com.example.pet_hospital.Dto.singleoption;
-import com.example.pet_hospital.Entity.*;
+import com.example.pet_hospital.Entity.paper;
+import com.example.pet_hospital.Entity.question;
 import com.example.pet_hospital.Service.PaperService;
 import com.example.pet_hospital.Service.PracticeService;
 import com.example.pet_hospital.Util.JWTUtils;
-import com.example.pet_hospital.Dto.paper_question;
-import com.example.pet_hospital.Vo.paperDetail;
-import com.example.pet_hospital.Vo.result;
+import com.example.pet_hospital.Entity.result;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @RestController//
@@ -81,7 +79,7 @@ public class PaperController {
         }
 
         //检查是不是已经有了这个题目
-        if (paperService.ifPaperContainsQueston(p)!=null){
+        if (paperService.ifPaperContainsQueston(p)!=null && paperService.ifPaperContainsQueston(p).size()>0){
             return result.error("该题目已经在试卷中！");
         }
 
@@ -96,15 +94,15 @@ public class PaperController {
         }
 
         //判断order是否合法和不为
-        if (p.getOrder()==null){
+        if (p.getQuestion_order()==null){
             return result.error("order不能为空！");
         }
-        if (p.getOrder()<1){
+        if (p.getQuestion_order()<1){
             return result.error("order不能小于1！");
         }
 
         //判断order是否已存在
-        if(paperService.ifOrderExist(p)!=null){
+        if(paperService.ifOrderExist(p)!=null && paperService.ifOrderExist(p).size()>0){
             return result.error("order已存在！");
         }
 
@@ -215,46 +213,27 @@ public class PaperController {
         if (paperService.getPaperByID(p)==null){
             return result.error("该试卷不存在！");
         }
-        paperDetail r = paperService.getQuestionsFromPaper(paper_id);
-        List<paper_question> questions = r.getQuestions();
+        paper r = paperService.getQuestionsFromPaper(paper_id);
+        List<question> questions = r.getQuestions();
         int question_number = questions.size();
         int value = 0;
         if(questions.size() == 0){
             return result.error("该试卷没有题目！");
         }
         //System.out.println(questions);
-        for (paper_question question : questions) {
+        for (question question : questions) {
             // 对于每个问题，根据question_id获取选项内容
-            option optionResult = paperService.selectOptionsForQuestion(question.getQuestion_id());
+            List<Map<String, String>> optionResult = paperService.selectOptionsForQuestion(question.getQuestion_id());
             if(optionResult != null){
                 if (question.getType().equals("choice")) {
-                // 将选项内容转换为Option对象的列表
-                List<singleoption> optionsList = new ArrayList<>();
-                optionsList.add(new singleoption("A", optionResult.getA()));
-                optionsList.add(new singleoption("B", optionResult.getB()));
-                optionsList.add(new singleoption("C", optionResult.getC()));
-                optionsList.add(new singleoption("D", optionResult.getD()));
-
-                // 将转换后的列表设置为问题的options属性
-                question.setOptions(optionsList);
+                question.setOptions(optionResult);
             }
-
                if (question.getType().equals("judge")) {
-                   // 将选项内容转换为Option对象的列表
-                   List<singleoption> optionsList = new ArrayList<>();
-                   optionsList.add(new singleoption("A", optionResult.getA()));
-                   optionsList.add(new singleoption("B", optionResult.getB()));
-
-
-                   // 将转换后的列表设置为问题的options属性
-                    question.setOptions(optionsList);
+                   optionResult  = new ArrayList<>(optionResult.subList(0, 2));
+                   question.setOptions(optionResult);
                 }
-
                value += question.getValue();
-
             }
-
-
         }
         r.setQuestion_number(question_number);
         r.setValue(value);

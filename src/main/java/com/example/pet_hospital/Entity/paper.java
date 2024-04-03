@@ -1,18 +1,11 @@
 package com.example.pet_hospital.Entity;
 
 
-import cn.hutool.json.JSONObject;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.sf.jsqlparser.statement.create.table.ColumnDefinition;
-import org.springframework.data.relational.core.mapping.Column;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -20,11 +13,14 @@ import java.util.Map;
 public class paper {
     String paper_id;
     String paper_name;
-    String duration;
+    Integer duration;
     String question_id;
     Integer question_number;
+    Integer question_value;
+    Integer question_order;
+    List<question> questions;
     Integer value;
-    Integer order;
+
     //ArrayList<paperItem> questions;
     //String questionsJSON;
 }

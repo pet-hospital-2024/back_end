@@ -1,7 +1,6 @@
 package com.example.pet_hospital.Mapper;
 
 import com.example.pet_hospital.Entity.Exam;
-import com.example.pet_hospital.Vo.examList;
 import org.apache.ibatis.annotations.*;
 
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public interface ExamMapper {
     Exam getExamById(Exam exam);
 
     @Select("select e.exam_id, e.paper_id, e.exam_name, p.duration, e.exam_start, e.exam_end from syf.exams e join syf.papers p on e.paper_id = p.paper_id")
-    ArrayList<examList> getExamList();
+    ArrayList<Exam> getExamList();
 
 
 }

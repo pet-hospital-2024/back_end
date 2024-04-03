@@ -1,14 +1,12 @@
 package com.example.pet_hospital.Mapper;
 
-import com.example.pet_hospital.Dto.option;
-import com.example.pet_hospital.Dto.questonifexist;
-import com.example.pet_hospital.Entity.*;
-import com.example.pet_hospital.Dto.paper_question;
-import com.example.pet_hospital.Vo.paperDetail;
+import com.example.pet_hospital.Entity.paper;
+import com.example.pet_hospital.Entity.question;
 import org.apache.ibatis.annotations.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @Mapper
@@ -32,7 +30,7 @@ public interface PaperMapper {
             @Result(property = "questions", column = "paper_id", javaType = List.class,
                     many = @Many(select = "selectQuestionsForPaper"))
     })
-    paperDetail getQuestionsFromPaper(String paper_id);
+    paper getQuestionsFromPaper(String paper_id);
 
     @Select("SELECT * FROM syf.questions q INNER JOIN syf.paper_questions pq ON q.question_id = pq.question_id WHERE pq.paper_id = #{paper_id} order by `order`")
     @Results(value = {
@@ -45,16 +43,11 @@ public interface PaperMapper {
             @Result(property = "value", column = "value")
 
     })
-    List<paper_question> selectQuestionsForPaper(String paper_id);
+    List<question> selectQuestionsForPaper(String paper_id);
 
     @Select("SELECT a,b,c,d FROM syf.questions WHERE question_id = #{question_id}")
-    @Results(value = {
-            @Result(property = "A", column = "a"),
-            @Result(property = "B", column = "b"),
-            @Result(property = "C", column = "c"),
-            @Result(property = "D", column = "d")
-    })
-    option selectOptionsForQuestion(String question_id);
+
+    Map<String, String> selectOptionsForQuestion(String question_id);
 
 
     @Select("select * from syf.papers where paper_name=#{paper_name}")
@@ -76,10 +69,10 @@ public interface PaperMapper {
 
 
     @Select("select * from syf.paper_questions where paper_id=#{paper_id} and question_id=#{question_id}")
-    questonifexist ifPaperContainsQueston(paper p);
+    List<Map<String,String>> ifPaperContainsQueston(paper p);
 
     @Select("select paper_id,question_id from syf.paper_questions where paper_id=#{paper_id} and `order` = #{order}")
-    questonifexist ifOrderExist(paper p);
+    List<Map<String,String>> ifOrderExist(paper p);
 
     @Update("update syf.papers set value=#{value},question_number=#{questionNumber} where paper_id=#{paperId}")
     void updatePaperValueAndQuestionNumber(String paperId, int value, int questionNumber);

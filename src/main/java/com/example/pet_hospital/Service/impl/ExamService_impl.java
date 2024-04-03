@@ -1,7 +1,6 @@
 package com.example.pet_hospital.Service.impl;
 
 import com.example.pet_hospital.Entity.Exam;
-import com.example.pet_hospital.Vo.examList;
 import com.example.pet_hospital.Mapper.ExamMapper;
 import com.example.pet_hospital.Service.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,7 @@ public class ExamService_impl implements ExamService {
     }
 
     @Override
-    public ArrayList<examList> getExamList() {
+    public ArrayList<Exam> getExamList() {
         return examMapper.getExamList();
     }
 

@@ -2,8 +2,6 @@ package com.example.pet_hospital.Service;
 
 
 import com.example.pet_hospital.Entity.*;
-import com.example.pet_hospital.Vo.case_base;
-import com.example.pet_hospital.Vo.diseases;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -32,9 +30,9 @@ public interface DiseaseService {
 
     disease getDiseasebyId(String disease_id);
 
-    diseases[] getDiseasebyDepartment(String department_id);//在疾病表中查找某一科室的所有疾病
+    disease[] getDiseasebyDepartment(String department_id);//在疾病表中查找某一科室的所有疾病
 
-    case_base[] getCasebyDis(String disease_id);//在病例表中查找某一疾病的所有病例
+    cases[] getCasebyDis(String disease_id);//在病例表中查找某一疾病的所有病例
 
     void addCase(cases i);
 
@@ -49,7 +47,7 @@ public interface DiseaseService {
     cases[] searchCase(String name);
 
     //case_base[] CaseList();
-    PageInfo<case_base> findPaginated(int page, int size);
+    PageInfo<cases> findPaginated(int page, int size);
 
     //PageInfo<case_base> findPaginatedbyDis(String disease_id, int page, int size);
 

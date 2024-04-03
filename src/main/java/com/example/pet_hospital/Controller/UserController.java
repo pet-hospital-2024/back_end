@@ -1,7 +1,7 @@
 package com.example.pet_hospital.Controller;
 
 import cn.hutool.json.JSONUtil;
-import com.example.pet_hospital.Vo.result;
+import com.example.pet_hospital.Entity.result;
 import com.example.pet_hospital.Entity.user;
 import com.example.pet_hospital.Service.UserService;
 import com.example.pet_hospital.Util.JWTUtils;

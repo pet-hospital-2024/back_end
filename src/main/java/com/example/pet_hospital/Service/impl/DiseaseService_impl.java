@@ -3,8 +3,6 @@ package com.example.pet_hospital.Service.impl;
 import com.example.pet_hospital.Entity.*;
 import com.example.pet_hospital.Mapper.DiseaseMapper;
 import com.example.pet_hospital.Service.DiseaseService;
-import com.example.pet_hospital.Vo.case_base;
-import com.example.pet_hospital.Vo.diseases;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,12 +71,12 @@ public class DiseaseService_impl implements DiseaseService {
     }
 
     @Override
-    public diseases[] getDiseasebyDepartment(String department_id) {
+    public disease[] getDiseasebyDepartment(String department_id) {
         return DiseaseMapper.getDiseasebyDepartment(department_id);
     }
 
     @Override
-    public case_base[] getCasebyDis(String disease_id) {
+    public cases[] getCasebyDis(String disease_id) {
         return DiseaseMapper.getCasebyDis(disease_id);
     }
 
@@ -113,11 +111,11 @@ public class DiseaseService_impl implements DiseaseService {
     }
 
     @Override
-    public PageInfo<case_base> findPaginated(int page, int size) {
+    public PageInfo<cases> findPaginated(int page, int size) {
         PageHelper.startPage(page, size);
-        List<case_base> list = DiseaseMapper.CaseList();
+        List<cases> list = DiseaseMapper.CaseList();
         //Page<case_base> pageList = (Page<case_base>) list;
-        PageInfo<case_base> pageInfo = new PageInfo<>(list, 5);
+        PageInfo<cases> pageInfo = new PageInfo<>(list, 5);
         //System.out.println(pageInfo);
         //return new PageResult<>(list, pageInfo.getTotal(), pageInfo.getPages(), page, size);
         //return new PageResult<>(case_bases, case_bases.getTotal(), case_bases.getPages(), page, size);

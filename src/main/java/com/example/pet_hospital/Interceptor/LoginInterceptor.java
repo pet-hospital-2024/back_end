@@ -1,7 +1,7 @@
 package com.example.pet_hospital.Interceptor;
 
 import cn.hutool.json.JSONUtil;
-import com.example.pet_hospital.Vo.result;
+import com.example.pet_hospital.Entity.result;
 import com.example.pet_hospital.Util.JWTUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

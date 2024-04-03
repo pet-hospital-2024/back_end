@@ -13,5 +13,6 @@ public class Exam {
     String exam_start;
     String exam_end;
     String exam_name;
+    Integer duration;
 
 }
