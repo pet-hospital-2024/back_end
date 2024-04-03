@@ -87,6 +87,11 @@ public interface DiseaseMapper {
     })
     List<department> findAllDepartments();
 
+
+    //实现List<department> findAllDepartments();用到的selectDiseasesForDepartment
+    @Select("SELECT disease_id, disease_name FROM syf.disease WHERE department_id=#{department_id}")
+    List<disease> selectDiseasesForDepartment(String department_id);
+
     @Insert("insert into syf.case_media values(uuid_short(),#{case_id},#{media_url},#{media_name},#{media_type},#{category})")
     void addMedia(case_media m);
 
