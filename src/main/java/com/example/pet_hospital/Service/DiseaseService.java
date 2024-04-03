@@ -51,39 +51,34 @@ public interface DiseaseService {
 
     //PageInfo<case_base> findPaginatedbyDis(String disease_id, int page, int size);
 
-    void addCaseImg(case_img i);
 
-    void deleteCaseImg(case_img i);
 
-    case_img getCaseImgbyId(String caseImgId);//根据图片id查找图片
 
-    case_img[] getCaseImgbyCase(String case_id);
-
-    void addCaseVideo(case_video i);
-
-    void deleteCaseVideo(case_video i);
-
-    case_video getCaseVideobyId(String caseVideoId);//根据视频id查找视频
-
-    case_video[] getCaseVideobyCase(String case_id);
-
-    void addOperationVideo(operation_video o);
-
-    operation_video getOperationVideobyId(String case_operation_id);
-
-    void deleteCaseOperationVideo(operation_video o);
-
-    operation_video[] getOperationVideobyCase(String caseId);
-
-    void addResultImg(result_img r);
-
-    result_img getResultImgbyId(String caseResultimgId);
-
-    void deleteResultImg(result_img r);
-
-    result_img[] getCaseResultImgbyCase(String caseId);
 
     List<department> findAllDepartments();
 
 
+    void addMedia(case_media m);
+
+    case_media getMediabyUrl(String mediaUrl);
+
+    case_media getMediabyName(String mediaName);
+
+    void deleteMedia(case_media m);
+
+    case_media[] findAllMedia();
+
+    case_media[] getMediaByCaseId(String caseId);
+
+    case_media[] getMediaByType(String mediaType);
+
+    case_media[] getMediaByCategory(String category);
+
+    case_media[] getMediaByCaseIdAndType(String caseId, String mediaType);
+
+    case_media[] getMediaByCaseIdAndCategory(String caseId, String category);
+
+    case_media[] getMediaByTypeAndCategory(String mediaType, String category);
+
+    case_media[] getMediaByCaseIdAndTypeAndCategory(String caseId, String mediaType, String category);
 }

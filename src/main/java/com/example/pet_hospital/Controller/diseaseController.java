@@ -334,160 +334,212 @@ public class diseaseController {
     }
 
 
-    //增加病例症状图片
-    @PostMapping("/disease/addCaseImg")
-    public result addCaseImg(@RequestBody case_img i, @RequestHeader String Authorization){
+    //添加病例多媒体
+    //media_type只能是image或者video，对应 图片 或者 视频 ；
+    //
+    //category:
+    //用于指明多媒体文件属于四个类别中的哪一个。
+    //接诊 病例检查 诊断结果 治疗方案
+    //只能是以下四个之一
+    //Consultation Examination Result Treatment
+    @PostMapping("/disease/addMedia")
+    public result addMedia(@RequestBody case_media m, @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if (i.getCase_img_name().isEmpty()){
-            return result.error("图片名不能为空！");
+        if (m.getCase_id().isEmpty()){
+            return result.error("病例id不能为空！");
         }
-        if(diseaseService.getCasebyId(i.getCase_id())==null){
+        if (m.getMedia_url().isEmpty()){
+            return result.error("媒体url不能为空！");
+        }
+        if (m.getMedia_name().isEmpty()){
+            return result.error("媒体名不能为空！");
+        }
+        if (m.getMedia_type().isEmpty()){
+            return result.error("媒体类型不能为空！");
+        }
+        if (m.getCategory().isEmpty()){
+            return result.error("媒体类别不能为空！");
+        }
+        if(diseaseService.getCasebyId(m.getCase_id())==null){
             return result.error("该病例不存在！");
         }
-        diseaseService.addCaseImg(i);
+        if(diseaseService.getMediabyUrl(m.getMedia_url())!=null){
+            return result.error("该媒体已存在！");
+        }
+        if(diseaseService.getMediabyName(m.getMedia_name())!=null){
+            return result.error("该媒体名已存在！");
+        }
+        if(!(m.getMedia_type().equals("image")||m.getMedia_type().equals("video"))){
+            return result.error("媒体类型只能是image或者video！");
+        }
+        if(!(m.getCategory().equals("Consultation")||m.getCategory().equals("Examination")
+                ||m.getCategory().equals("Result")||m.getCategory().equals("Treatment"))){
+            return result.error("媒体类别只能是Consultation,Examination,Result,Treatment之一！");
+        }
+        diseaseService.addMedia(m);
         return result.success(newToken(Authorization));
-
-
-
     }
 
-    //删除病例症状图片
-    @PostMapping("/disease/deleteCaseImg")
-    public result deleteCaseImg(@RequestBody case_img i, @RequestHeader String Authorization){
+    //删除病例多媒体
+    @PostMapping("/disease/deleteMedia")
+    public result deleteMedia(@RequestBody case_media m, @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
-        if(diseaseService.getCaseImgbyId(i.getCase_img_id())==null){
-            return result.error("该图片不存在！");
+        if(diseaseService.getMediabyUrl(m.getMedia_url())==null){
+            return result.error("该媒体不存在！");
         }
-        if (stringRedisTemplate.opsForValue().get(CASE_KEY +i.getCase_id())!=null){
-            stringRedisTemplate.delete(CASE_KEY +i.getCase_id());
-        }
-        diseaseService.deleteCaseImg(i);
+        diseaseService.deleteMedia(m);
         return result.success(newToken(Authorization));
     }
 
-    //根据病例获取病例症状所有图片
-    @GetMapping("/disease/getCaseImgbyCase")
-    public result getCaseImgbyCase(@RequestParam(name = "case_id") String case_id,@RequestHeader String Authorization){
-        return result.success(diseaseService.getCaseImgbyCase(case_id));
+
+    //获取病例多媒体
+    //可以选择type和category进行筛选
+    //type和category都为空则返回所有多媒体
+    //getMedia?case_id=212&media_type=image&category=Consultation
+    @GetMapping("/disease/getMedia")
+    public result getMedia(@RequestParam(name = "case_id",required = false) String case_id,
+                           @RequestParam(name = "media_type",required = false) String media_type,
+                           @RequestParam(name = "category",required = false) String category,
+                           @RequestHeader String Authorization ){
+
+        //media_type只能是image或者video，对应 图片 或者 视频 ；
+        //
+        //category:
+        //用于指明多媒体文件属于四个类别中的哪一个。
+        //接诊 病例检查 诊断结果 治疗方案
+        //只能是以下四个之一
+        //Consultation Examination Result Treatment
+        if (media_type!=null&&!media_type.equals("image")&&!media_type.equals("video")){
+            return result.error("媒体类型只能是image或者video！");
+        }
+        if (category!=null&&!(category.equals("Consultation")||category.equals("Examination")
+                ||category.equals("Result")||category.equals("Treatment"))){
+            return result.error("媒体类别只能是Consultation,Examination,Result,Treatment之一！");
+        }
+
+        if (case_id==null&&media_type==null&&category==null){
+            return result.success(diseaseService.findAllMedia());
+        }
+        if (case_id!=null&&media_type==null&&category==null){
+            return result.success(diseaseService.getMediaByCaseId(case_id));
+        }
+        if (case_id==null&&media_type!=null&&category==null){
+            return result.success(diseaseService.getMediaByType(media_type));
+        }
+        if (case_id==null&&media_type==null&&category!=null){
+            return result.success(diseaseService.getMediaByCategory(category));
+        }
+        if (case_id!=null&&media_type!=null&&category==null){
+            return result.success(diseaseService.getMediaByCaseIdAndType(case_id,media_type));
+        }
+        if (case_id!=null&&media_type==null&&category!=null){
+            return result.success(diseaseService.getMediaByCaseIdAndCategory(case_id,category));
+        }
+        if (case_id==null&&media_type!=null&&category!=null){
+            return result.success(diseaseService.getMediaByTypeAndCategory(media_type,category));
+        }
+        if (case_id!=null&&media_type!=null&&category!=null){
+            return result.success(diseaseService.getMediaByCaseIdAndTypeAndCategory(case_id,media_type,category));
+        }
+        return result.error("参数错误！");
     }
 
-    //增加病例介绍视频
-    @PostMapping("/disease/addCaseVideo")
-    public result addCaseVideo(@RequestBody case_video i, @RequestHeader String Authorization){
-        if (identitySecure("user",Authorization)){
-            return result.error("无操作权限！");
+    //获取病例多媒体
+    //只返回一个URL列表，其他信息不返回
+    //可以选择type和category进行筛选
+    //type和category都为空则返回所有多媒体
+    //getMedia?case_id=212&media_type=image&category=Consultation
+    @GetMapping("/disease/getMediaURL")
+    public result getMediaURL(@RequestParam(name = "case_id",required = false) String case_id,
+                           @RequestParam(name = "media_type",required = false) String media_type,
+                           @RequestParam(name = "category",required = false) String category,
+                           @RequestHeader String Authorization ) {
+
+        //media_type只能是image或者video，对应 图片 或者 视频 ；
+        //
+        //category:
+        //用于指明多媒体文件属于四个类别中的哪一个。
+        //接诊 病例检查 诊断结果 治疗方案
+        //只能是以下四个之一
+        //Consultation Examination Result Treatment
+        if (media_type != null && !media_type.equals("image") && !media_type.equals("video")) {
+            return result.error("媒体类型只能是image或者video！");
         }
-        if (i.getCase_video_name().isEmpty()){
-            return result.error("视频名不能为空！");
+        if (category != null && !(category.equals("Consultation") || category.equals("Examination")
+                || category.equals("Result") || category.equals("Treatment"))) {
+            return result.error("媒体类别只能是Consultation,Examination,Result,Treatment之一！");
         }
-        if(diseaseService.getCasebyId(i.getCase_id())==null){
-            return result.error("该病例不存在！");
+
+        if (case_id == null && media_type == null && category == null) {
+            case_media[] media = diseaseService.findAllMedia();
+            String[] urls = new String[media.length];
+            for (int i = 0; i < media.length; i++) {
+                urls[i] = media[i].getMedia_url();
+            }
+            return result.success(urls);
         }
-        diseaseService.addCaseVideo(i);
-        return result.success(newToken(Authorization));
+        if (case_id != null && media_type == null && category == null) {
+            case_media[] media = diseaseService.getMediaByCaseId(case_id);
+            String[] urls = new String[media.length];
+            for (int i = 0; i < media.length; i++) {
+                urls[i] = media[i].getMedia_url();
+            }
+            return result.success(urls);
+        }
+        if (case_id == null && media_type != null && category == null) {
+            case_media[] media = diseaseService.getMediaByType(media_type);
+            String[] urls = new String[media.length];
+            for (int i = 0; i < media.length; i++) {
+                urls[i] = media[i].getMedia_url();
+            }
+            return result.success(urls);
+        }
+        if (case_id == null && media_type == null && category != null) {
+            case_media[] media = diseaseService.getMediaByCategory(category);
+            String[] urls = new String[media.length];
+            for (int i = 0; i < media.length; i++) {
+                urls[i] = media[i].getMedia_url();
+            }
+            return result.success(urls);
+        }
+        if (case_id != null && media_type != null && category == null) {
+            case_media[] media = diseaseService.getMediaByCaseIdAndType(case_id, media_type);
+            String[] urls = new String[media.length];
+            for (int i = 0; i < media.length; i++) {
+                urls[i] = media[i].getMedia_url();
+            }
+            return result.success(urls);
+        }
+        if (case_id != null && media_type == null && category != null) {
+            case_media[] media = diseaseService.getMediaByCaseIdAndCategory(case_id, category);
+            String[] urls = new String[media.length];
+            for (int i = 0; i < media.length; i++) {
+                urls[i] = media[i].getMedia_url();
+            }
+            return result.success(urls);
+        }
+        if (case_id == null && media_type != null && category != null) {
+            case_media[] media = diseaseService.getMediaByTypeAndCategory(media_type, category);
+            String[] urls = new String[media.length];
+            for (int i = 0; i < media.length; i++) {
+                urls[i] = media[i].getMedia_url();
+            }
+            return result.success(urls);
+        }
+        if (case_id != null && media_type != null && category != null) {
+            case_media[] media = diseaseService.getMediaByCaseIdAndTypeAndCategory(case_id, media_type, category);
+            String[] urls = new String[media.length];
+            for (int i = 0; i < media.length; i++) {
+                urls[i] = media[i].getMedia_url();
+            }
+            return result.success(urls);
+        }
+        return result.error("参数错误！");
+
+
     }
-
-    //删除病例介绍视频
-    @PostMapping("/disease/deleteCaseVideo")
-    public result deleteCaseVideo(@RequestBody case_video i, @RequestHeader String Authorization){
-        if (identitySecure("user",Authorization)){
-            return result.error("无操作权限！");
-        }
-        if(diseaseService.getCaseVideobyId(i.getCase_video_id())==null){
-            return result.error("该视频不存在！");
-        }
-        if (stringRedisTemplate.opsForValue().get(CASE_KEY +i.getCase_id())!=null){
-            stringRedisTemplate.delete(CASE_KEY +i.getCase_id());
-        }
-        diseaseService.deleteCaseVideo(i);
-        return result.success(newToken(Authorization));
-    }
-
-    //根据病例获取病例症状所有视频
-    @GetMapping("/disease/getCaseVideobyCase")
-    public result getCaseVideobyCase(@RequestParam(name = "case_id") String case_id,@RequestHeader String Authorization){
-        return result.success(diseaseService.getCaseVideobyCase(case_id));
-    }
-
-    //增加手术视频
-    @PostMapping("/disease/addOperationVideo")
-    public result addOperationVideo(@RequestBody operation_video o, @RequestHeader String Authorization){
-        if (identitySecure("user",Authorization)){
-            return result.error("无操作权限！");
-        }
-        if (o.getCase_operation_name().isEmpty()){
-            return result.error("视频名不能为空！");
-        }
-        if(diseaseService.getCasebyId(o.getCase_id())==null){
-            return result.error("该病例不存在！");
-        }
-        diseaseService.addOperationVideo(o);
-        return result.success(newToken(Authorization));
-    }
-
-    //删除手术视频
-    @PostMapping("/disease/deleteOperationVideo")
-    public result deleteOperationVideo(@RequestBody operation_video o, @RequestHeader String Authorization){
-        if (identitySecure("user",Authorization)){
-            return result.error("无操作权限！");
-        }
-        if(diseaseService.getOperationVideobyId(o.getCase_operation_id())==null){
-            return result.error("该视频不存在！");
-        }
-        if (stringRedisTemplate.opsForValue().get(CASE_KEY +o.getCase_id())!=null){
-            stringRedisTemplate.delete(CASE_KEY +o.getCase_id());
-        }
-
-        diseaseService.deleteCaseOperationVideo(o);
-        return result.success(newToken(Authorization));
-    }
-
-    //根据病例获取手术视频
-    @GetMapping("/disease/getOperationVideobyCase")
-    public result getOperationVideobyCase(@RequestParam(name = "case_id") String case_id,@RequestHeader String Authorization){
-        return result.success(diseaseService.getOperationVideobyCase(case_id));
-    }
-
-    //增加病例诊断结果图片
-    @PostMapping("/disease/addResultImg")
-    public result addResultImg(@RequestBody result_img r, @RequestHeader String Authorization){
-        if (identitySecure("user",Authorization)){
-            return result.error("无操作权限！");
-        }
-        if (r.getCase_resultimg_name().isEmpty()){
-            return result.error("图片名不能为空！");
-        }
-        if(diseaseService.getCasebyId(r.getCase_id())==null){
-            return result.error("该病例不存在！");
-        }
-        diseaseService.addResultImg(r);
-        return result.success(newToken(Authorization));
-    }
-
-    //删除病例诊断结果图片
-    @PostMapping("/disease/deleteResultImg")
-    public result deleteResultImg(@RequestBody result_img r, @RequestHeader String Authorization){
-        if (identitySecure("user",Authorization)){
-            return result.error("无操作权限！");
-        }
-        if(diseaseService.getResultImgbyId(r.getCase_resultimg_id())==null){
-            return result.error("该图片不存在！");
-        }
-        if (stringRedisTemplate.opsForValue().get(CASE_KEY +r.getCase_id())!=null){
-            stringRedisTemplate.delete(CASE_KEY +r.getCase_id());
-        }
-        diseaseService.deleteResultImg(r);
-        return result.success(newToken(Authorization));
-    }
-
-    //根据病例获取诊断结果图片
-    @GetMapping("/disease/getResultImgbyCase")
-    public result getResultImgbyCase(@RequestParam(name = "case_id") String case_id,@RequestHeader String Authorization){
-        return result.success(diseaseService.getCaseResultImgbyCase(case_id));
-    }
-
 }

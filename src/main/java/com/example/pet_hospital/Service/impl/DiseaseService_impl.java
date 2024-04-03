@@ -121,11 +121,10 @@ public class DiseaseService_impl implements DiseaseService {
         PageHelper.startPage(page, size);
         List<cases> list = DiseaseMapper.CaseList();
         //Page<case_base> pageList = (Page<case_base>) list;
-        PageInfo<cases> pageInfo = new PageInfo<>(list, 5);
         //System.out.println(pageInfo);
         //return new PageResult<>(list, pageInfo.getTotal(), pageInfo.getPages(), page, size);
         //return new PageResult<>(case_bases, case_bases.getTotal(), case_bases.getPages(), page, size);
-        return pageInfo;
+        return new PageInfo<>(list, 5);
     }
 
 //    @Override
@@ -141,94 +140,72 @@ public class DiseaseService_impl implements DiseaseService {
 //        return DiseaseMapper.CaseList();
 //    }
 
-    @Override
-    public void addCaseImg(case_img i) {
-        DiseaseMapper.addCaseImg(i);
-    }
-
-    @Override
-    public void deleteCaseImg(case_img i) {
-        DiseaseMapper.deleteCaseImg(i);
-    }
-
-    @Override
-    public case_img getCaseImgbyId(String case_imgage_id) {
-        return DiseaseMapper.getCaseImgbyId(case_imgage_id);
-    }
-
-    @Override
-    public case_img[] getCaseImgbyCase(String case_id) {
-        return DiseaseMapper.getCaseImgbyCase(case_id);
-    }
-
-    @Override
-    public void addCaseVideo(case_video i) {
-        DiseaseMapper.addCaseVideo(i);
-    }
-
-    @Override
-    public void deleteCaseVideo(case_video i) {
-        DiseaseMapper.deleteCaseVideo(i);
-    }
-
-    @Override
-    public case_video getCaseVideobyId(String caseVideoId) {
-        return DiseaseMapper.getCaseVideobyId(caseVideoId);
-    }
-
-    @Override
-    public case_video[] getCaseVideobyCase(String case_id) {
-        return DiseaseMapper.getCaseVideobyCase(case_id);
-    }
-
-    @Override
-    public void addOperationVideo(operation_video o) {
-        DiseaseMapper.addOperationVideo(o);
-    }
-
-    @Override
-    public operation_video getOperationVideobyId(String case_operation_id) {
-        return DiseaseMapper.getOperationVideobyId(case_operation_id);
-    }
-
-    @Override
-    public void deleteCaseOperationVideo(operation_video o) {
-        DiseaseMapper.deleteCaseOperationVideo(o);
-
-    }
-
-    @Override
-    public operation_video[] getOperationVideobyCase(String case_id) {
-        return DiseaseMapper.getOperationVideobyCase(case_id);
-    }
-
-    @Override
-    public void addResultImg(result_img r) {
-        DiseaseMapper.addResultImg(r);
-
-    }
-
-    @Override
-    public result_img getResultImgbyId(String case_result_img_id) {
-        return DiseaseMapper.getResultImgbyId(case_result_img_id);
-    }
-
-    @Override
-    public void deleteResultImg(result_img r) {
-        DiseaseMapper.deleteResultImg(r);
-
-    }
-
-    @Override
-    public result_img[] getCaseResultImgbyCase(String case_id) {
-        return DiseaseMapper.getCaseResultImgbyCase(case_id);
-    }
 
     @Override
     public List<department> findAllDepartments() {
         return DiseaseMapper.findAllDepartments();
     }
 
+    @Override
+    public void addMedia(case_media m) {
+        DiseaseMapper.addMedia(m);
+    }
+
+    @Override
+    public case_media getMediabyUrl(String mediaUrl) {
+        return DiseaseMapper.getMediabyUrl(mediaUrl);
+    }
+
+    @Override
+    public case_media getMediabyName(String mediaName) {
+        return DiseaseMapper.getMediabyName(mediaName);
+    }
+
+    @Override
+    public void deleteMedia(case_media m) {
+        DiseaseMapper.deleteMedia(m);
+
+    }
+
+    @Override
+    public case_media[] findAllMedia() {
+        return DiseaseMapper.findAllMedia();
+    }
+
+    @Override
+    public case_media[] getMediaByCaseId(String caseId) {
+        return DiseaseMapper.getMediaByCaseId(caseId);
+    }
+
+    @Override
+    public case_media[] getMediaByType(String mediaType) {
+        return DiseaseMapper.getMediaByType(mediaType);
+    }
+
+    @Override
+    public case_media[] getMediaByCategory(String category) {
+        return DiseaseMapper.getMediaByCategory(category);
+    }
+
+    @Override
+    public case_media[] getMediaByCaseIdAndType(String caseId, String mediaType) {
+        return DiseaseMapper.getMediaByCaseIdAndType(caseId, mediaType);
+    }
+
+    @Override
+    public case_media[] getMediaByCaseIdAndCategory(String caseId, String category) {
+        return DiseaseMapper.getMediaByCaseIdAndCategory(caseId, category);
+    }
+
+    @Override
+    public case_media[] getMediaByTypeAndCategory(String mediaType, String category) {
+        return DiseaseMapper.getMediaByTypeAndCategory(mediaType, category);
+    }
+
+    @Override
+    public case_media[] getMediaByCaseIdAndTypeAndCategory(String caseId, String mediaType, String category) {
+        return DiseaseMapper.getMediaByCaseIdAndTypeAndCategory(caseId, mediaType, category);
+    }
 
 
 }

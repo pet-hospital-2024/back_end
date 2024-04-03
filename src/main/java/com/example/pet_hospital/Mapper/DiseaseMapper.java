@@ -76,53 +76,7 @@ public interface DiseaseMapper {
     @Select("select * from syf.cases ")
     List<cases> CaseList();
 
-    @Insert("insert into syf.case_img values(uuid_short(),#{case_id},#{case_img_url},#{case_img_name})")
-    void addCaseImg(case_img i);
 
-    @Delete("delete from syf.case_img where case_img_id=#{case_img_id}")
-    void deleteCaseImg(case_img i);
-
-    @Select("select * from syf.case_img where case_img_id=#{case_img_id}")
-    case_img getCaseImgbyId(String case_img_id);
-
-    @Select("select * from syf.case_img where case_id=#{case_id}")
-    case_img[] getCaseImgbyCase(String case_id);
-
-    @Insert("insert into syf.case_video values(uuid_short(),#{case_id},#{case_video_url},#{case_video_name})")
-    void addCaseVideo(case_video i);
-
-    @Delete("delete from syf.case_video where case_video_id=#{case_video_id}")
-    void deleteCaseVideo(case_video i);
-
-    @Select("select * from syf.case_video where case_video_id=#{case_video_id}")
-    case_video getCaseVideobyId(String case_video_id);
-
-    @Select("select * from syf.case_video where case_id=#{case_id}")
-    case_video[] getCaseVideobyCase(String case_id);
-
-    @Insert("insert into syf.operation_video values(uuid_short(),#{case_id},#{case_operation_url},#{case_operation_name})")
-    void addOperationVideo(operation_video o);
-
-    @Select("select * from syf.operation_video where case_operation_id=#{case_operation_id}")
-    operation_video getOperationVideobyId(String case_operation_id);
-
-    @Delete("delete from syf.operation_video where case_operation_id=#{case_operation_id}")
-    void deleteCaseOperationVideo(operation_video o);
-
-    @Select("select * from syf.operation_video where case_id=#{case_id}")
-    operation_video[] getOperationVideobyCase(String case_id);
-
-    @Insert("insert into syf.result_img values(uuid_short(),#{case_id},#{case_resultimg_url},#{case_resultimg_name})")
-    void addResultImg(result_img r);
-
-    @Select("select * from syf.result_img where case_resultimg_id=#{case_result_img_id}")
-    result_img getResultImgbyId(String case_result_img_id);
-
-    @Delete("delete from syf.result_img where case_resultimg_id=#{case_resultimg_id}")
-    void deleteResultImg(result_img r);
-
-    @Select("select * from syf.result_img where case_id=#{case_id}")
-    result_img[] getCaseResultImgbyCase(String case_id);
 
     @Select("SELECT department_id, department_name FROM syf.department ORDER BY department_id")
     @Results(value = {
@@ -133,11 +87,120 @@ public interface DiseaseMapper {
     })
     List<department> findAllDepartments();
 
+    @Insert("insert into syf.case_media values(uuid_short(),#{case_id},#{media_url},#{media_name},#{media_type},#{category})")
+    void addMedia(case_media m);
 
-    @Select("SELECT * FROM syf.disease WHERE department_id = #{department_id}")
+    @Select("select * from syf.case_media where case_media_url=#{mediaUrl}")
+    @Results(value = {
+            @Result(property = "case_id", column = "case_id"),
+            @Result(property = "media_id", column = "case_media_id"),
+            @Result(property = "media_url", column = "case_media_url"),
+            @Result(property = "media_name", column = "case_media_name"),
+            @Result(property = "media_type", column = "case_media_type"),
+            @Result(property = "category", column = "category")
+    })
+    case_media getMediabyUrl(String mediaUrl);
 
-    List<disease> selectDiseasesForDepartment(String departmentId);
+    @Select("select * from syf.case_media where case_media_name=#{mediaName}")
+    @Results(value = {
+            @Result(property = "case_id", column = "case_id"),
+            @Result(property = "media_id", column = "case_media_id"),
+            @Result(property = "media_url", column = "case_media_url"),
+            @Result(property = "media_name", column = "case_media_name"),
+            @Result(property = "media_type", column = "case_media_type"),
+            @Result(property = "category", column = "category")
+    })
+    case_media getMediabyName(String mediaName);
+
+    @Delete("delete from syf.case_media where case_media_id=#{media_id}")
+    void deleteMedia(case_media m);
 
 
+    @Select("select * from syf.case_media")
+    @Results(value = {
+            @Result(property = "case_id", column = "case_id"),
+            @Result(property = "media_id", column = "case_media_id"),
+            @Result(property = "media_url", column = "case_media_url"),
+            @Result(property = "media_name", column = "case_media_name"),
+            @Result(property = "media_type", column = "case_media_type"),
+            @Result(property = "category", column = "category")
+    })
+    case_media[] findAllMedia();
 
+    @Select("select * from syf.case_media where case_id=#{caseId}")
+    @Results(value = {
+            @Result(property = "case_id", column = "case_id"),
+            @Result(property = "media_id", column = "case_media_id"),
+            @Result(property = "media_url", column = "case_media_url"),
+            @Result(property = "media_name", column = "case_media_name"),
+            @Result(property = "media_type", column = "case_media_type"),
+            @Result(property = "category", column = "category")
+    })
+    case_media[] getMediaByCaseId(String caseId);
+
+    @Select("select * from syf.case_media where case_media_type=#{mediaType}")
+    @Results(value = {
+            @Result(property = "case_id", column = "case_id"),
+            @Result(property = "media_id", column = "case_media_id"),
+            @Result(property = "media_url", column = "case_media_url"),
+            @Result(property = "media_name", column = "case_media_name"),
+            @Result(property = "media_type", column = "case_media_type"),
+            @Result(property = "category", column = "category")
+    })
+    case_media[] getMediaByType(String mediaType);
+
+    @Select("select * from syf.case_media where category=#{category}")
+    @Results(value = {
+            @Result(property = "case_id", column = "case_id"),
+            @Result(property = "media_id", column = "case_media_id"),
+            @Result(property = "media_url", column = "case_media_url"),
+            @Result(property = "media_name", column = "case_media_name"),
+            @Result(property = "media_type", column = "case_media_type"),
+            @Result(property = "category", column = "category")
+    })
+    case_media[] getMediaByCategory(String category);
+
+    @Select("select * from syf.case_media where case_id=#{caseId} and case_media_type=#{mediaType}")
+    @Results(value = {
+            @Result(property = "case_id", column = "case_id"),
+            @Result(property = "media_id", column = "case_media_id"),
+            @Result(property = "media_url", column = "case_media_url"),
+            @Result(property = "media_name", column = "case_media_name"),
+            @Result(property = "media_type", column = "case_media_type"),
+            @Result(property = "category", column = "category")
+    })
+    case_media[] getMediaByCaseIdAndType(String caseId, String mediaType);
+
+    @Select("select * from syf.case_media where case_id=#{caseId} and category=#{category}")
+    @Results(value = {
+            @Result(property = "case_id", column = "case_id"),
+            @Result(property = "media_id", column = "case_media_id"),
+            @Result(property = "media_url", column = "case_media_url"),
+            @Result(property = "media_name", column = "case_media_name"),
+            @Result(property = "media_type", column = "case_media_type"),
+            @Result(property = "category", column = "category")
+    })
+    case_media[] getMediaByCaseIdAndCategory(String caseId, String category);
+
+    @Select("select * from syf.case_media where case_media_type=#{mediaType} and category=#{category}")
+    @Results(value = {
+            @Result(property = "case_id", column = "case_id"),
+            @Result(property = "media_id", column = "case_media_id"),
+            @Result(property = "media_url", column = "case_media_url"),
+            @Result(property = "media_name", column = "case_media_name"),
+            @Result(property = "media_type", column = "case_media_type"),
+            @Result(property = "category", column = "category")
+    })
+    case_media[] getMediaByTypeAndCategory(String mediaType, String category);
+
+    @Select("select * from syf.case_media where case_id=#{caseId} and case_media_type=#{mediaType} and category=#{category}")
+    @Results(value = {
+            @Result(property = "case_id", column = "case_id"),
+            @Result(property = "media_id", column = "case_media_id"),
+            @Result(property = "media_url", column = "case_media_url"),
+            @Result(property = "media_name", column = "case_media_name"),
+            @Result(property = "media_type", column = "case_media_type"),
+            @Result(property = "category", column = "category")
+    })
+    case_media[] getMediaByCaseIdAndTypeAndCategory(String caseId, String mediaType, String category);
 }
