@@ -16,10 +16,11 @@ public class paper {
     Integer duration;
     String question_id;
     Integer question_number;
+    Integer value;
     Integer question_value;
     Integer question_order;
     List<question> questions;
-    Integer value;
+
 
     //ArrayList<paperItem> questions;
     //String questionsJSON;
