@@ -3,6 +3,8 @@ package com.example.pet_hospital.Mapper;
 import com.example.pet_hospital.Entity.user;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface UserMapper {
     @Select("select * from syf.userdata where username=#{username} and password=#{password}")
@@ -20,6 +22,9 @@ public interface UserMapper {
 
     @Select("select * from syf.userdata where username=#{username}")
     user getUser(user u);
+
+    @Select("select * from syf.userdata")
+    List<user> getAllUser();
 
     @Select("select * from syf.userdata where user_id=#{user_id}")
     user getUserByID(user u);

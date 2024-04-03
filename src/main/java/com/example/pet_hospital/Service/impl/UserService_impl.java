@@ -2,9 +2,13 @@ package com.example.pet_hospital.Service.impl;
 
 import com.example.pet_hospital.Entity.user;
 import com.example.pet_hospital.Mapper.UserMapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.pet_hospital.Service.UserService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService_impl implements UserService {
@@ -28,6 +32,14 @@ public class UserService_impl implements UserService {
             return true;
         else
             return false;
+    }
+
+    @Override
+    public PageInfo<user> getAllUser(int page, int size) {
+        PageHelper.startPage(page, size);
+        List<user> users = userMapper.getAllUser();
+        PageInfo<user> pageInfo = new PageInfo<>(users);
+        return pageInfo;
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.example.pet_hospital.Entity.question;
 import com.example.pet_hospital.Entity.result;
 import com.example.pet_hospital.Service.PracticeService;
 import com.example.pet_hospital.Util.JWTUtils;
+import com.github.pagehelper.PageInfo;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -99,9 +100,17 @@ public class practiceController {
     }
 
     @GetMapping("/question/getAll")
-    public result getAllQuestions( @RequestHeader String Authorization) {
-        question[] questions = practiceService.getAllQuestions();
-        return result.success(questions);
+    public result getAllQuestions( @RequestHeader String Authorization,
+                                   @RequestParam(value = "page", defaultValue = "1") int page,
+                                   @RequestParam(value = "size", defaultValue = "10") int size) {
+        if(identitySecure("user",Authorization)){
+            return result.error("无操作权限。");
+        }
+        if(page<=0||size<=0){
+            return result.error("参数错误！");
+        }
+        PageInfo<question> pageResult = practiceService.getAllQuestions(page, size);
+        return result.success(pageResult);
     }
 
     @PostMapping("/question/alter")

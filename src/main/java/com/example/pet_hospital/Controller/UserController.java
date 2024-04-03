@@ -5,6 +5,7 @@ import com.example.pet_hospital.Entity.result;
 import com.example.pet_hospital.Entity.user;
 import com.example.pet_hospital.Service.UserService;
 import com.example.pet_hospital.Util.JWTUtils;
+import com.github.pagehelper.PageInfo;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -193,6 +194,21 @@ public class UserController {
             return result.error("未查找到该用户。");
         }
     }
+
+    @GetMapping("/user/getAllUser")
+    public result getAllUser(@RequestHeader String Authorization,
+                             @RequestParam(name = "page", defaultValue = "1") int page,
+                             @RequestParam(name = "size", defaultValue = "10") int size){
+        if (!identitySecure("administrator",Authorization)){
+            return result.error("无操作权限！");
+        }
+        if(page<=0||size<=0){
+            return result.error("参数错误！");
+        }
+        PageInfo<user> pageResult = userService.getAllUser(page, size);
+        return result.success(pageResult);
+    }
+
 
     @PostMapping("/user/updatePwd")
     public result ChangePassword(@RequestBody user u, @RequestHeader String Authorization){

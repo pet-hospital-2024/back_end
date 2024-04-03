@@ -21,7 +21,7 @@ public interface DiseaseMapper {
     department getDepartmentbyId(String id);
 
     @Select("select * from syf.department")
-    department[] getAllDepartment();
+    List<department> getAllDepartment();
 
     @Delete("delete from syf.department where department_id=#{department_id}")
     void deleteDepartment(department k);
@@ -45,7 +45,7 @@ public interface DiseaseMapper {
     disease getDiseasebyId(String disease_id);
 
     @Select("select * from syf.disease where department_id=#{department_id}")
-    disease[] getDiseasebyDepartment(String Department_id);
+    List<disease> getDiseasebyDepartment(String Department_id);
 
 //    @Select("select case_id, case_name, case_introduction from syf.cases where disease_id=#{disease_id}")
 //    List<case_base> getCasebyDis(String disease_id);

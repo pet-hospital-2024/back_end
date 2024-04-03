@@ -3,6 +3,8 @@ package com.example.pet_hospital.Mapper;
 import com.example.pet_hospital.Entity.question;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface PracticeMapper {
     @Delete("delete from syf.questions where question_id=#{question_id}")
@@ -15,7 +17,7 @@ public interface PracticeMapper {
     void alterQuestion(question q);
 
     @Select("select * from syf.questions")
-    question[] getAllQuestions();
+    List<question> getAllQuestions();
 
     /////////////////////////////////////
     @Select("select * from syf.questions where question_id=#{question_id}")

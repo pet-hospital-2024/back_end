@@ -7,6 +7,7 @@ import com.example.pet_hospital.Service.PaperService;
 import com.example.pet_hospital.Service.PracticeService;
 import com.example.pet_hospital.Util.JWTUtils;
 import com.example.pet_hospital.Entity.result;
+import com.github.pagehelper.PageInfo;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -239,8 +240,17 @@ public class PaperController {
     }
 
     @GetMapping("/paper/getPaperList")
-    public result GetPaperList( @RequestHeader String Authorization){
-        return result.success(paperService.getPaperList());
+    public result GetPaperList( @RequestHeader String Authorization,
+                                @RequestParam(value = "page", defaultValue = "1") int page,
+                                @RequestParam(value = "size", defaultValue = "10") int size) {
+        if(identitySecure("user",Authorization)){
+            return result.error("无操作权限。");
+        }
+        if(page<=0||size<=0){
+            return result.error("参数错误！");
+        }
+        PageInfo<paper> pageResult = paperService.getPaperList(page, size);
+        return result.success(pageResult);
     }
 
 

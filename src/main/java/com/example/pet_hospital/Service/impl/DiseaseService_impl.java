@@ -31,8 +31,11 @@ public class DiseaseService_impl implements DiseaseService {
     }
 
     @Override
-    public department[] getAllDepartment() {
-        return DiseaseMapper.getAllDepartment();
+    public PageInfo<department> getAllDepartment(int page, int size) {
+        PageHelper.startPage(page, size);
+        List<department> list = DiseaseMapper.getAllDepartment();
+        PageInfo<department> pageInfo = new PageInfo<>(list, 5);
+        return pageInfo;
     }
 
     @Override
@@ -71,8 +74,11 @@ public class DiseaseService_impl implements DiseaseService {
     }
 
     @Override
-    public disease[] getDiseasebyDepartment(String department_id) {
-        return DiseaseMapper.getDiseasebyDepartment(department_id);
+    public PageInfo<disease> getDiseasebyDepartment(String department_id, int page, int size) {
+        PageHelper.startPage(page, size);
+        List<disease> list = DiseaseMapper.getDiseasebyDepartment(department_id);
+        PageInfo<disease> pageInfo = new PageInfo<>(list, 5);
+        return pageInfo;
     }
 
     @Override

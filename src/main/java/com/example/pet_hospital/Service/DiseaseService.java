@@ -18,7 +18,7 @@ public interface DiseaseService {
 
     department getDepartmentbyId(String id);//在科室表中根据科室id查找科室
 
-    department[] getAllDepartment();
+    PageInfo<department> getAllDepartment(int page, int size);
 
     void addDisease(disease d);
 
@@ -30,7 +30,7 @@ public interface DiseaseService {
 
     disease getDiseasebyId(String disease_id);
 
-    disease[] getDiseasebyDepartment(String department_id);//在疾病表中查找某一科室的所有疾病
+    PageInfo<disease> getDiseasebyDepartment(String department_id, int page, int size);//在疾病表中查找某一科室的所有疾病
 
     cases[] getCasebyDis(String disease_id);//在病例表中查找某一疾病的所有病例
 

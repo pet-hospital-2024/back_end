@@ -1,6 +1,7 @@
 package com.example.pet_hospital.Service;
 
 import com.example.pet_hospital.Entity.paper;
+import com.github.pagehelper.PageInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ public interface PaperService {
 
     paper getPaperByName(paper p);
 
-    ArrayList<paper> getPaperList ();
+    PageInfo<paper> getPaperList (int page, int size);
 
     void insertNewQuestion(paper p);
 

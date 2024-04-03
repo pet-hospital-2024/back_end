@@ -3,10 +3,13 @@ package com.example.pet_hospital.Service.impl;
 import com.example.pet_hospital.Entity.Exam;
 import com.example.pet_hospital.Mapper.ExamMapper;
 import com.example.pet_hospital.Service.ExamService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ExamService_impl implements ExamService {
@@ -38,5 +41,12 @@ public class ExamService_impl implements ExamService {
         return examMapper.getExamList();
     }
 
+    @Override
+    public PageInfo<Exam> getAllExam(int page, int size) {
+        PageHelper.startPage(page, size);
+        ArrayList<Exam> examList = examMapper.getExamList();
+        PageInfo<Exam> pageInfo = new PageInfo<>(examList);
+        return pageInfo;
+    }
 
 }

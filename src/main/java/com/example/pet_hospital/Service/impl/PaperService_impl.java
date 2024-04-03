@@ -4,6 +4,8 @@ import com.example.pet_hospital.Entity.paper;
 import com.example.pet_hospital.Mapper.PaperMapper;
 import com.example.pet_hospital.Service.PaperService;
 import com.example.pet_hospital.Util.JWTUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,8 +60,11 @@ public class PaperService_impl implements PaperService {
     }
 
     @Override
-    public ArrayList<paper> getPaperList() {
-        return paperMapper.getPaperList();
+    public PageInfo<paper> getPaperList(int page, int size) {
+        PageHelper.startPage(page, size);
+        List<paper> papers = paperMapper.getPaperList();
+        PageInfo<paper> pageInfo = new PageInfo<>(papers);
+        return pageInfo;
     }
 
     @Override

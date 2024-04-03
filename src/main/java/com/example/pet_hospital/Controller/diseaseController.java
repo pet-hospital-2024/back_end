@@ -104,8 +104,17 @@ public class diseaseController {
 
     //获取所有科室
     @GetMapping("/disease/getAllDepartment")
-    public result getAllDepartment(@RequestHeader String Authorization) {
-        return result.success(diseaseService.getAllDepartment());
+    public result getAllDepartment(@RequestHeader String Authorization,
+                                   @RequestParam(name = "page", defaultValue = "1") int page,
+                                   @RequestParam(name = "size", defaultValue = "10") int size) {
+        if(identitySecure("user",Authorization)){
+            return result.error("无操作权限！");
+        }
+        if(page<=0||size<=0){
+            return result.error("参数错误！");
+        }
+        PageInfo<department> pageResult = diseaseService.getAllDepartment(page, size);
+        return result.success(pageResult);
     }
 
     //添加疾病
@@ -165,7 +174,10 @@ public class diseaseController {
 
     //查找某个科室下的所有疾病
     @GetMapping("/disease/getDiseasebyDepartment")
-    public result getDiseasebyDepartment(@RequestParam(name="department_id") String department_id,@RequestHeader String Authorization) {
+    public result getDiseasebyDepartment(@RequestParam(name="department_id") String department_id,
+                                         @RequestHeader String Authorization,
+                                         @RequestParam(name = "page", defaultValue = "1") int page,
+                                         @RequestParam(name = "size", defaultValue = "10") int size) {
 
         department d = new department();
         d.setDepartment_id(department_id);
@@ -173,7 +185,8 @@ public class diseaseController {
         if(diseaseService.getDepartmentbyId(d.getDepartment_id())==null){
             return result.error("该科室不存在！");
         }
-        return result.success(diseaseService.getDiseasebyDepartment(d.getDepartment_id()));
+        PageInfo<disease> pageResult = diseaseService.getDiseasebyDepartment(d.getDepartment_id(), page, size);
+        return result.success(pageResult);
     }
 
     //查找某个疾病下的所有病例
@@ -310,9 +323,12 @@ public class diseaseController {
 
     //分页查询病例列表
     @GetMapping("/disease/getCaseList")
-    public result getCaseList(@RequestParam(name = "page") int page,
-                              @RequestParam(name = "pageSize") int size,
+    public result getCaseList(@RequestParam(name = "page", defaultValue = "1") int page,
+                              @RequestParam(name = "pageSize", defaultValue = "10") int size,
                               @RequestHeader String Authorization){
+        if(page<=0||size<=0){
+            return result.error("参数错误！");
+        }
         PageInfo<cases> pageResult = diseaseService.findPaginated(page, size);
         return result.success(pageResult);
     }

@@ -134,4 +134,16 @@ public class ExamController {
         return result.success(examService.getExamList());
     }
 
+    @GetMapping("/exam/getAllExam")
+    public result GetAllExam(@RequestHeader String Authorization,
+                             @RequestParam(name = "page") int page,
+                             @RequestParam(name = "size") int size){
+        if(identitySecure("user",Authorization)){
+            return result.error("无操作权限！");
+        }
+        if(page<=0||size<=0){
+            return result.error("参数错误！");
+        }
+        return result.success(examService.getAllExam(page, size));
+    }
 }
