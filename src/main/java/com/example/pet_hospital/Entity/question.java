@@ -12,7 +12,7 @@ import java.util.Map;
 public class question {
     String question_id;
     String question_body;
-    Integer body;
+
     String type;
     String right_choice;
     String A;
