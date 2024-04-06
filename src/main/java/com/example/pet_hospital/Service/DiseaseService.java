@@ -1,7 +1,10 @@
 package com.example.pet_hospital.Service;
 
 
-import com.example.pet_hospital.Entity.*;
+import com.example.pet_hospital.Entity.case_media;
+import com.example.pet_hospital.Entity.cases;
+import com.example.pet_hospital.Entity.department;
+import com.example.pet_hospital.Entity.disease;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -58,13 +61,13 @@ public interface DiseaseService {
     List<department> findAllDepartments();
 
 
-    void addMedia(case_media m);
+
 
     case_media getMediabyUrl(String mediaUrl);
 
     case_media getMediabyName(String mediaName);
 
-    void deleteMedia(case_media m);
+
 
     case_media[] findAllMedia();
 
@@ -82,5 +85,8 @@ public interface DiseaseService {
 
     case_media[] getMediaByCaseIdAndTypeAndCategory(String caseId, String mediaType, String category);
 
+    public String uploadMedia(case_media m) throws Exception;
+
+    public void deleteMedia(String mediaId) throws Exception;
 
 }

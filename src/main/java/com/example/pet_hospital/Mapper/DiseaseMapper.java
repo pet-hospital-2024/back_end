@@ -92,8 +92,18 @@ public interface DiseaseMapper {
     @Select("SELECT disease_id, disease_name FROM syf.disease WHERE department_id=#{department_id}")
     List<disease> selectDiseasesForDepartment(String department_id);
 
-    @Insert("insert into syf.case_media values(uuid_short(),#{case_id},#{media_url},#{media_name},#{media_type},#{category})")
+    //以下是对case_media表的操作
+
+    @Insert("insert into syf.case_media(case_media_id,case_id,case_media_url,case_media_name,case_media_type,category) values(uuid_short(),#{case_id},#{media_url},#{media_name},#{media_type},#{category})")
     void addMedia(case_media m);
+
+    @Delete("delete from syf.case_media where case_media_id=#{media_id}")
+    void deleteMedia(case_media m);
+
+
+
+
+
 
     @Select("select * from syf.case_media where case_media_url=#{mediaUrl}")
     @Results(value = {
@@ -102,7 +112,9 @@ public interface DiseaseMapper {
             @Result(property = "media_url", column = "case_media_url"),
             @Result(property = "media_name", column = "case_media_name"),
             @Result(property = "media_type", column = "case_media_type"),
-            @Result(property = "category", column = "category")
+            @Result(property = "category", column = "category"),
+            @Result(property = "created_at", column = "created_at"),
+            @Result(property = "updated_at", column = "updated_at")
     })
     case_media getMediabyUrl(String mediaUrl);
 
@@ -113,12 +125,27 @@ public interface DiseaseMapper {
             @Result(property = "media_url", column = "case_media_url"),
             @Result(property = "media_name", column = "case_media_name"),
             @Result(property = "media_type", column = "case_media_type"),
-            @Result(property = "category", column = "category")
+            @Result(property = "category", column = "category"),
+            @Result(property = "created_at", column = "created_at"),
+            @Result(property = "updated_at", column = "updated_at")
     })
     case_media getMediabyName(String mediaName);
 
-    @Delete("delete from syf.case_media where case_media_id=#{media_id}")
-    void deleteMedia(case_media m);
+
+
+    //根据id查询媒体
+    @Select("select * from syf.case_media where case_media_id=#{mediaId}")
+    @Results(value = {
+            @Result(property = "case_id", column = "case_id"),
+            @Result(property = "media_id", column = "case_media_id"),
+            @Result(property = "media_url", column = "case_media_url"),
+            @Result(property = "media_name", column = "case_media_name"),
+            @Result(property = "media_type", column = "case_media_type"),
+            @Result(property = "category", column = "category"),
+            @Result(property = "created_at", column = "created_at"),
+            @Result(property = "updated_at", column = "updated_at")
+    })
+    case_media getMediabyId(String mediaId);
 
 
     @Select("select * from syf.case_media")
@@ -128,7 +155,9 @@ public interface DiseaseMapper {
             @Result(property = "media_url", column = "case_media_url"),
             @Result(property = "media_name", column = "case_media_name"),
             @Result(property = "media_type", column = "case_media_type"),
-            @Result(property = "category", column = "category")
+            @Result(property = "category", column = "category"),
+            @Result(property = "created_at", column = "created_at"),
+            @Result(property = "updated_at", column = "updated_at")
     })
     case_media[] findAllMedia();
 
@@ -139,7 +168,9 @@ public interface DiseaseMapper {
             @Result(property = "media_url", column = "case_media_url"),
             @Result(property = "media_name", column = "case_media_name"),
             @Result(property = "media_type", column = "case_media_type"),
-            @Result(property = "category", column = "category")
+            @Result(property = "category", column = "category"),
+            @Result(property = "created_at", column = "created_at"),
+            @Result(property = "updated_at", column = "updated_at")
     })
     case_media[] getMediaByCaseId(String caseId);
 
@@ -150,7 +181,9 @@ public interface DiseaseMapper {
             @Result(property = "media_url", column = "case_media_url"),
             @Result(property = "media_name", column = "case_media_name"),
             @Result(property = "media_type", column = "case_media_type"),
-            @Result(property = "category", column = "category")
+            @Result(property = "category", column = "category"),
+            @Result(property = "created_at", column = "created_at"),
+            @Result(property = "updated_at", column = "updated_at")
     })
     case_media[] getMediaByType(String mediaType);
 
@@ -161,7 +194,9 @@ public interface DiseaseMapper {
             @Result(property = "media_url", column = "case_media_url"),
             @Result(property = "media_name", column = "case_media_name"),
             @Result(property = "media_type", column = "case_media_type"),
-            @Result(property = "category", column = "category")
+            @Result(property = "category", column = "category"),
+            @Result(property = "created_at", column = "created_at"),
+            @Result(property = "updated_at", column = "updated_at")
     })
     case_media[] getMediaByCategory(String category);
 
@@ -172,7 +207,9 @@ public interface DiseaseMapper {
             @Result(property = "media_url", column = "case_media_url"),
             @Result(property = "media_name", column = "case_media_name"),
             @Result(property = "media_type", column = "case_media_type"),
-            @Result(property = "category", column = "category")
+            @Result(property = "category", column = "category"),
+            @Result(property = "created_at", column = "created_at"),
+            @Result(property = "updated_at", column = "updated_at")
     })
     case_media[] getMediaByCaseIdAndType(String caseId, String mediaType);
 
@@ -183,7 +220,9 @@ public interface DiseaseMapper {
             @Result(property = "media_url", column = "case_media_url"),
             @Result(property = "media_name", column = "case_media_name"),
             @Result(property = "media_type", column = "case_media_type"),
-            @Result(property = "category", column = "category")
+            @Result(property = "category", column = "category"),
+            @Result(property = "created_at", column = "created_at"),
+            @Result(property = "updated_at", column = "updated_at")
     })
     case_media[] getMediaByCaseIdAndCategory(String caseId, String category);
 
@@ -194,7 +233,9 @@ public interface DiseaseMapper {
             @Result(property = "media_url", column = "case_media_url"),
             @Result(property = "media_name", column = "case_media_name"),
             @Result(property = "media_type", column = "case_media_type"),
-            @Result(property = "category", column = "category")
+            @Result(property = "category", column = "category"),
+            @Result(property = "created_at", column = "created_at"),
+            @Result(property = "updated_at", column = "updated_at")
     })
     case_media[] getMediaByTypeAndCategory(String mediaType, String category);
 
@@ -205,7 +246,9 @@ public interface DiseaseMapper {
             @Result(property = "media_url", column = "case_media_url"),
             @Result(property = "media_name", column = "case_media_name"),
             @Result(property = "media_type", column = "case_media_type"),
-            @Result(property = "category", column = "category")
+            @Result(property = "category", column = "category"),
+            @Result(property = "created_at", column = "created_at"),
+            @Result(property = "updated_at", column = "updated_at")
     })
     case_media[] getMediaByCaseIdAndTypeAndCategory(String caseId, String mediaType, String category);
 }

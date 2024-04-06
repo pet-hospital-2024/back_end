@@ -4,12 +4,12 @@ import cn.hutool.json.JSONUtil;
 import com.example.pet_hospital.Entity.*;
 import com.example.pet_hospital.Service.DiseaseService;
 import com.example.pet_hospital.Util.JWTUtils;
-import com.example.pet_hospital.Entity.result;
 import com.github.pagehelper.PageInfo;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -354,16 +354,30 @@ public class diseaseController {
     //只能是以下四个之一
     //Consultation Examination Result Treatment
     @PostMapping("/disease/addMedia")
-    public result addMedia(@RequestBody case_media m, @RequestHeader String Authorization){
+    public result addMedia(@RequestParam("case_id") String caseId,
+                           @RequestParam("media_name") String mediaName,
+                           @RequestParam("category") String category,
+                           @RequestParam("file") MultipartFile file,
+                           @RequestHeader String Authorization) throws Exception {
+
+        case_media m = new case_media();
+        m.setCase_id(caseId);
+        m.setMedia_name(mediaName);
+        m.setCategory(category);
+        m.setFile(file);
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
         if (m.getCase_id().isEmpty()){
             return result.error("病例id不能为空！");
         }
-        if (m.getMedia_url().isEmpty()){
-            return result.error("媒体url不能为空！");
-        }
+
+        String contentType = file.getContentType();
+
+        // 检查文件类型是否为图片或视频
+        if(!(contentType != null && (contentType.startsWith("image/") || contentType.startsWith("video/"))))
+            return result.error("文件类型只能是图片或者视频！");
+        
         if (m.getMedia_name().isEmpty()){
             return result.error("媒体名不能为空！");
         }
@@ -382,27 +396,26 @@ public class diseaseController {
         if(diseaseService.getMediabyName(m.getMedia_name())!=null){
             return result.error("该媒体名已存在！");
         }
-        if(!(m.getMedia_type().equals("image")||m.getMedia_type().equals("video"))){
-            return result.error("媒体类型只能是image或者video！");
-        }
+
         if(!(m.getCategory().equals("Consultation")||m.getCategory().equals("Examination")
                 ||m.getCategory().equals("Result")||m.getCategory().equals("Treatment"))){
             return result.error("媒体类别只能是Consultation,Examination,Result,Treatment之一！");
         }
-        diseaseService.addMedia(m);
+        diseaseService.uploadMedia(m);
         return result.success(newToken(Authorization));
     }
 
     //删除病例多媒体
     @PostMapping("/disease/deleteMedia")
-    public result deleteMedia(@RequestBody case_media m, @RequestHeader String Authorization){
+    public result deleteMedia(@RequestBody case_media m, @RequestHeader String Authorization) throws Exception {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
         if(diseaseService.getMediabyUrl(m.getMedia_url())==null){
             return result.error("该媒体不存在！");
         }
-        diseaseService.deleteMedia(m);
+        String id = m.getMedia_id();
+        diseaseService.deleteMedia(id);
         return result.success(newToken(Authorization));
     }
 
