@@ -68,6 +68,17 @@ public class diseaseController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
+        //设置基础科室不可被删除
+        //基础科室的id：100759049863168001，100776782742945792，100776782742945798，100776782742945799
+        //100776782742945800,100776782742945801,100776782742945802,123123
+        if (k.getDepartment_id().equals("100759049863168001")||k.getDepartment_id().equals("100776782742945792")
+                ||k.getDepartment_id().equals("100776782742945798")||k.getDepartment_id().equals("100776782742945799")
+                ||k.getDepartment_id().equals("100776782742945800")||k.getDepartment_id().equals("100776782742945801")
+                ||k.getDepartment_id().equals("100776782742945802")||k.getDepartment_id().equals("123123")){
+            return result.error("基础科室不可被删除！");
+        }
+
+
         //删除缓存
         if (stringRedisTemplate.opsForValue().get(KIND_KEY+k.getDepartment_id())!=null){
             stringRedisTemplate.delete(KIND_KEY+k.getDepartment_name());
