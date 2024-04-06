@@ -48,5 +48,31 @@ public class PracticeService_impl implements PracticeService {
         return practiceMapper.getQuestionByBody(q);
     }
 
+    @Override
+    public String getDiseaseID(question q) {
+        return practiceMapper.getDiseaseID(q);
+    }//根据疾病name获取id，根据科室name获取id
+
+    @Override
+    public String getDepartmentID(question q) {
+        return practiceMapper.getDepartmentID(q);
+    }
+
+    @Override
+    public PageInfo<question> getquestionbyname(String name, int page, int size) {
+        PageHelper.startPage(page, size);
+        List<question> questions = practiceMapper.getQuestionByName(name);
+        PageInfo<question> pageInfo = new PageInfo<>(questions);
+        return pageInfo;
+    }
+
+    @Override
+    public PageInfo<question> getquestionbydisease(String name, int page, int size) {
+        PageHelper.startPage(page, size);
+        List<question> questions = practiceMapper.getQuestionByDisease(name);
+        PageInfo<question> pageInfo = new PageInfo<>(questions);
+        return pageInfo;
+    }
+
 
 }

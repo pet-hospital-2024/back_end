@@ -16,4 +16,11 @@ public interface PracticeService {
 
     public question getQuestionByBody(question q);
 
+    String getDiseaseID(question q);
+
+    String getDepartmentID(question q);
+
+    PageInfo<question> getquestionbyname(String name, int page, int size);
+
+    PageInfo<question> getquestionbydisease(String name, int page, int size);
 }

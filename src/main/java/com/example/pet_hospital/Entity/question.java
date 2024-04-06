@@ -24,4 +24,6 @@ public class question {
     List<Map<String, String>> options;
     String disease_id;//疾病id
     String department_id;//所属科室id
+    String disease_name;//疾病name
+    String department_name;//所属科室name
 }

@@ -47,6 +47,14 @@ public class practiceController {
 
     @PostMapping("/question/add")//已解决非法SQL问题，可正常使用。
     public result addQuestion(@RequestBody question q, @RequestHeader String Authorization) {
+
+        //根据疾病name获取id，根据科室name获取id
+
+        q.setDisease_id(practiceService.getDiseaseID(q));
+        q.setDepartment_id(practiceService.getDepartmentID(q));
+
+
+
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
@@ -118,6 +126,10 @@ public class practiceController {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限。");
         }
+
+        q.setDisease_id(practiceService.getDiseaseID(q));
+        q.setDepartment_id(practiceService.getDepartmentID(q));
+
         String type=q.getType();
         if (!type.equals("choice") && !type.equals("judge")){
             return result.error("题目类型只能是choice或者judge！");
@@ -162,8 +174,11 @@ public class practiceController {
 
 
     @PostMapping("/question/getquestion")
-    public result getQuestion(@RequestBody question q) {
-        //no identity secure needed.
+    public result getQuestion(@RequestBody question q, @RequestHeader String Authorization) {
+        if(identitySecure("user",Authorization)){
+            return result.error("无操作权限。");
+        }
+
         if (stringRedisTemplate.opsForValue().get(QUESTION_KEY+q.getQuestion_id())!=null){//缓存命中
             return result.success(JSONUtil.toBean(stringRedisTemplate.opsForValue().
                     get(QUESTION_KEY+q.getQuestion_id()), question.class));
@@ -181,9 +196,42 @@ public class practiceController {
         }
     }
 
-    //模糊查询
+    //根据名字模糊搜索试题(get请求)
+    //通过pagehelper进行分页
+    @GetMapping("/question/getquestionbyname")
+    public result getQuestionByName(@RequestParam(name = "question_name") String name,
+                                    @RequestParam(value = "page", defaultValue = "1") int page,
+                                    @RequestParam(value = "size", defaultValue = "10") int size,
+                                    @RequestHeader String Authorization) {
+
+        if(identitySecure("user",Authorization)){
+            return result.error("无操作权限。");
+        }
+        if(page<=0||size<=0){
+            return result.error("参数错误！");
+        }
+        return result.success(practiceService.getquestionbyname(name,page,size));
+    }
+
 
 
     //根据疾病返回试题
+    @GetMapping("/question/getquestionbydisease")
+    public result getQuestionByDisease(@RequestParam(name = "disease_name") String name,
+                                       @RequestParam(value = "page", defaultValue = "1") int page,
+                                       @RequestParam(value = "size", defaultValue = "10") int size,
+                                       @RequestHeader String Authorization) {
+
+        if(identitySecure("user",Authorization)){
+            return result.error("无操作权限。");
+        }
+        if(page<=0||size<=0){
+            return result.error("参数错误！");
+        }
+        if(practiceService.getquestionbydisease(name, page, size).getList().isEmpty()){
+            return result.error("该疾病下没有试题！");
+        }
+        return result.success(practiceService.getquestionbydisease(name,page,size));
+    }
 
 }
