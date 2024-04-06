@@ -81,4 +81,6 @@ public interface DiseaseService {
     case_media[] getMediaByTypeAndCategory(String mediaType, String category);
 
     case_media[] getMediaByCaseIdAndTypeAndCategory(String caseId, String mediaType, String category);
+
+
 }

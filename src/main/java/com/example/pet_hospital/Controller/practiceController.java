@@ -1,8 +1,10 @@
 package com.example.pet_hospital.Controller;
 
 import cn.hutool.json.JSONUtil;
+import com.example.pet_hospital.Entity.disease;
 import com.example.pet_hospital.Entity.question;
 import com.example.pet_hospital.Entity.result;
+import com.example.pet_hospital.Service.DiseaseService;
 import com.example.pet_hospital.Service.PracticeService;
 import com.example.pet_hospital.Util.JWTUtils;
 import com.github.pagehelper.PageInfo;
@@ -19,6 +21,9 @@ public class practiceController {
 
     @Autowired
     private PracticeService practiceService;
+
+    @Autowired
+    private DiseaseService diseaseService;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -48,16 +53,26 @@ public class practiceController {
     @PostMapping("/question/add")//已解决非法SQL问题，可正常使用。
     public result addQuestion(@RequestBody question q, @RequestHeader String Authorization) {
 
-        //根据疾病name获取id，根据科室name获取id
-
-        q.setDisease_id(practiceService.getDiseaseID(q));
-        q.setDepartment_id(practiceService.getDepartmentID(q));
-
-
-
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
+
+        //根据疾病name获取id，根据科室name获取id
+        q.setDisease_id(practiceService.getDiseaseID(q));
+        q.setDepartment_id(practiceService.getDepartmentID(q));
+
+        //判断id是否存在
+        if(q.getDisease_id()==null){
+            return result.error("该疾病不存在！");
+        }
+        if(q.getDepartment_id()==null){
+            return result.error("该科室不存在！");
+        }
+        if(q.getQuestion_body()==null){
+            return result.error("题目不能为空！");
+        }
+
+
         if (practiceService.getQuestionByBody(q)!=null){
             return result.error("该题目已存在！");
         }
@@ -66,6 +81,9 @@ public class practiceController {
             return result.error("题目类型只能是choice或者judge！");
         }
         if(type.equals("judge")){
+            if(q.getA()==null || q.getB()==null ){
+                return result.error("选项A,B不能为空！");
+            }
             if (!(q.getA().equals("对") && q.getB().equals("错") )){
                 return result.error("判断题选项只能是A是对，B是错！");
             }
@@ -73,6 +91,10 @@ public class practiceController {
                 return result.error("判断题答案只能是a或者b！");
             }
         }else {
+            if(q.getA()==null || q.getB()==null || q.getC()==null || q.getD()==null){
+                return result.error("选项不能为空！");
+            }
+
             if(!(q.getRight_choice().equals("a") || q.getRight_choice().equals("b") ||
                     q.getRight_choice().equals("c") || q.getRight_choice().equals("d"))){
                 return result.error("选择题答案只能是a,b,c,d中的一个！");
@@ -124,17 +146,32 @@ public class practiceController {
     @PostMapping("/question/alter")
     public result alterQuestion(@RequestBody question q, @RequestHeader String Authorization) {
         if (identitySecure("user",Authorization)){
-            return result.error("无操作权限。");
+            return result.error("无操作权限！");
         }
 
+        //根据疾病name获取id，根据科室name获取id
         q.setDisease_id(practiceService.getDiseaseID(q));
         q.setDepartment_id(practiceService.getDepartmentID(q));
+
+        //判断id是否存在
+        if(q.getDisease_id()==null){
+            return result.error("该疾病不存在！");
+        }
+        if(q.getDepartment_id()==null){
+            return result.error("该科室不存在！");
+        }
+        if(q.getQuestion_body()==null){
+            return result.error("题目不能为空！");
+        }
 
         String type=q.getType();
         if (!type.equals("choice") && !type.equals("judge")){
             return result.error("题目类型只能是choice或者judge！");
         }
         if(type.equals("judge")){
+            if(q.getA()==null || q.getB()==null ){
+                return result.error("选项A,B不能为空！");
+            }
             if (!(q.getA().equals("对") && q.getB().equals("错") )){
                 return result.error("判断题选项只能是A是对，B是错！");
             }
@@ -142,6 +179,10 @@ public class practiceController {
                 return result.error("判断题答案只能是a或者b！");
             }
         }else {
+            if(q.getA()==null || q.getB()==null || q.getC()==null || q.getD()==null){
+                return result.error("选项不能为空！");
+            }
+
             if(!(q.getRight_choice().equals("a") || q.getRight_choice().equals("b") ||
                     q.getRight_choice().equals("c") || q.getRight_choice().equals("d"))){
                 return result.error("选择题答案只能是a,b,c,d中的一个！");
@@ -210,6 +251,10 @@ public class practiceController {
         if(page<=0||size<=0){
             return result.error("参数错误！");
         }
+        if(practiceService.getquestionbyname(name, page, size).getList().isEmpty()){
+            return result.error("没有找到相关试题！");
+        }
+
         return result.success(practiceService.getquestionbyname(name,page,size));
     }
 
@@ -228,6 +273,14 @@ public class practiceController {
         if(page<=0||size<=0){
             return result.error("参数错误！");
         }
+        //判断疾病是否存在
+        disease d=new disease();
+        d.setDisease_name(name);
+
+        if(diseaseService.getDiseasebyName(d)==null){
+            return result.error("该疾病不存在！");
+        }
+
         if(practiceService.getquestionbydisease(name, page, size).getList().isEmpty()){
             return result.error("该疾病下没有试题！");
         }
