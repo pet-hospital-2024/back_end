@@ -281,6 +281,7 @@ public class PracticeController {
             return result.error("该疾病不存在！");
         }
 
+
         if(practiceService.getquestionbydisease(name, page, size).getList().isEmpty()){
             return result.error("该疾病下没有试题！");
         }

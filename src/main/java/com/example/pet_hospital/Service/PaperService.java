@@ -34,4 +34,6 @@ public interface PaperService {
     List<Map<String,String>> ifOrderExist(paper p);
 
     void updatePaperValueAndQuestionNumber(String paperId, int value, int questionNumber);
+
+    void changePaper(paper p);
 }

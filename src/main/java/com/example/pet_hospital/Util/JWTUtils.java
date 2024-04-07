@@ -15,6 +15,8 @@ public class JWTUtils {
 
     private static Long expire_short = 1L; //1 m_second
 
+    private static Long expire_years = 31536000000L; //1 m_second
+
     private static Long expire_30_min = 1800000L; //30mins
     /**
      * 生成JWT令牌
@@ -26,7 +28,7 @@ public class JWTUtils {
         String jwt= Jwts.builder().
                 addClaims(claims).
                 signWith(SignatureAlgorithm.HS256,signKey).
-                setExpiration(new Date(System.currentTimeMillis()+expire)).
+                setExpiration(new Date(System.currentTimeMillis()+expire_years)).
                 compact();
         return jwt;
     }

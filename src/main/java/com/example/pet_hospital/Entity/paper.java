@@ -20,8 +20,4 @@ public class paper {
     Integer question_value;
     Integer question_order;
     List<question> questions;
-
-
-    //ArrayList<paperItem> questions;
-    //String questionsJSON;
 }

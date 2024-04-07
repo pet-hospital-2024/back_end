@@ -68,6 +68,23 @@ public class PaperController {
 
     }
 
+    @PostMapping("/paper/change")
+    public result changePaper(@RequestBody paper p, @RequestHeader String Authorization){
+        if (identitySecure("user",Authorization)){
+            return result.error("无操作权限。");
+        }
+        if (paperService.getPaperByID(p)==null){
+            return result.error("该试卷不存在！");
+        }
+        paperService.changePaper(p);
+        if (JWTUtils.refreshTokenNeeded(Authorization)){
+            return result.success(newToken(Authorization));
+        }
+        else {
+            return result.success(Authorization);
+        }
+    }
+
     @PostMapping("/paper/addquestion")
     public result insertNewQuestion(@RequestBody paper p, @RequestHeader String Authorization){
         if (identitySecure("user",Authorization)){

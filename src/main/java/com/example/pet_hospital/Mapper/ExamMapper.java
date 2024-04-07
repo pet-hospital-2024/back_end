@@ -8,13 +8,13 @@ import java.util.ArrayList;
 @Mapper
 public interface ExamMapper {
 
-    @Insert("insert into syf.exams values (uuid_short(),#{paper_id},#{start},#{end},#{name})")
+    @Insert("insert into syf.exams values (uuid_short(),#{paper_id},#{exam_name},#{exam_start},#{exam_end})")
     void addExam(Exam exam);
 
     @Delete("delete from syf.exams where exam_id = #{exam_id}")
     void deleteExam(Exam exam);
 
-    @Update("update syf.exams set paper_id = #{paper_id},exam_start = #{start},exam_end = #{end} where exam_id = #{exam_id}")
+    @Update("update syf.exams set paper_id = #{paper_id},exam_start = #{exam_start},exam_end = #{exam_end} where exam_id = #{exam_id}")
     void updateExam(Exam exam);
 
     @Select("select * from syf.exams where exam_id = #{exam_id}")

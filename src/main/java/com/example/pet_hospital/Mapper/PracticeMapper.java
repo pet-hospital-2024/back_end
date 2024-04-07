@@ -16,6 +16,9 @@ public interface PracticeMapper {
     @Update("update syf.questions set  type=#{type}, question_body=#{question_body}, a=#{a}, b=#{b}, c=#{c}, d=#{d}, right_choice=#{right_choice}, judgement=#{judgement} where question_id=#{question_id}")
     void alterQuestion(question q);
 
+    @Select("select * from syf.questions where disease_id=#{disease_id}")
+    question [] getQuestionsByDiseaseID(question q);
+
 
     //返回的属性增加疾病和科室的name，需要question和disease表和department表的连接查询，通过disease_id和department_id
     @Select("select * from syf.questions join syf.disease on syf.questions.disease_id=syf.disease.disease_id join syf.department on syf.questions.department_id=syf.department.department_id")

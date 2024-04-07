@@ -105,13 +105,7 @@ public class PaperService_impl implements PaperService {
             complexList.add(option);
         }
 
-
-
-
-
-
         return complexList;
-
 
     }
 
@@ -131,5 +125,10 @@ public class PaperService_impl implements PaperService {
     @Override
     public void updatePaperValueAndQuestionNumber(String paperId, int value, int questionNumber) {
         paperMapper.updatePaperValueAndQuestionNumber(paperId, value, questionNumber);
+    }
+
+    @Override
+    public void changePaper(paper p) {
+        paperMapper.changePaper(p);
     }
 }
