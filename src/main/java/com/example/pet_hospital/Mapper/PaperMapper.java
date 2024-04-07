@@ -79,6 +79,9 @@ public interface PaperMapper {
     @Update("update syf.papers set duration=#{duration},paper_name=#{paper_name} where paper_id=#{paper_id}")
     void changePaper(paper p);
 
+    @Select("select question_id from syf.paper_questions where paper_id=#{paper_id}")
+    List<String> getQuestionsIDFromPaper(String paperId);
+
 //    @Select("select question_id from syf.paper_questions where paper_id=#{paper_id}")
 //    ArrayList<String> getQuestionsFromPaper(paper p);
 

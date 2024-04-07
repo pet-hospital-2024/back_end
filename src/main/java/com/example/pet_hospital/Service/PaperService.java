@@ -3,7 +3,6 @@ package com.example.pet_hospital.Service;
 import com.example.pet_hospital.Entity.paper;
 import com.github.pagehelper.PageInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,4 +35,6 @@ public interface PaperService {
     void updatePaperValueAndQuestionNumber(String paperId, int value, int questionNumber);
 
     void changePaper(paper p);
+
+    List<String> getQuestionsIDFromPaper(String paperId);
 }

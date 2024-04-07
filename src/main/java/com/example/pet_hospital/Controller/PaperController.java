@@ -76,6 +76,23 @@ public class PaperController {
             return result.error("该试卷不存在！");
         }
         paperService.changePaper(p);
+
+        // 在试卷信息更新后，删除Redis中的缓存
+        String paperCacheKey = "paper:" + p.getPaper_id();
+        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(paperCacheKey))) {
+            // 如果Redis中存在这个试卷的缓存，则删除
+            stringRedisTemplate.delete(paperCacheKey);
+        }
+        // 还需要考虑删除与这个试卷相关的问题和选项的缓存
+        List<String> questionIds = paperService.getQuestionsIDFromPaper(p.getPaper_id());
+        for (String questionId : questionIds) {
+            String questionCacheKey = "question:" + questionId;
+            if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(questionCacheKey))) {
+                stringRedisTemplate.delete(questionCacheKey);
+            }
+        }
+
+
         if (JWTUtils.refreshTokenNeeded(Authorization)) {
             return result.success(newToken(Authorization));
         } else {
@@ -158,13 +175,28 @@ public class PaperController {
         if (identitySecure("user", Authorization)) {
             return result.error("无操作权限！");
         }
-        if (stringRedisTemplate.opsForValue().get(PAPER_KEY + p.getPaper_id()) != null) {
-            stringRedisTemplate.delete(PAPER_KEY + p.getPaper_id());
+
+        // 删除试卷之前，先删除相关的缓存
+        String paperCacheKey = "paper:" + p.getPaper_id();
+        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(paperCacheKey))) {
+            stringRedisTemplate.delete(paperCacheKey);
         }
+
+        // 删除与试卷相关的所有问题的缓存
+        List<String> questionIds = paperService.getQuestionsIDFromPaper(p.getPaper_id());
+        for (String questionId : questionIds) {
+            String questionCacheKey = "question:" + questionId;
+            if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(questionCacheKey))) {
+                stringRedisTemplate.delete(questionCacheKey);
+            }
+        }
+
+        // 检查试卷是否存在，然后执行删除操作
         if (paperService.getPaperByID(p) == null) {
             return result.error("该试卷不存在！");
         }
         paperService.deletePaper(p);
+
         if (JWTUtils.refreshTokenNeeded(Authorization)) {
             return result.success(newToken(Authorization));
         } else {
@@ -172,9 +204,12 @@ public class PaperController {
         }
     }
 
+
     @PostMapping("/paper/deletequestion")
     public result deleteQuestionFromPaper(@RequestBody paper p, @RequestHeader String Authorization) {
-        if (identitySecure("user", Authorization)) return result.error("无操作权限！");
+        if (identitySecure("user", Authorization)) {
+            return result.error("无操作权限！");
+        }
 
         question q = new question();
         q.setQuestion_id(p.getQuestion_id());
@@ -184,13 +219,30 @@ public class PaperController {
         if (paperService.getPaperByID(p) == null) {
             return result.error("该试卷不存在！");
         }
+
+        // 执行删除题目操作前，删除相关的缓存
+        // 删除试卷缓存
+        String paperCacheKey = "paper:" + p.getPaper_id();
+        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(paperCacheKey))) {
+            stringRedisTemplate.delete(paperCacheKey);
+        }
+
+        // 删除题目缓存
+        String questionCacheKey = "question:" + p.getQuestion_id();
+        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(questionCacheKey))) {
+            stringRedisTemplate.delete(questionCacheKey);
+        }
+
+        // 从试卷中删除问题
         paperService.deleteQuestionFromPaper(p);
+
         if (JWTUtils.refreshTokenNeeded(Authorization)) {
             return result.success(newToken(Authorization));
         } else {
             return result.success(Authorization);
         }
     }
+
 
 //    @GetMapping("/paper/getpaperbyid")
 //    public result getQuestionsFromPaper(@RequestParam(name = "paper_id") String paper_id){

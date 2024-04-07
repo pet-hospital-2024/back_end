@@ -21,11 +21,7 @@ public class PaperService_impl implements PaperService {
     public Boolean identitySecure(String target, String Authorization){
         Claims claims = JWTUtils.jwtParser(Authorization);
         String identity=(String) claims.get("identity");
-        if (target.equals(identity)){
-            return true;
-        }else {
-            return false;
-        }
+        return target.equals(identity);
     }
 
     public String newToken(String Authorization){
@@ -113,8 +109,7 @@ public class PaperService_impl implements PaperService {
     @Override
     public paper getQuestionsFromPaper(String paper_id) {
 
-        paper r = paperMapper.getQuestionsFromPaper(paper_id);
-        return r;
+        return paperMapper.getQuestionsFromPaper(paper_id);
     }
 
     @Override
@@ -130,5 +125,10 @@ public class PaperService_impl implements PaperService {
     @Override
     public void changePaper(paper p) {
         paperMapper.changePaper(p);
+    }
+
+    @Override
+    public List<String> getQuestionsIDFromPaper(String paperId) {
+        return paperMapper.getQuestionsIDFromPaper(paperId);
     }
 }
