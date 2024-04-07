@@ -12,6 +12,7 @@ public class result {
     private String message;
     private Object data;
 
+
     public static result success(Object data){
         return new result(1,"success",data);
     }

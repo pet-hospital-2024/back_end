@@ -14,7 +14,7 @@ public interface PracticeService {
 
     question getQuestionByID(question q);
 
-    public question getQuestionByBody(question q);
+    question getQuestionByBody(question q);
 
     String getDiseaseID(question q);
 

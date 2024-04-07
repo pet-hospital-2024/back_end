@@ -32,7 +32,7 @@ public interface DiseaseMapper {
     @Insert("insert into syf.disease values(uuid_short(),#{department_id},#{disease_name})")
     void addDisease(disease d);
 
-    @Select("select * from syf.disease where disease_name=#{disease_name} and department_id=#{department_id}")
+    @Select("select * from syf.disease where disease_name=#{disease_name}")
     disease getDiseasebyName(disease d);
 
     @Delete("delete from syf.disease where disease_id=#{disease_id}")
