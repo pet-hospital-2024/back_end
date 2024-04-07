@@ -57,3 +57,15 @@ pagehelper:
 
 server:
   port: 8081
+
+
+
+ai:
+  appKey: kwuAM5KB9hKft3WJsPyzdlLK
+  secretKey: clnu25Q0Zesytom38yl4uXX0rx944vIw
+
+custom:
+  okhttp:
+    connectTimeout: 300  # 连接超时时间（秒）
+    writeTimeout: 300    # 写入超时时间（秒）
+    readTimeout: 300     # 读取超时时间（秒）

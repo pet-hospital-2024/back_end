@@ -1,0 +1,121 @@
+2024-04-07 19:51:36 INFO  PetHospitalApplication - Starting PetHospitalApplication using Java 17.0.10 with PID 51983 (/Users/alexwang/back_end/target/classes started by alexwang in /Users/alexwang/back_end)
+2024-04-07 19:51:36 INFO  PetHospitalApplication - No active profile set, falling back to 1 default profile: "default"
+2024-04-07 19:51:36 INFO  ChangeableUrls - The Class-Path manifest attribute in /Users/alexwang/.m2/repository/com/oracle/database/jdbc/ojdbc11/21.9.0.0/ojdbc11-21.9.0.0.jar referenced one or more files that do not exist: file:/Users/alexwang/.m2/repository/com/oracle/database/jdbc/ojdbc11/21.9.0.0/oraclepki.jar
+2024-04-07 19:51:36 INFO  DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-04-07 19:51:36 INFO  DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-04-07 19:51:37 INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-04-07 19:51:37 INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2024-04-07 19:51:37 INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 6 ms. Found 0 JDBC repository interfaces.
+2024-04-07 19:51:37 INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-04-07 19:51:37 INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-04-07 19:51:37 INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 1 ms. Found 0 JPA repository interfaces.
+2024-04-07 19:51:37 INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-04-07 19:51:37 INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-04-07 19:51:37 INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 1 ms. Found 0 Redis repository interfaces.
+2024-04-07 19:51:37 WARN  PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2024-04-07 19:51:37 INFO  AnnotationActionEndpointMapping - Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+2024-04-07 19:51:37 INFO  TomcatWebServer - Tomcat initialized with port 8081 (http)
+2024-04-07 19:51:37 INFO  ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 621 ms
+2024-04-07 19:51:37 INFO  HikariDataSource - HikariPool-1 - Starting...
+2024-04-07 19:51:37 INFO  HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@8d5a4ad
+2024-04-07 19:51:37 INFO  HikariDataSource - HikariPool-1 - Start completed.
+2024-04-07 19:51:37 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-04-07 19:51:38 INFO  Version - HHH000412: Hibernate ORM core version 6.4.4.Final
+2024-04-07 19:51:38 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-04-07 19:51:38 INFO  SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-04-07 19:51:38 INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-04-07 19:51:38 INFO  LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-04-07 19:51:38 WARN  JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-04-07 19:51:38 INFO  OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-04-07 19:51:38 INFO  TomcatWebServer - Tomcat started on port 8081 (http) with context path ''
+2024-04-07 19:51:38 INFO  PetHospitalApplication - Started PetHospitalApplication in 2.217 seconds (process running for 2.545)
+2024-04-07 19:55:28 INFO  DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-04-07 19:55:28 INFO  DispatcherServlet - Completed initialization in 1 ms
+2024-04-07 19:55:28 INFO  LoginInterceptor - 请求的url: http://localhost:8081/user/login
+2024-04-07 19:55:28 INFO  LoginInterceptor - 无需鉴权操作，放行。
+2024-04-07 19:55:38 INFO  LoginInterceptor - 请求的url: http://localhost:8081/user/login
+2024-04-07 19:55:38 INFO  LoginInterceptor - 无需鉴权操作，放行。
+2024-04-07 19:57:29 INFO  LoginInterceptor - 请求的url: http://localhost:8081/ai
+2024-04-07 19:57:29 INFO  LoginInterceptor - 令牌解析成功,放行。
+2024-04-07 19:59:30 INFO  LoginInterceptor - 请求的url: http://localhost:8081/ai
+2024-04-07 19:59:30 INFO  LoginInterceptor - 令牌解析成功,放行。
+2024-04-07 20:00:22 INFO  LoginInterceptor - 请求的url: http://localhost:8081/ai
+2024-04-07 20:00:22 INFO  LoginInterceptor - 令牌解析成功,放行。
+2024-04-07 20:00:47 INFO  LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2024-04-07 20:00:58 INFO  LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-04-07 20:00:58 INFO  HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-04-07 20:00:58 INFO  HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-04-07 20:00:58 INFO  DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-04-07 20:00:58 INFO  DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-04-07 20:00:58 INFO  PetHospitalApplication - Starting PetHospitalApplication using Java 17.0.10 with PID 51983 (/Users/alexwang/back_end/target/classes started by alexwang in /Users/alexwang/back_end)
+2024-04-07 20:00:58 INFO  PetHospitalApplication - No active profile set, falling back to 1 default profile: "default"
+2024-04-07 20:00:58 INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-04-07 20:00:58 INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2024-04-07 20:00:58 INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 1 ms. Found 0 JDBC repository interfaces.
+2024-04-07 20:00:58 INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-04-07 20:00:58 INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-04-07 20:00:58 INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 0 ms. Found 0 JPA repository interfaces.
+2024-04-07 20:00:58 INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-04-07 20:00:58 INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-04-07 20:00:58 INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 0 ms. Found 0 Redis repository interfaces.
+2024-04-07 20:00:58 WARN  PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2024-04-07 20:00:58 INFO  AnnotationActionEndpointMapping - Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+2024-04-07 20:00:58 INFO  TomcatWebServer - Tomcat initialized with port 8081 (http)
+2024-04-07 20:00:58 INFO  ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 148 ms
+2024-04-07 20:00:58 INFO  HikariDataSource - HikariPool-2 - Starting...
+2024-04-07 20:00:59 INFO  HikariPool - HikariPool-2 - Added connection com.mysql.cj.jdbc.ConnectionImpl@146ac618
+2024-04-07 20:00:59 INFO  HikariDataSource - HikariPool-2 - Start completed.
+2024-04-07 20:00:59 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-04-07 20:00:59 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-04-07 20:00:59 INFO  SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-04-07 20:00:59 INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-04-07 20:00:59 INFO  LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-04-07 20:00:59 WARN  JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-04-07 20:00:59 INFO  OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-04-07 20:00:59 INFO  TomcatWebServer - Tomcat started on port 8081 (http) with context path ''
+2024-04-07 20:00:59 INFO  PetHospitalApplication - Started PetHospitalApplication in 0.682 seconds (process running for 563.222)
+2024-04-07 20:00:59 INFO  ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2024-04-07 20:01:17 INFO  DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-04-07 20:01:17 INFO  DispatcherServlet - Completed initialization in 0 ms
+2024-04-07 20:01:17 INFO  LoginInterceptor - 请求的url: http://localhost:8081/ai
+2024-04-07 20:01:17 INFO  LoginInterceptor - 令牌解析成功,放行。
+2024-04-07 20:03:36 INFO  LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2024-04-07 20:03:47 INFO  LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-04-07 20:03:47 INFO  HikariDataSource - HikariPool-2 - Shutdown initiated...
+2024-04-07 20:03:48 INFO  HikariDataSource - HikariPool-2 - Shutdown completed.
+2024-04-07 20:03:48 INFO  DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-04-07 20:03:48 INFO  DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-04-07 20:03:48 INFO  PetHospitalApplication - Starting PetHospitalApplication using Java 17.0.10 with PID 51983 (/Users/alexwang/back_end/target/classes started by alexwang in /Users/alexwang/back_end)
+2024-04-07 20:03:48 INFO  PetHospitalApplication - No active profile set, falling back to 1 default profile: "default"
+2024-04-07 20:03:48 INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-04-07 20:03:48 INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2024-04-07 20:03:48 INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 1 ms. Found 0 JDBC repository interfaces.
+2024-04-07 20:03:48 INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-04-07 20:03:48 INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-04-07 20:03:48 INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 0 ms. Found 0 JPA repository interfaces.
+2024-04-07 20:03:48 INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-04-07 20:03:48 INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-04-07 20:03:48 INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 0 ms. Found 0 Redis repository interfaces.
+2024-04-07 20:03:48 WARN  PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2024-04-07 20:03:48 INFO  AnnotationActionEndpointMapping - Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+2024-04-07 20:03:48 INFO  TomcatWebServer - Tomcat initialized with port 8081 (http)
+2024-04-07 20:03:48 INFO  ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 117 ms
+2024-04-07 20:03:48 INFO  HikariDataSource - HikariPool-3 - Starting...
+2024-04-07 20:03:48 INFO  HikariPool - HikariPool-3 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6265004f
+2024-04-07 20:03:48 INFO  HikariDataSource - HikariPool-3 - Start completed.
+2024-04-07 20:03:48 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-04-07 20:03:48 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-04-07 20:03:48 INFO  SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-04-07 20:03:48 INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-04-07 20:03:48 INFO  LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-04-07 20:03:48 WARN  JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-04-07 20:03:48 INFO  OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-04-07 20:03:48 INFO  TomcatWebServer - Tomcat started on port 8081 (http) with context path ''
+2024-04-07 20:03:48 INFO  PetHospitalApplication - Started PetHospitalApplication in 0.635 seconds (process running for 732.477)
+2024-04-07 20:03:48 INFO  ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2024-04-07 20:11:19 INFO  DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-04-07 20:11:19 INFO  DispatcherServlet - Completed initialization in 5 ms
+2024-04-07 20:11:19 INFO  LoginInterceptor - 请求的url: http://localhost:8081/ai
+2024-04-07 20:11:19 INFO  LoginInterceptor - 令牌解析成功,放行。
+2024-04-07 20:21:53 INFO  LoginInterceptor - 请求的url: http://localhost:8081/ai
+2024-04-07 20:21:53 INFO  LoginInterceptor - 令牌解析成功,放行。
