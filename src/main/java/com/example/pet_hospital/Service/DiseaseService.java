@@ -54,18 +54,12 @@ public interface DiseaseService {
     //PageInfo<case_base> findPaginatedbyDis(String disease_id, int page, int size);
 
 
-
-
-
     List<department> findAllDepartments();
-
-
 
 
     cases getMediabyUrl(String mediaUrl);
 
     cases getMediabyName(String mediaName);
-
 
 
     cases[] findAllMedia();

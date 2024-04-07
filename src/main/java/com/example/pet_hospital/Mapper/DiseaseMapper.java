@@ -77,7 +77,6 @@ public interface DiseaseMapper {
     List<cases> CaseList();
 
 
-
     @Select("SELECT department_id, department_name FROM syf.department ORDER BY department_id")
     @Results(value = {
             @Result(property = "department_id", column = "department_id"),
@@ -99,10 +98,6 @@ public interface DiseaseMapper {
 
     @Delete("delete from syf.case_media where case_media_id=#{media_id}")
     void deleteMedia(cases m);
-
-
-
-
 
 
     @Select("select * from syf.case_media where case_media_url=#{mediaUrl}")
@@ -130,7 +125,6 @@ public interface DiseaseMapper {
             @Result(property = "updated_at", column = "updated_at")
     })
     cases getMediabyName(String mediaName);
-
 
 
     //根据id查询媒体

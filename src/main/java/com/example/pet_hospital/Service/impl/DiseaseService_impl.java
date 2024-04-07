@@ -153,10 +153,7 @@ public class DiseaseService_impl implements DiseaseService {
     }
 
 
-
     //以下是media的操作
-
-
 
 
     @Override
@@ -206,11 +203,6 @@ public class DiseaseService_impl implements DiseaseService {
             throw new Exception("Media not found with id: " + mediaId);
         }
     }
-
-
-
-
-
 
 
     @Override

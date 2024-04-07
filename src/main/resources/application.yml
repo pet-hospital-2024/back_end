@@ -44,9 +44,9 @@ minio:
   accessKey: Gzbw8F6d9xxYjkZwHSGs
   secretKey: JgYhU5NX3Ycw8Yzq9V5smzSwgiK0sCC3iBrPYisp
   secure: false
-  bucket-name: syf # 桶名 我这是给出了一个默认桶名
-  image-size: 10485760 # 我在这里设定了 图片文件的最大大小
-  file-size: 1073741824 # 此处是设定了文件的最大大小
+  bucket-name: syf # 桶名
+  image-size: 10485760 # 图片文件的最大大小
+  file-size: 1073741824 # 文件的最大大小
 
 pagehelper:
   helper-dialect: mysql
@@ -54,11 +54,8 @@ pagehelper:
   support-methods-arguments: true
   params: count=countSql
 
-
 server:
   port: 8081
-
-
 
 ai:
   appKey: kwuAM5KB9hKft3WJsPyzdlLK
