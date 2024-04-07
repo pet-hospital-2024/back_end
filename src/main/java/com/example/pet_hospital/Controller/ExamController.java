@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 @RestController
 public class ExamController {
@@ -58,6 +59,25 @@ public class ExamController {
         if (paperService.getPaperByID(p)==null){
             return result.error("该试卷不存在！");
         }
+
+        String start=e.getExam_start();
+        String end=e.getExam_end();
+
+        if(start==null||end==null){
+            return result.error("考试时间不能为空！");
+        }
+        String regex = "^\\d{4}-\\d{2}-\\d{2}$";
+        Pattern pattern = Pattern.compile(regex);
+        if(!pattern.matcher(start).matches()||!pattern.matcher(end).matches()){
+            return result.error("时间格式错误！");
+        }
+
+        if(start.compareTo(end)>=0){
+            return result.error("考试开始时间不能晚于结束时间！");
+        }
+
+
+
         examService.createExam(e);
         if (JWTUtils.refreshTokenNeeded(Authorization)){
             return result.success(newToken(Authorization));
@@ -99,6 +119,25 @@ public class ExamController {
         if (paperService.getPaperByID(p)==null){
             return result.error("该试卷不存在！");
         }
+
+
+        String start=e.getExam_start();
+        String end=e.getExam_end();
+
+        if(start==null||end==null){
+            return result.error("考试时间不能为空！");
+        }
+        String regex = "^\\d{4}-\\d{2}-\\d{2}$";
+        Pattern pattern = Pattern.compile(regex);
+        if(!pattern.matcher(start).matches()||!pattern.matcher(end).matches()){
+            return result.error("时间格式错误！");
+        }
+
+        if(start.compareTo(end)>=0){
+            return result.error("考试开始时间不能晚于结束时间！");
+        }
+
+
         examService.updateExam(e);
         stringRedisTemplate.opsForValue().set(EXAM_KEY+e.getExam_id(),
                 e.getExam_id(),30,TimeUnit.MINUTES);
