@@ -1,7 +1,6 @@
 package com.example.pet_hospital.Service;
 
 
-import com.example.pet_hospital.Entity.case_media;
 import com.example.pet_hospital.Entity.cases;
 import com.example.pet_hospital.Entity.department;
 import com.example.pet_hospital.Entity.disease;
@@ -63,29 +62,29 @@ public interface DiseaseService {
 
 
 
-    case_media getMediabyUrl(String mediaUrl);
+    cases getMediabyUrl(String mediaUrl);
 
-    case_media getMediabyName(String mediaName);
+    cases getMediabyName(String mediaName);
 
 
 
-    case_media[] findAllMedia();
+    cases[] findAllMedia();
 
-    case_media[] getMediaByCaseId(String caseId);
+    cases[] getMediaByCaseId(String caseId);
 
-    case_media[] getMediaByType(String mediaType);
+    cases[] getMediaByType(String mediaType);
 
-    case_media[] getMediaByCategory(String category);
+    cases[] getMediaByCategory(String category);
 
-    case_media[] getMediaByCaseIdAndType(String caseId, String mediaType);
+    cases[] getMediaByCaseIdAndType(String caseId, String mediaType);
 
-    case_media[] getMediaByCaseIdAndCategory(String caseId, String category);
+    cases[] getMediaByCaseIdAndCategory(String caseId, String category);
 
-    case_media[] getMediaByTypeAndCategory(String mediaType, String category);
+    cases[] getMediaByTypeAndCategory(String mediaType, String category);
 
-    case_media[] getMediaByCaseIdAndTypeAndCategory(String caseId, String mediaType, String category);
+    cases[] getMediaByCaseIdAndTypeAndCategory(String caseId, String mediaType, String category);
 
-    public String uploadMedia(case_media m) throws Exception;
+    public String uploadMedia(cases m) throws Exception;
 
     public void deleteMedia(String mediaId) throws Exception;
 
