@@ -68,7 +68,7 @@ public class UserController {
     @PostMapping("/user/login")
     public result login(@RequestBody user u){
         user us= userService.login(u);
-        if (us!=null)
+        if (us!=null && !us.getIdentity().equals("banned"))
         {
             Map<String,Object> claims = new HashMap<>();
             claims.put("username",us.getUsername());
@@ -82,6 +82,9 @@ public class UserController {
             return result.success("登录成功",token);
         }
         else {
+            if (us.getIdentity().equals("banned")){
+                return result.error("账户已被禁用。");
+            }
             return result.error("用户名或密码错误");
         }
     }
