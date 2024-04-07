@@ -377,7 +377,7 @@ public class DiseaseController {
         // 检查文件类型是否为图片或视频
         if(!(contentType != null && (contentType.startsWith("image/") || contentType.startsWith("video/"))))
             return result.error("文件类型只能是图片或者视频！");
-        
+
         if (m.getMedia_name().isEmpty()){
             return result.error("媒体名不能为空！");
         }
@@ -479,9 +479,9 @@ public class DiseaseController {
     //getMedia?case_id=212&media_type=image&category=Consultation
     @GetMapping("/disease/getMediaURL")
     public result getMediaURL(@RequestParam(name = "case_id",required = false) String case_id,
-                           @RequestParam(name = "media_type",required = false) String media_type,
-                           @RequestParam(name = "category",required = false) String category,
-                           @RequestHeader String Authorization ) {
+                              @RequestParam(name = "media_type",required = false) String media_type,
+                              @RequestParam(name = "category",required = false) String category,
+                              @RequestHeader String Authorization ) {
 
         //media_type只能是image或者video，对应 图片 或者 视频 ；
         //
@@ -586,7 +586,7 @@ public class DiseaseController {
                              @RequestParam("disease_name") String diseaseName,
                              @RequestParam("department_name") String departmentName,
                              @RequestHeader String Authorization) throws Exception {
-        
+
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
@@ -596,9 +596,9 @@ public class DiseaseController {
         if (caseName.isEmpty()){
             return result.error("病例名不能为空！");
         }
-       
-        
-        
+
+
+
         cases i = new cases();
         i.setCase_id(caseId);
         i.setCase_name(caseName);
@@ -629,7 +629,7 @@ public class DiseaseController {
             return result.error("不能修改到不存在的科室之下！");
         }
         diseaseService.changeCase(i);
-        
+
         //修改多媒体
         if (file!=null){
             cases m = new cases();
