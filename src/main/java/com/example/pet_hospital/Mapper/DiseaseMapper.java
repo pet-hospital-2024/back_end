@@ -95,10 +95,10 @@ public interface DiseaseMapper {
     //以下是对case_media表的操作
 
     @Insert("insert into syf.case_media(case_media_id,case_id,case_media_url,case_media_name,case_media_type,category) values(uuid_short(),#{case_id},#{media_url},#{media_name},#{media_type},#{category})")
-    void addMedia(case_media m);
+    void addMedia(cases m);
 
     @Delete("delete from syf.case_media where case_media_id=#{media_id}")
-    void deleteMedia(case_media m);
+    void deleteMedia(cases m);
 
 
 
@@ -116,7 +116,7 @@ public interface DiseaseMapper {
             @Result(property = "created_at", column = "created_at"),
             @Result(property = "updated_at", column = "updated_at")
     })
-    case_media getMediabyUrl(String mediaUrl);
+    cases getMediabyUrl(String mediaUrl);
 
     @Select("select * from syf.case_media where case_media_name=#{mediaName}")
     @Results(value = {
@@ -129,7 +129,7 @@ public interface DiseaseMapper {
             @Result(property = "created_at", column = "created_at"),
             @Result(property = "updated_at", column = "updated_at")
     })
-    case_media getMediabyName(String mediaName);
+    cases getMediabyName(String mediaName);
 
 
 
@@ -145,7 +145,7 @@ public interface DiseaseMapper {
             @Result(property = "created_at", column = "created_at"),
             @Result(property = "updated_at", column = "updated_at")
     })
-    case_media getMediabyId(String mediaId);
+    cases getMediabyId(String mediaId);
 
 
     @Select("select * from syf.case_media")
@@ -159,7 +159,7 @@ public interface DiseaseMapper {
             @Result(property = "created_at", column = "created_at"),
             @Result(property = "updated_at", column = "updated_at")
     })
-    case_media[] findAllMedia();
+    cases[] findAllMedia();
 
     @Select("select * from syf.case_media where case_id=#{caseId}")
     @Results(value = {
@@ -172,7 +172,7 @@ public interface DiseaseMapper {
             @Result(property = "created_at", column = "created_at"),
             @Result(property = "updated_at", column = "updated_at")
     })
-    case_media[] getMediaByCaseId(String caseId);
+    cases[] getMediaByCaseId(String caseId);
 
     @Select("select * from syf.case_media where case_media_type=#{mediaType}")
     @Results(value = {
@@ -185,7 +185,7 @@ public interface DiseaseMapper {
             @Result(property = "created_at", column = "created_at"),
             @Result(property = "updated_at", column = "updated_at")
     })
-    case_media[] getMediaByType(String mediaType);
+    cases[] getMediaByType(String mediaType);
 
     @Select("select * from syf.case_media where category=#{category}")
     @Results(value = {
@@ -198,7 +198,7 @@ public interface DiseaseMapper {
             @Result(property = "created_at", column = "created_at"),
             @Result(property = "updated_at", column = "updated_at")
     })
-    case_media[] getMediaByCategory(String category);
+    cases[] getMediaByCategory(String category);
 
     @Select("select * from syf.case_media where case_id=#{caseId} and case_media_type=#{mediaType}")
     @Results(value = {
@@ -211,7 +211,7 @@ public interface DiseaseMapper {
             @Result(property = "created_at", column = "created_at"),
             @Result(property = "updated_at", column = "updated_at")
     })
-    case_media[] getMediaByCaseIdAndType(String caseId, String mediaType);
+    cases[] getMediaByCaseIdAndType(String caseId, String mediaType);
 
     @Select("select * from syf.case_media where case_id=#{caseId} and category=#{category}")
     @Results(value = {
@@ -224,7 +224,7 @@ public interface DiseaseMapper {
             @Result(property = "created_at", column = "created_at"),
             @Result(property = "updated_at", column = "updated_at")
     })
-    case_media[] getMediaByCaseIdAndCategory(String caseId, String category);
+    cases[] getMediaByCaseIdAndCategory(String caseId, String category);
 
     @Select("select * from syf.case_media where case_media_type=#{mediaType} and category=#{category}")
     @Results(value = {
@@ -237,7 +237,7 @@ public interface DiseaseMapper {
             @Result(property = "created_at", column = "created_at"),
             @Result(property = "updated_at", column = "updated_at")
     })
-    case_media[] getMediaByTypeAndCategory(String mediaType, String category);
+    cases[] getMediaByTypeAndCategory(String mediaType, String category);
 
     @Select("select * from syf.case_media where case_id=#{caseId} and case_media_type=#{mediaType} and category=#{category}")
     @Results(value = {
@@ -250,5 +250,5 @@ public interface DiseaseMapper {
             @Result(property = "created_at", column = "created_at"),
             @Result(property = "updated_at", column = "updated_at")
     })
-    case_media[] getMediaByCaseIdAndTypeAndCategory(String caseId, String mediaType, String category);
+    cases[] getMediaByCaseIdAndTypeAndCategory(String caseId, String mediaType, String category);
 }

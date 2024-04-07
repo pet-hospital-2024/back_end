@@ -360,7 +360,7 @@ public class diseaseController {
                            @RequestParam("file") MultipartFile file,
                            @RequestHeader String Authorization) throws Exception {
 
-        case_media m = new case_media();
+        cases m = new cases();
         m.setCase_id(caseId);
         m.setMedia_name(mediaName);
         m.setCategory(category);
@@ -407,7 +407,7 @@ public class diseaseController {
 
     //删除病例多媒体
     @PostMapping("/disease/deleteMedia")
-    public result deleteMedia(@RequestBody case_media m, @RequestHeader String Authorization) throws Exception {
+    public result deleteMedia(@RequestBody cases m, @RequestHeader String Authorization) throws Exception {
         if (identitySecure("user",Authorization)){
             return result.error("无操作权限！");
         }
@@ -499,7 +499,7 @@ public class diseaseController {
         }
 
         if (case_id == null && media_type == null && category == null) {
-            case_media[] media = diseaseService.findAllMedia();
+            cases[] media = diseaseService.findAllMedia();
             String[] urls = new String[media.length];
             for (int i = 0; i < media.length; i++) {
                 urls[i] = media[i].getMedia_url();
@@ -507,7 +507,7 @@ public class diseaseController {
             return result.success(urls);
         }
         if (case_id != null && media_type == null && category == null) {
-            case_media[] media = diseaseService.getMediaByCaseId(case_id);
+            cases[] media = diseaseService.getMediaByCaseId(case_id);
             String[] urls = new String[media.length];
             for (int i = 0; i < media.length; i++) {
                 urls[i] = media[i].getMedia_url();
@@ -515,7 +515,7 @@ public class diseaseController {
             return result.success(urls);
         }
         if (case_id == null && media_type != null && category == null) {
-            case_media[] media = diseaseService.getMediaByType(media_type);
+            cases[] media = diseaseService.getMediaByType(media_type);
             String[] urls = new String[media.length];
             for (int i = 0; i < media.length; i++) {
                 urls[i] = media[i].getMedia_url();
@@ -523,7 +523,7 @@ public class diseaseController {
             return result.success(urls);
         }
         if (case_id == null && media_type == null && category != null) {
-            case_media[] media = diseaseService.getMediaByCategory(category);
+            cases[] media = diseaseService.getMediaByCategory(category);
             String[] urls = new String[media.length];
             for (int i = 0; i < media.length; i++) {
                 urls[i] = media[i].getMedia_url();
@@ -531,7 +531,7 @@ public class diseaseController {
             return result.success(urls);
         }
         if (case_id != null && media_type != null && category == null) {
-            case_media[] media = diseaseService.getMediaByCaseIdAndType(case_id, media_type);
+            cases[] media = diseaseService.getMediaByCaseIdAndType(case_id, media_type);
             String[] urls = new String[media.length];
             for (int i = 0; i < media.length; i++) {
                 urls[i] = media[i].getMedia_url();
@@ -539,7 +539,7 @@ public class diseaseController {
             return result.success(urls);
         }
         if (case_id != null && media_type == null && category != null) {
-            case_media[] media = diseaseService.getMediaByCaseIdAndCategory(case_id, category);
+            cases[] media = diseaseService.getMediaByCaseIdAndCategory(case_id, category);
             String[] urls = new String[media.length];
             for (int i = 0; i < media.length; i++) {
                 urls[i] = media[i].getMedia_url();
@@ -547,7 +547,7 @@ public class diseaseController {
             return result.success(urls);
         }
         if (case_id == null && media_type != null && category != null) {
-            case_media[] media = diseaseService.getMediaByTypeAndCategory(media_type, category);
+            cases[] media = diseaseService.getMediaByTypeAndCategory(media_type, category);
             String[] urls = new String[media.length];
             for (int i = 0; i < media.length; i++) {
                 urls[i] = media[i].getMedia_url();
@@ -555,7 +555,7 @@ public class diseaseController {
             return result.success(urls);
         }
         if (case_id != null && media_type != null && category != null) {
-            case_media[] media = diseaseService.getMediaByCaseIdAndTypeAndCategory(case_id, media_type, category);
+            cases[] media = diseaseService.getMediaByCaseIdAndTypeAndCategory(case_id, media_type, category);
             String[] urls = new String[media.length];
             for (int i = 0; i < media.length; i++) {
                 urls[i] = media[i].getMedia_url();
@@ -566,4 +566,216 @@ public class diseaseController {
 
 
     }
+
+
+    /*
+
+    //修改病例（文字和多媒体一起）
+    @PostMapping("/disease/changeCase")
+    public result changeCase(@RequestParam("media_name") String mediaName,
+                             @RequestParam("category") String category,
+                             @RequestParam("file") MultipartFile file,
+                             @RequestParam("case_id") String caseId,
+                             @RequestParam("case_name") String caseName,
+                             @RequestParam("case_examination") String caseExamination,
+                             @RequestParam("case_result") String caseResult,
+                             @RequestParam("case_treatment") String caseTreatment,
+                             @RequestParam("case_medicine") String caseMedicine,
+                             @RequestParam("case_cost") String caseCost,
+                             @RequestParam("case_introduction") String caseIntroduction,
+                             @RequestParam("disease_name") String diseaseName,
+                             @RequestParam("department_name") String departmentName,
+                             @RequestHeader String Authorization) throws Exception {
+        
+        if (identitySecure("user",Authorization)){
+            return result.error("无操作权限！");
+        }
+        if (caseId.isEmpty()){
+            return result.error("病例id不能为空！");
+        }
+        if (caseName.isEmpty()){
+            return result.error("病例名不能为空！");
+        }
+       
+        
+        
+        cases i = new cases();
+        i.setCase_id(caseId);
+        i.setCase_name(caseName);
+        i.setCase_examination(caseExamination);
+        i.setCase_result(caseResult);
+        i.setCase_treatment(caseTreatment);
+        i.setCase_medicine(caseMedicine);
+        i.setCase_cost(caseCost);
+        i.setCase_introduction(caseIntroduction);
+        //根据disease和department的name返回id
+        disease d = new disease();
+        d.setDisease_name(diseaseName);
+        i.setDisease_id(diseaseService.getDiseasebyName(d).getDisease_id());
+        department k = new department();
+        k.setDepartment_name(departmentName);
+        i.setDepartment_id(diseaseService.getDepartmentbyName(k).getDepartment_id());
+        i.setFile(file);
+        i.setMedia_name(mediaName);
+        i.setCategory(category);
+
+        if(diseaseService.getCasebyId(i.getCase_id())==null){
+            return result.error("该病例不存在！");
+        }
+        if(diseaseService.getDiseasebyId(i.getDisease_id())==null){
+            return result.error("不能修改到不存在的疾病之下！");
+        }
+        if(diseaseService.getDepartmentbyId(i.getDepartment_id())==null){
+            return result.error("不能修改到不存在的科室之下！");
+        }
+        diseaseService.changeCase(i);
+        
+        //修改多媒体
+        if (file!=null){
+            cases m = new cases();
+            m.setCase_id(caseId);
+            m.setMedia_name(mediaName);
+            m.setCategory(category);
+            m.setFile(file);
+
+            String contentType = file.getContentType();
+
+            // 检查文件类型是否为图片或视频
+            if(!(contentType != null && (contentType.startsWith("image/") || contentType.startsWith("video/"))))
+                return result.error("文件类型只能是图片或者视频！");
+
+            if (m.getMedia_name().isEmpty()){
+                return result.error("媒体名不能为空！");
+            }
+            if (m.getMedia_type().isEmpty()){
+                return result.error("媒体类型不能为空！");
+            }
+            if (m.getCategory().isEmpty()){
+                return result.error("媒体类别不能为空！");
+            }
+            if(diseaseService.getCasebyId(m.getCase_id())==null){
+                return result.error("该病例不存在！");
+            }
+            if(diseaseService.getMediabyUrl(m.getMedia_url())!=null){
+                return result.error("该媒体已存在！");
+            }
+            if(diseaseService.getMediabyName(m.getMedia_name())!=null){
+                return result.error("该媒体名已存在！");
+            }
+
+            if(!(m.getCategory().equals("Consultation")||m.getCategory().equals("Examination")
+                    ||m.getCategory().equals("Result")||m.getCategory().equals("Treatment"))){
+                return result.error("媒体类别只能是Consultation,Examination,Result,Treatment之一！");
+            }
+            diseaseService.uploadMedia(m);
+        }
+        return result.success(newToken(Authorization));
+    }
+
+    //添加病例（文字和多媒体一起）
+    @PostMapping("/disease/addCaseWithMedia")
+    public result addCaseWithMedia(
+                                    @RequestParam("media_name") String mediaName,
+                                    @RequestParam("category") String category,
+                                    @RequestParam("file") MultipartFile file,
+                                    @RequestParam("case_name") String caseName,
+                                    @RequestParam("case_examination") String caseExamination,
+                                    @RequestParam("case_result") String caseResult,
+                                    @RequestParam("case_treatment") String caseTreatment,
+                                    @RequestParam("case_medicine") String caseMedicine,
+                                    @RequestParam("case_cost") String caseCost,
+                                    @RequestParam("case_introduction") String caseIntroduction,
+                                    @RequestParam("disease_name") String diseaseName,
+                                    @RequestParam("department_name") String departmentName,
+
+                                    @RequestHeader String Authorization
+    ) throws Exception {
+
+        if (identitySecure("user", Authorization)) {
+            return result.error("无操作权限！");
+        }
+        if (caseName.isEmpty()) {
+            return result.error("病例名不能为空！");
+        }
+
+        cases i = new cases();
+        i.setCase_name(caseName);
+        i.setCase_examination(caseExamination);
+        i.setCase_result(caseResult);
+        i.setCase_treatment(caseTreatment);
+        i.setCase_medicine(caseMedicine);
+        i.setCase_cost(caseCost);
+        i.setCase_introduction(caseIntroduction);
+        //根据disease和department的name返回id
+        disease d = new disease();
+        d.setDisease_name(diseaseName);
+        i.setDisease_id(diseaseService.getDiseasebyName(d).getDisease_id());
+        department k = new department();
+        k.setDepartment_name(departmentName);
+        i.setDepartment_id(diseaseService.getDepartmentbyName(k).getDepartment_id());
+        //更新文字信息
+        if (diseaseService.getDiseasebyId(i.getDisease_id()) == null) {
+            return result.error("不能修改到不存在的疾病之下！");
+        }
+        if (diseaseService.getDepartmentbyId(i.getDepartment_id()) == null) {
+            return result.error("不能修改到不存在的科室之下！");
+        }
+        diseaseService.changeCase(i);
+
+        //添加多媒体
+        cases m = new cases();
+        m.setCase_id(diseaseService.getCasebyName(i.getCase_name()).getCase_id());
+
+        m.setMedia_name(mediaName);
+        m.setCategory(category);
+        m.setFile(file);
+        if (identitySecure("user", Authorization)) {
+            return result.error("无操作权限！");
+        }
+        if (m.getCase_id().isEmpty()) {
+            return result.error("病例id不能为空！");
+        }
+
+        String contentType = file.getContentType();
+
+        // 检查文件类型是否为图片或视频
+        if (!(contentType != null && (contentType.startsWith("image/") || contentType.startsWith("video/"))))
+            return result.error("文件类型只能是图片或者视频！");
+
+        if (m.getMedia_name().isEmpty()) {
+            return result.error("媒体名不能为空！");
+        }
+        if (m.getMedia_type().isEmpty()) {
+            return result.error("媒体类型不能为空！");
+        }
+        if (m.getCategory().isEmpty()) {
+            return result.error("媒体类别不能为空！");
+        }
+        if (diseaseService.getCasebyId(m.getCase_id()) == null) {
+            return result.error("该病例不存在！");
+        }
+        if (diseaseService.getMediabyUrl(m.getMedia_url()) != null) {
+            return result.error("该媒体已存在！");
+        }
+        if (diseaseService.getMediabyName(m.getMedia_name()) != null) {
+            return result.error("该媒体名已存在！");
+        }
+
+        if (!(m.getCategory().equals("Consultation") || m.getCategory().equals("Examination")
+                || m.getCategory().equals("Result") || m.getCategory().equals("Treatment"))) {
+            return result.error("媒体类别只能是Consultation,Examination,Result,Treatment之一！");
+        }
+        diseaseService.uploadMedia(m);
+        return result.success(newToken(Authorization));
+    }
+
+
+
+        */
+
+
+
+
+
+
 }

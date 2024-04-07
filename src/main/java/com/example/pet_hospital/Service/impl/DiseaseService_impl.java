@@ -1,6 +1,5 @@
 package com.example.pet_hospital.Service.impl;
 
-import com.example.pet_hospital.Entity.case_media;
 import com.example.pet_hospital.Entity.cases;
 import com.example.pet_hospital.Entity.department;
 import com.example.pet_hospital.Entity.disease;
@@ -161,7 +160,7 @@ public class DiseaseService_impl implements DiseaseService {
 
 
     @Override
-    public String uploadMedia(case_media m) throws Exception {
+    public String uploadMedia(cases m) throws Exception {
         MultipartFile file = m.getFile();
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         minioClient.putObject(
@@ -181,7 +180,7 @@ public class DiseaseService_impl implements DiseaseService {
                         .build()
         );
 
-        case_media newMedia = new case_media();
+        cases newMedia = new cases();
         newMedia.setCase_id(m.getCase_id()); // 设置你的case_id
         newMedia.setMedia_name(fileName);
         newMedia.setMedia_type(file.getContentType().startsWith("image/") ? "image" : "video");
@@ -194,7 +193,7 @@ public class DiseaseService_impl implements DiseaseService {
 
     @Override
     public void deleteMedia(String mediaId) throws Exception {
-        case_media mediaToDelete = diseaseMapper.getMediabyId(mediaId);
+        cases mediaToDelete = diseaseMapper.getMediabyId(mediaId);
         if (mediaToDelete != null) {
             minioClient.removeObject(
                     RemoveObjectArgs.builder()
@@ -215,52 +214,52 @@ public class DiseaseService_impl implements DiseaseService {
 
 
     @Override
-    public case_media getMediabyUrl(String mediaUrl) {
+    public cases getMediabyUrl(String mediaUrl) {
         return diseaseMapper.getMediabyUrl(mediaUrl);
     }
 
     @Override
-    public case_media getMediabyName(String mediaName) {
+    public cases getMediabyName(String mediaName) {
         return diseaseMapper.getMediabyName(mediaName);
     }
 
     @Override
-    public case_media[] findAllMedia() {
+    public cases[] findAllMedia() {
         return diseaseMapper.findAllMedia();
     }
 
     @Override
-    public case_media[] getMediaByCaseId(String caseId) {
+    public cases[] getMediaByCaseId(String caseId) {
         return diseaseMapper.getMediaByCaseId(caseId);
     }
 
     @Override
-    public case_media[] getMediaByType(String mediaType) {
+    public cases[] getMediaByType(String mediaType) {
         return diseaseMapper.getMediaByType(mediaType);
     }
 
     @Override
-    public case_media[] getMediaByCategory(String category) {
+    public cases[] getMediaByCategory(String category) {
         return diseaseMapper.getMediaByCategory(category);
     }
 
     @Override
-    public case_media[] getMediaByCaseIdAndType(String caseId, String mediaType) {
+    public cases[] getMediaByCaseIdAndType(String caseId, String mediaType) {
         return diseaseMapper.getMediaByCaseIdAndType(caseId, mediaType);
     }
 
     @Override
-    public case_media[] getMediaByCaseIdAndCategory(String caseId, String category) {
+    public cases[] getMediaByCaseIdAndCategory(String caseId, String category) {
         return diseaseMapper.getMediaByCaseIdAndCategory(caseId, category);
     }
 
     @Override
-    public case_media[] getMediaByTypeAndCategory(String mediaType, String category) {
+    public cases[] getMediaByTypeAndCategory(String mediaType, String category) {
         return diseaseMapper.getMediaByTypeAndCategory(mediaType, category);
     }
 
     @Override
-    public case_media[] getMediaByCaseIdAndTypeAndCategory(String caseId, String mediaType, String category) {
+    public cases[] getMediaByCaseIdAndTypeAndCategory(String caseId, String mediaType, String category) {
         return diseaseMapper.getMediaByCaseIdAndTypeAndCategory(caseId, mediaType, category);
     }
 
