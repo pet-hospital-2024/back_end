@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -265,54 +266,40 @@ public class PaperController {
 
     @GetMapping("/paper/getPaperById")
     public result GetPaperById(@RequestParam(name = "paper_id") String paper_id, @RequestHeader String Authorization) {
-        String paperCacheKey = "paper:" + paper_id;
-        String paperData = stringRedisTemplate.opsForValue().get(paperCacheKey);
-
-
         paper p = new paper();
         p.setPaper_id(paper_id);
-        // 检查试卷是否存在
+        //no identity secure needed.
         if (paperService.getPaperByID(p) == null) {
             return result.error("该试卷不存在！");
         }
-
         paper r = paperService.getQuestionsFromPaper(paper_id);
         List<question> questions = r.getQuestions();
+        int question_number = questions.size();
+        int value = 0;
         if (questions.isEmpty()) {
             return result.error("该试卷没有题目！");
         }
-
-        // 处理问题和选项，并计算总分
-        int question_number = questions.size();
-        int value = 0;
+        //System.out.println(questions);
         for (question question : questions) {
-            String questionCacheKey = "question:" + question.getQuestion_id();
-            String questionData = stringRedisTemplate.opsForValue().get(questionCacheKey);
-
-            if (questionData != null) {
-                // 如果问题在缓存中，直接使用缓存的数据
-                question = JSONUtil.toBean(questionData, question.class);
-            } else {
-                // 问题不在缓存中，处理问题并加入缓存
-                List<Map<String, String>> optionResult = paperService.selectOptionsForQuestion(question.getQuestion_id());
-                if (optionResult != null) {
-                    if (question.getType().equals("choice") || question.getType().equals("judge")) {
-                        question.setOptions(optionResult);
-                    }
-                    stringRedisTemplate.opsForValue().set(questionCacheKey, JSONUtil.toJsonStr(question), 30, TimeUnit.MINUTES);
+            // 对于每个问题，根据question_id获取选项内容
+            List<Map<String, String>> optionResult = paperService.selectOptionsForQuestion(question.getQuestion_id());
+            if (optionResult != null) {
+                if (question.getType().equals("choice")) {
+                    question.setOptions(optionResult);
                 }
+                if (question.getType().equals("judge")) {
+                    optionResult = new ArrayList<>(optionResult.subList(0, 2));
+                    question.setOptions(optionResult);
+                }
+                value += question.getValue();
             }
-            value += question.getValue();
         }
-
         r.setQuestion_number(question_number);
         r.setValue(value);
-        // 更新paper的value和question_number
+        //更新paper的value和question_number
         paperService.updatePaperValueAndQuestionNumber(paper_id, value, question_number);
-        // 将处理完的试卷存入缓存
-        stringRedisTemplate.opsForValue().set(paperCacheKey, JSONUtil.toJsonStr(r), 30, TimeUnit.MINUTES);
-        return result.success(r);
 
+        return result.success(r);
     }
 
 
