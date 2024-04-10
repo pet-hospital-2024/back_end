@@ -28,7 +28,7 @@ public class JWTUtils {
         String jwt= Jwts.builder().
                 addClaims(claims).
                 signWith(SignatureAlgorithm.HS256,signKey).
-                setExpiration(new Date(System.currentTimeMillis()+expire_years)).
+                setExpiration(new Date(System.currentTimeMillis()+expire)).
                 compact();
         return jwt;
     }

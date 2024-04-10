@@ -82,10 +82,10 @@ public class UserController {
             return result.success("登录成功",token);
         }
         else {
-            if (us.getIdentity().equals("banned")){
-                return result.error("账户已被禁用。");
+            if (us==null){
+                return result.error("用户名或密码错误");
             }
-            return result.error("用户名或密码错误");
+            return result.error("该用户已被封禁");
         }
     }
 
