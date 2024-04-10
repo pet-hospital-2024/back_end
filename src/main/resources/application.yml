@@ -13,6 +13,7 @@ spring:
       host: wxl475.cn
       port: 6382
       password: wxl5211314
+
       jedis:
         pool:
           max-active: 8
