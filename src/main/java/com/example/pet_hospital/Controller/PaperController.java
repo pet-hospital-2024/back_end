@@ -276,24 +276,30 @@ public class PaperController {
         List<question> questions = r.getQuestions();
         int question_number = questions.size();
         int value = 0;
-        if (questions.isEmpty()) {
-            return result.success();
+        if(question_number != 0){
+
+            for (question question : questions) {
+                // 对于每个问题，根据question_id获取选项内容
+                List<Map<String, String>> optionResult = paperService.selectOptionsForQuestion(question.getQuestion_id());
+                if (optionResult != null) {
+                    if (question.getType().equals("choice")) {
+                        question.setOptions(optionResult);
+                    }
+                    if (question.getType().equals("judge")) {
+                        optionResult = new ArrayList<>(optionResult.subList(0, 2));
+                        question.setOptions(optionResult);
+                    }
+                    value += question.getValue();
+                }
+            }
+
+        }else{
+            //返回一个空的question列表
+            questions = new ArrayList<>();
+            
         }
         //System.out.println(questions);
-        for (question question : questions) {
-            // 对于每个问题，根据question_id获取选项内容
-            List<Map<String, String>> optionResult = paperService.selectOptionsForQuestion(question.getQuestion_id());
-            if (optionResult != null) {
-                if (question.getType().equals("choice")) {
-                    question.setOptions(optionResult);
-                }
-                if (question.getType().equals("judge")) {
-                    optionResult = new ArrayList<>(optionResult.subList(0, 2));
-                    question.setOptions(optionResult);
-                }
-                value += question.getValue();
-            }
-        }
+
         r.setQuestion_number(question_number);
         r.setValue(value);
         //更新paper的value和question_number
