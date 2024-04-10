@@ -40,4 +40,8 @@ public interface UserMapper {
 
     @Update("update syf.userdata set password=#{newPassword} where user_id=#{user_id}")
     void ChangePassword(user u);
+
+    //用户模糊搜索
+    @Select("select *  from syf.userdata where userdata.username like concat('%',#{name},'%') ")
+    List<user> getUserByName(String name);
 }

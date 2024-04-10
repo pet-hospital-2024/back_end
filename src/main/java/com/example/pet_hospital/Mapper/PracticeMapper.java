@@ -54,7 +54,14 @@ public interface PracticeMapper {
     String getDepartmentID(question q);
 
     //模糊查询（包括题干和选项）
-    @Select("select *  from syf.questions join syf.disease on syf.questions.disease_id=syf.disease.disease_id join syf.department on syf.questions.department_id=syf.department.department_id where question_body like concat('%',#{name},'%') or A like concat('%',#{name},'%') or B like concat('%',#{name},'%') or C like concat('%',#{name},'%') or D like concat('%',#{name},'%')")
+    @Select("select *  from syf.questions join syf.disease" +
+            " on syf.questions.disease_id=syf.disease.disease_id join syf.department" +
+            " on syf.questions.department_id=syf.department.department_id " +
+            "where question_body like concat('%',#{name},'%') " +
+            "or A like concat('%',#{name},'%') " +
+            "or B like concat('%',#{name},'%') " +
+            "or C like concat('%',#{name},'%') " +
+            "or D like concat('%',#{name},'%')")
     List<question> getQuestionByName(String name);
 
     //根据疾病name获取题目

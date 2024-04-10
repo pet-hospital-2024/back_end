@@ -2,10 +2,10 @@ package com.example.pet_hospital.Service.impl;
 
 import com.example.pet_hospital.Entity.user;
 import com.example.pet_hospital.Mapper.UserMapper;
+import com.example.pet_hospital.Service.UserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.example.pet_hospital.Service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,6 +71,14 @@ public class UserService_impl implements UserService {
     @Override
     public void ChangePassword(user u) {
         userMapper.ChangePassword(u);
+    }
+
+    @Override
+    public PageInfo<user> getUserByName(String name, int page, int size) {
+        PageHelper.startPage(page, size);
+        List<user> users = userMapper.getUserByName(name);
+        PageInfo<user> pageInfo = new PageInfo<>(users);
+        return pageInfo;
     }
 
 }
