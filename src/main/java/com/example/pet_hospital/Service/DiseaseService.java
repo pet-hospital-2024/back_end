@@ -82,4 +82,7 @@ public interface DiseaseService {
 
     public void deleteMedia(String mediaId) throws Exception;
 
+    String getMediabyId(String mediaId);
+
+    void changeMedia(cases m) throws Exception;
 }

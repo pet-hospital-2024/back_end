@@ -204,6 +204,56 @@ public class DiseaseService_impl implements DiseaseService {
         }
     }
 
+    @Override
+    public String getMediabyId(String mediaId) {
+        cases media = diseaseMapper.getMediabyId(mediaId);
+        return media != null ? media.getMedia_url() : null;
+    }
+
+    @Override
+    public void changeMedia(cases m) throws Exception {
+        //先删除minio中的文件
+        cases mediaToDelete = diseaseMapper.getMediabyId(m.getMedia_id());
+        if (mediaToDelete != null) {
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(mediaToDelete.getMedia_name())
+                            .build()
+            );
+        }
+
+        //再上传新文件
+        MultipartFile file = m.getFile();
+        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        minioClient.putObject(
+                PutObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(fileName)
+                        .stream(file.getInputStream(), file.getSize(), -1)
+                        .contentType(file.getContentType())
+                        .build()
+        );
+        //更新url
+        String url = minioClient.getPresignedObjectUrl(
+                GetPresignedObjectUrlArgs.builder()
+                        .method(Method.GET)
+                        .bucket(bucketName)
+                        .object(fileName)
+                        .build()
+        );
+        //更新数据库
+        cases newMedia = new cases();
+        newMedia.setMedia_id(m.getMedia_id());
+        //更新这个id的media的url
+        newMedia.setMedia_url(url);
+        newMedia.setMedia_name(fileName);
+        newMedia.setMedia_type(file.getContentType().startsWith("image/") ? "image" : "video");
+        //只更新上面这三个字段，其他字段不变
+        diseaseMapper.changeMedia(newMedia);
+
+    }
+
 
     @Override
     public cases getMediabyUrl(String mediaUrl) {

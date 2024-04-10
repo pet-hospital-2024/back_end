@@ -404,6 +404,39 @@ public class DiseaseController {
         return result.success(newToken(Authorization));
     }
 
+    //编辑后的图片替换掉原来的(通过media_id和file)
+    @PostMapping("/disease/changeMedia")
+    public result changeMedia(@RequestParam("media_id") String mediaId,
+                              @RequestParam("file") MultipartFile file,
+                              @RequestHeader String Authorization) throws Exception {
+        cases m = new cases();
+        m.setMedia_id(mediaId);
+        m.setFile(file);
+        if (identitySecure("user", Authorization)) {
+            return result.error("无操作权限！");
+        }
+        if (m.getMedia_id().isEmpty()) {
+            return result.error("媒体id不能为空！");
+        }
+        if (diseaseService.getMediabyId(m.getMedia_id()) == null) {
+            return result.error("该媒体不存在！");
+        }
+        String contentType = file.getContentType();
+
+        // 检查文件类型是否为图片或视频
+        if (!(contentType != null && (contentType.startsWith("image/") || contentType.startsWith("video/"))))
+            return result.error("文件类型只能是图片或者视频！");
+
+        diseaseService.changeMedia(m);
+        return result.success(newToken(Authorization));
+    }
+
+
+
+
+
+
+
     //删除病例多媒体
     @PostMapping("/disease/deleteMedia")
     public result deleteMedia(@RequestBody cases m, @RequestHeader String Authorization) throws Exception {

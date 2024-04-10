@@ -277,7 +277,7 @@ public class PaperController {
         int question_number = questions.size();
         int value = 0;
         if (questions.isEmpty()) {
-            return result.error("该试卷没有题目！");
+            return result.success();
         }
         //System.out.println(questions);
         for (question question : questions) {

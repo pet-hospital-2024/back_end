@@ -245,4 +245,9 @@ public interface DiseaseMapper {
             @Result(property = "updated_at", column = "updated_at")
     })
     cases[] getMediaByCaseIdAndTypeAndCategory(String caseId, String mediaType, String category);
+
+
+
+    @Update("update syf.case_media set case_media_url=#{media_url},case_media_name=#{media_name},case_media_type=#{media_type} where case_media_id=#{media_id}")
+    void changeMedia(cases m);
 }
