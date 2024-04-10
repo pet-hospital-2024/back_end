@@ -22,4 +22,6 @@ public interface UserService {
     void alterUserInfo(user u);
 
     void ChangePassword(user u);
+
+    PageInfo<user> getUserByName(String name, int page, int size);
 }

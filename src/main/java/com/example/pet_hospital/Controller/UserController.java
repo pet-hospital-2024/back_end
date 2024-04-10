@@ -264,4 +264,26 @@ public class UserController {
         }
     }
 
+    //用户模糊搜索
+    @GetMapping("/user/getuserbyname")
+    public result GetUserByName(@RequestParam(name = "username") String name,
+                                @RequestParam(value = "page", defaultValue = "1") int page,
+                                @RequestParam(value = "size", defaultValue = "10") int size,
+                                @RequestHeader String Authorization){
+        if (identitySecure("user",Authorization)){
+            return result.error("无操作权限。");
+        }
+        if (page<=0 || size<=0){
+            return result.error("参数错误。");
+        }
+        if (name.equals("")){
+            return result.error("用户名不能为空。");
+        }
+        if (userService.getUserByName(name,page,size).getList().isEmpty()){
+            return result.error("未找到相关用户。");
+        }
+
+        return result.success(userService.getUserByName(name,page,size));
+
+    }
 }
