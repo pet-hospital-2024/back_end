@@ -106,13 +106,11 @@ public class PaperController {
             return result.error("无操作权限。");
         }
 
-        //检查是不是已经有了这个题目
         if (paperService.ifPaperContainsQueston(p) != null &&
                 !paperService.ifPaperContainsQueston(p).isEmpty()) {
             return result.error("该题目已经在试卷中！");
         }
 
-        //先查询后修改，防止bad request。
         question q = new question();
         q.setQuestion_id(p.getQuestion_id());
         if (practiceService.getQuestionByID(q) == null) {
@@ -122,7 +120,6 @@ public class PaperController {
             return result.error("该试卷不存在！");
         }
 
-        //判断order是否合法和不为
         if (p.getQuestion_order() == null) {
             return result.error("order不能为空！");
         }
@@ -130,14 +127,17 @@ public class PaperController {
             return result.error("order不能小于1！");
         }
 
-        //判断order是否已存在
         if (paperService.ifOrderExist(p) != null && !paperService.ifOrderExist(p).isEmpty()) {
             return result.error("order已存在！");
         }
 
-
-        //插入paper_questions表
         paperService.insertNewQuestion(p);
+
+        // 由于试卷内容已更新，需要清除与该试卷相关的缓存
+        String paperCacheKey = "paper:" + p.getPaper_id();
+        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(paperCacheKey))) {
+            stringRedisTemplate.delete(paperCacheKey);
+        }
 
         if (JWTUtils.refreshTokenNeeded(Authorization)) {
             return result.success(newToken(Authorization));
@@ -145,6 +145,7 @@ public class PaperController {
             return result.success(Authorization);
         }
     }
+
 
 
     @PostMapping("/paper/getpaper")
