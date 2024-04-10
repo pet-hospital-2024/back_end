@@ -66,3 +66,14 @@ custom:
     connectTimeout: 300  # 连接超时时间（秒）
     writeTimeout: 300    # 写入超时时间（秒）
     readTimeout: 300     # 读取超时时间（秒）
+
+
+aliyun:
+  accessKeyId: LTAI5tQqugm6r3VwZn8t4iph
+  accessKeySecret: d9AFGkmUygC8svruWOuVHNQffsWELS
+  oss:
+    endpoint: oss-cn-shanghai.aliyuncs.com
+    bucketName: alexoh
+  vod:
+    regionId: cn-shanghai # 如"cn-shanghai"
+
