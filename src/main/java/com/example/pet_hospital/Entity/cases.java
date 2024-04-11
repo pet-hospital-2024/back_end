@@ -19,7 +19,9 @@ public class cases {
     String case_cost;
     String case_introduction;
     String disease_id;
+    String disease_name;
     String department_id;
+    String department_name;
     MultipartFile file;
     String media_id;
     String media_url;

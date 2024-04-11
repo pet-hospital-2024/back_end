@@ -14,5 +14,6 @@ public class Exam {
     String exam_end;
     String exam_name;
     Integer duration;
+    String paper_name;
 
 }
