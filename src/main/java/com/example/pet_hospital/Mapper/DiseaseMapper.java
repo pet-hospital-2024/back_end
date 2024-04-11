@@ -69,7 +69,7 @@ public interface DiseaseMapper {
     void changeCase(cases i);
 
     //根据病例名称模糊查询病例
-    @Select("select * from syf.cases where case_name like CONCAT('%', #{case_name}, '%')")
+    @Select("select * from syf.cases c, syf.disease d, syf.department de where case_name like CONCAT('%', #{case_name}, '%')")
     cases[] searchCase(String case_name);
 
     //查询所有病例(要联合disease和department表查询病例名和科室名)
