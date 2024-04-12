@@ -320,9 +320,11 @@ public class DiseaseController {
     }
 
     //根据输入的病例名称模糊搜索病例
-    @PostMapping("/disease/searchCase")
-    public result searchCasebyName(@RequestBody cases i) {
-        return result.success(diseaseService.searchCase(i.getCase_name()));
+    @GetMapping("/disease/searchCase")
+    public result searchCasebyName(@RequestParam(name = "case_name") String case_name,
+                                   @RequestParam(name = "page", defaultValue = "1") int page,
+                                   @RequestParam(name = "size", defaultValue = "10") int size){
+        return result.success(diseaseService.searchCase(page, size, case_name));
     }
 
     @GetMapping("/disease/getCatalog")

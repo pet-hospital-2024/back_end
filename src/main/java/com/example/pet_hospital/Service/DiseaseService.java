@@ -46,7 +46,7 @@ public interface DiseaseService {
 
     cases getCasebyId(String case_id);
 
-    cases[] searchCase(String name);
+    PageInfo<cases> searchCase(int page, int size, String case_name);
 
     //case_base[] CaseList();
     PageInfo<cases> findPaginated(int page, int size);

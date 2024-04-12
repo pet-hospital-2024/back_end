@@ -70,7 +70,7 @@ public interface DiseaseMapper {
 
     //根据病例名称模糊查询病例
     @Select("select * from syf.cases c, syf.disease d, syf.department de where c.disease_id=d.disease_id and d.department_id=de.department_id and case_name like CONCAT('%', #{case_name}, '%')")
-    cases[] searchCase(String case_name);
+    List<cases> searchCase(String case_name);
 
     //查询所有病例(要联合disease和department表查询病例名和科室名)
     @Select("select * from syf.cases c, syf.disease d, syf.department de where c.disease_id=d.disease_id and d.department_id=de.department_id")

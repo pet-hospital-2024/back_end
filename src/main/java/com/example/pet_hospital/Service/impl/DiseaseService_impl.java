@@ -132,8 +132,10 @@ public class DiseaseService_impl implements DiseaseService {
     }
 
     @Override
-    public cases[] searchCase(String case_name) {
-        return diseaseMapper.searchCase(case_name);
+    public PageInfo<cases> searchCase(int page, int size, String case_name) {
+        PageHelper.startPage(page, size);
+        List<cases> list = diseaseMapper.searchCase(case_name);
+        return new PageInfo<>(list, 5);
     }
 
     @Override
