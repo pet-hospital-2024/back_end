@@ -35,6 +35,7 @@ public class DiseaseController {
 
     public String newToken(String Authorization) {
         Claims claims = JWTUtils.jwtParser(Authorization);
+
         String username = (String) claims.get("username");
         String user_id = (String) claims.get("user_id");
         String identity = (String) claims.get("identity");
@@ -43,7 +44,12 @@ public class DiseaseController {
         newclaim.put("username", username);
         newclaim.put("user_id", user_id);
         newclaim.put("identity", identity);
-        return JWTUtils.jwtGenerater(newclaim);
+        if (JWTUtils.refreshTokenNeeded(Authorization)){
+            return JWTUtils.jwtGenerater(newclaim);
+        }
+        else {
+            return Authorization;
+        }
     }
 
     //添加科室
