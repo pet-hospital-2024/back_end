@@ -16,6 +16,8 @@ public interface ExamService {
 
     Exam getExamById(Exam exam);
 
+    Exam getExamByName(Exam exam);
+
     ArrayList<Exam> getExamList();
 
     PageInfo<Exam> getAllExam(int page, int size);
