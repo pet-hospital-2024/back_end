@@ -391,9 +391,7 @@ public class DiseaseController {
         if (diseaseService.getCasebyId(m.getCase_id()) == null) {
             return result.error("该病例不存在！");
         }
-        if (diseaseService.getMediabyUrl(m.getMedia_url()) != null) {
-            return result.error("该媒体已存在！");
-        }
+        
 
 
         if (!(m.getCategory().equals("Consultation") || m.getCategory().equals("Examination")
