@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ExamService_impl implements ExamService {
@@ -34,6 +33,11 @@ public class ExamService_impl implements ExamService {
     @Override
     public Exam getExamById(Exam exam) {
         return examMapper.getExamById(exam);
+    }
+
+    @Override
+    public Exam getExamByName(Exam exam) {
+        return examMapper.getExamByName(exam);
     }
 
     @Override

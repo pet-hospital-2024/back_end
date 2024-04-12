@@ -125,13 +125,22 @@ public class ExamController {
         if (paperService.getPaperByID(p) == null) {
             return result.error("该试卷不存在！");
         }
-//考试名称不能为空
+        //考试名称不能为空
         if (e.getExam_name() == null) {
             return result.error("考试名称不能为空！");
         }
+
+        if (examService.getExamByName(e)!=null){//用户没改名  或  填入了一个新的名字
+            //填入了新的名字
+            if (!e.getExam_id().equals(examService.getExamByName(e).getExam_id())){
+                return result.error("考试名称不能与其他已存在考试重复！");
+            }
+            //如果没改名就do nothing
+        }
+
         //试卷不能为空
         if (e.getPaper_id() == null) {
-            return result.error("试卷不能为空！");
+            return result.error("试卷id不能为空！");
         }
 
         String start = e.getExam_start();
