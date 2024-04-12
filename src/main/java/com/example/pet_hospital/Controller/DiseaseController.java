@@ -354,14 +354,14 @@ public class DiseaseController {
     //Consultation Examination Result Treatment
     @PostMapping("/disease/addMedia")
     public result addMedia(@RequestParam("case_id") String caseId,
-                           @RequestParam("media_name") String mediaName,
+
                            @RequestParam("category") String category,
                            @RequestParam("file") MultipartFile file,
                            @RequestHeader String Authorization) throws Exception {
 
         cases m = new cases();
         m.setCase_id(caseId);
-        m.setMedia_name(mediaName);
+
         m.setCategory(category);
         m.setFile(file);
         if (identitySecure("user", Authorization)) {
@@ -380,9 +380,7 @@ public class DiseaseController {
         if (m.getMedia_name().isEmpty()) {
             return result.error("媒体名不能为空！");
         }
-//        if (m.getMedia_type()==null ||m.getMedia_type().isEmpty()) {
-//            return result.error("媒体类型不能为空！");
-//        }
+
         if (m.getCategory().isEmpty()) {
             return result.error("媒体类别不能为空！");
         }
@@ -392,9 +390,7 @@ public class DiseaseController {
         if (diseaseService.getMediabyUrl(m.getMedia_url()) != null) {
             return result.error("该媒体已存在！");
         }
-        if (diseaseService.getMediabyName(m.getMedia_name()) != null) {
-            return result.error("该媒体名已存在！");
-        }
+
 
         if (!(m.getCategory().equals("Consultation") || m.getCategory().equals("Examination")
                 || m.getCategory().equals("Result") || m.getCategory().equals("Treatment"))) {
@@ -443,7 +439,7 @@ public class DiseaseController {
         if (identitySecure("user", Authorization)) {
             return result.error("无操作权限！");
         }
-        if (diseaseService.getMediabyUrl(m.getMedia_url()) == null) {
+        if (diseaseService.getMediabyId(m.getMedia_id()) == null) {
             return result.error("该媒体不存在！");
         }
         String id = m.getMedia_id();
