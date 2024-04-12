@@ -377,9 +377,7 @@ public class DiseaseController {
         if (!(contentType != null && (contentType.startsWith("image/") || contentType.startsWith("video/"))))
             return result.error("文件类型只能是图片或者视频！");
 
-        if (m.getMedia_name().isEmpty()) {
-            return result.error("媒体名不能为空！");
-        }
+       
 
         if (m.getCategory().isEmpty()) {
             return result.error("媒体类别不能为空！");
