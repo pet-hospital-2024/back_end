@@ -380,9 +380,9 @@ public class DiseaseController {
         if (m.getMedia_name().isEmpty()) {
             return result.error("媒体名不能为空！");
         }
-        if (m.getMedia_type().isEmpty()) {
-            return result.error("媒体类型不能为空！");
-        }
+//        if (m.getMedia_type()==null ||m.getMedia_type().isEmpty()) {
+//            return result.error("媒体类型不能为空！");
+//        }
         if (m.getCategory().isEmpty()) {
             return result.error("媒体类别不能为空！");
         }

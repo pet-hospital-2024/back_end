@@ -93,7 +93,11 @@ public interface DiseaseMapper {
 
     //以下是对case_media表的操作
 
-    @Insert("insert into syf.case_media(case_media_id,case_id,case_media_url,case_media_name,case_media_type,category) values(uuid_short(),#{case_id},#{media_url},#{media_name},#{media_type},#{category})")
+    @Insert("insert into syf.case_media" +
+            "(case_media_id,case_id,case_media_url," +
+            "case_media_name,case_media_type,category) " +
+            "values(uuid_short(),#{case_id},#{media_url}," +
+            "#{media_name},#{media_type},#{category})")
     void addMedia(cases m);
 
     @Delete("delete from syf.case_media where case_media_id=#{media_id}")

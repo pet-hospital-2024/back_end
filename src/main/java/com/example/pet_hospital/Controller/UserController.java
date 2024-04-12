@@ -91,6 +91,7 @@ public class UserController {
 
     @PostMapping("/user/register")
     public result register (@RequestBody user u){
+        //BitMapBloomFilter filter=new BitMapBloomFilter(10);
         Boolean j = userService.findUser(u);
         if (!j)//没找到，代表可以进行注册
         {
