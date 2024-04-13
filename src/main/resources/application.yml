@@ -1,5 +1,7 @@
 spring:
   servlet:
+    session:
+      timeout: 30m
     multipart:
       max-file-size: 2000MB  # 设置单个文件最大大小
       max-request-size: 2150MB  # 设置整个请求的最大大小
@@ -58,9 +60,11 @@ pagehelper:
 server:
   port: 8081
 
-ai:
-  appKey: kwuAM5KB9hKft3WJsPyzdlLK
-  secretKey: clnu25Q0Zesytom38yl4uXX0rx944vIw
+appbuilder:
+  appId: 411a4dd3-e4fc-4384-b872-921dbaddfb3e
+  token: bce-v3/ALTAK-XaSJ0jsk7DeUIRGftgwRz/5cbe1b4c259f2d9c943c7784531239cbc97e549a
+
+
 
 custom:
   okhttp:

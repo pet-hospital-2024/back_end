@@ -263,6 +263,12 @@
 			<version>30.1.1-jre</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.baidubce</groupId>
+			<artifactId>appbuilder</artifactId>
+			<version>0.6.0</version>
+		</dependency>
+
 
 
 
