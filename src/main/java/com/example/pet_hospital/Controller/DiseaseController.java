@@ -416,7 +416,7 @@ public class DiseaseController {
                                 @RequestHeader String Authorization) throws Exception {
 
         // 校验权限、病例ID和类别等
-        if (!identitySecure("user", Authorization)) {
+        if (identitySecure("user", Authorization)) {
             return result.error("无操作权限！");
         }
         cases m = new cases();
