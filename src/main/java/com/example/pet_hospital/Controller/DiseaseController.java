@@ -1,7 +1,10 @@
 package com.example.pet_hospital.Controller;
 
 import cn.hutool.json.JSONUtil;
-import com.example.pet_hospital.Entity.*;
+import com.example.pet_hospital.Entity.cases;
+import com.example.pet_hospital.Entity.department;
+import com.example.pet_hospital.Entity.disease;
+import com.example.pet_hospital.Entity.result;
 import com.example.pet_hospital.Service.DiseaseService;
 import com.example.pet_hospital.Util.JWTUtils;
 import com.github.pagehelper.PageInfo;
@@ -11,6 +14,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -44,10 +50,9 @@ public class DiseaseController {
         newclaim.put("username", username);
         newclaim.put("user_id", user_id);
         newclaim.put("identity", identity);
-        if (JWTUtils.refreshTokenNeeded(Authorization)){
+        if (JWTUtils.refreshTokenNeeded(Authorization)) {
             return JWTUtils.jwtGenerater(newclaim);
-        }
-        else {
+        } else {
             return Authorization;
         }
     }
@@ -323,7 +328,7 @@ public class DiseaseController {
     @GetMapping("/disease/searchCase")
     public result searchCasebyName(@RequestParam(name = "case_name") String case_name,
                                    @RequestParam(name = "page", defaultValue = "1") int page,
-                                   @RequestParam(name = "size", defaultValue = "10") int size){
+                                   @RequestParam(name = "size", defaultValue = "10") int size) {
         return result.success(diseaseService.searchCase(page, size, case_name));
     }
 
@@ -362,7 +367,6 @@ public class DiseaseController {
     //Consultation Examination Result Treatment
     @PostMapping("/disease/addMedia")
     public result addMedia(@RequestParam("case_id") String caseId,
-
                            @RequestParam("category") String category,
                            @RequestParam("file") MultipartFile file,
                            @RequestHeader String Authorization) throws Exception {
@@ -385,7 +389,6 @@ public class DiseaseController {
         if (!(contentType != null && (contentType.startsWith("image/") || contentType.startsWith("video/"))))
             return result.error("文件类型只能是图片或者视频！");
 
-       
 
         if (m.getCategory().isEmpty()) {
             return result.error("媒体类别不能为空！");
@@ -395,7 +398,6 @@ public class DiseaseController {
         }
 
 
-
         if (!(m.getCategory().equals("Consultation") || m.getCategory().equals("Examination")
                 || m.getCategory().equals("Result") || m.getCategory().equals("Treatment"))) {
             return result.error("媒体类别只能是Consultation,Examination,Result,Treatment之一！");
@@ -403,6 +405,72 @@ public class DiseaseController {
         diseaseService.uploadMedia(m);
         return result.success(newToken(Authorization));
     }
+
+    //分块添加多媒体
+    @PostMapping("/disease/addMediaChunk")
+    public result addMediaChunk(@RequestParam("case_id") String caseId,
+                                @RequestParam("category") String category,
+                                @RequestParam("file") MultipartFile file,
+                                @RequestParam("chunk") int chunk,
+                                @RequestParam("chunks") int chunks,
+                                @RequestHeader String Authorization) throws Exception {
+
+        // 校验权限、病例ID和类别等
+        if (!identitySecure("user", Authorization)) {
+            return result.error("无操作权限！");
+        }
+        cases m = new cases();
+        m.setCase_id(caseId);
+        m.setCategory(category);
+        if (m.getCategory().isEmpty()) {
+            return result.error("媒体类别不能为空！");
+        }
+        if (m.getCase_id().isEmpty()) {
+            return result.error("病例id不能为空！");
+        }
+        if (diseaseService.getCasebyId(m.getCase_id()) == null) {
+            return result.error("该病例不存在！");
+        }
+        if (!(m.getCategory().equals("Consultation") || m.getCategory().equals("Examination")
+                || m.getCategory().equals("Result") || m.getCategory().equals("Treatment"))) {
+            return result.error("媒体类别只能是Consultation,Examination,Result,Treatment之一！");
+        }
+        // 检查文件类型是否为图片或视频（仅在第一个分片时检查）
+        if (chunk == 0) {
+            String contentType = file.getContentType();
+            if (!(contentType != null && (contentType.startsWith("image/") || contentType.startsWith("video/")))) {
+                return result.error("文件类型只能是图片或者视频！");
+            }
+        }
+
+        // 处理文件上传
+        String baseFilename = caseId + "_" + category;
+        String chunkFileName = baseFilename + "_" + chunk;
+        Path chunkFile = diseaseService.getFilePath(chunkFileName);
+
+        try {
+            file.transferTo(chunkFile.toFile());
+        } catch (IOException e) {
+            return result.error("文件上传失败");
+        }
+
+        // 检查是否所有分片已上传完毕
+        if (diseaseService.allChunksExist(baseFilename, chunks)) {
+            File[] files = new File[chunks];
+            for (int i = 0; i < chunks; i++) {
+                files[i] = diseaseService.getFilePath(baseFilename + "_" + i).toFile();
+            }
+            File mergedFile = diseaseService.mergeFiles(files, baseFilename);
+
+            // 这里可以添加将合并后的文件上传到MinIO的逻辑
+            diseaseService.uploadMedia(m);
+
+            return result.success("文件上传完毕并已合并");
+        }
+
+        return result.success("分片 " + chunk + " 上传成功");
+    }
+
 
     //编辑后的图片替换掉原来的(通过media_id和file)
     @PostMapping("/disease/changeMedia")
@@ -430,11 +498,6 @@ public class DiseaseController {
         diseaseService.changeMedia(m);
         return result.success(newToken(Authorization));
     }
-
-
-
-
-
 
 
     //删除病例多媒体

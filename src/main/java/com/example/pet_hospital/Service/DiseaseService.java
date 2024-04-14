@@ -6,6 +6,8 @@ import com.example.pet_hospital.Entity.department;
 import com.example.pet_hospital.Entity.disease;
 import com.github.pagehelper.PageInfo;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 public interface DiseaseService {
@@ -85,4 +87,11 @@ public interface DiseaseService {
     String getMediabyId(String mediaId);
 
     void changeMedia(cases m) throws Exception;
+
+    public Path getFilePath(String filename);
+
+    public File mergeFiles(File[] files, String outputFileName) throws Exception;
+
+    public boolean allChunksExist(String baseFilename, int totalChunks);
+
 }

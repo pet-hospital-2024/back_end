@@ -51,6 +51,11 @@ minio:
   image-size: 10485760 # 图片文件的最大大小
   file-size: 1073741824 # 文件的最大大小
 
+
+app:
+  storage-directory: "./storage"
+
+
 pagehelper:
   helper-dialect: mysql
   reasonable: true

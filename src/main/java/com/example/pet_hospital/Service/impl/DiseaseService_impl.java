@@ -12,11 +12,16 @@ import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
 import io.minio.http.Method;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -36,6 +41,24 @@ public class DiseaseService_impl implements DiseaseService {
         this.minioClient = minioClient;
         this.diseaseMapper = diseaseMapper;
     }
+
+
+    @Value("${app.storage-directory}")
+    private String storageDirectory;
+
+    @PostConstruct
+    public void init() {
+        try {
+            Path path = Paths.get(storageDirectory).toAbsolutePath().normalize();
+            if (!Files.exists(path)) {
+                Files.createDirectories(path);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Could not initialize storage", e);
+        }
+    }
+
+
 
     @Override
     public void addDepartment(department k) {
@@ -254,6 +277,33 @@ public class DiseaseService_impl implements DiseaseService {
         //只更新上面这三个字段，其他字段不变
         diseaseMapper.changeMedia(newMedia);
 
+    }
+
+    @Override
+    public Path getFilePath(String filename) {
+        return Paths.get(storageDirectory).resolve(filename);
+    }
+
+    @Override
+    public File mergeFiles(File[] files, String outputFileName) throws IOException {
+        File mergedFile = new File(storageDirectory, outputFileName);
+        try (OutputStream out = new BufferedOutputStream(new FileOutputStream(mergedFile))) {
+            for (File file : files) {
+                Files.copy(file.toPath(), out);
+                file.delete(); // Delete after merge
+            }
+        }
+        return mergedFile;
+    }
+
+    @Override
+    public boolean allChunksExist(String baseFilename, int totalChunks) {
+        for (int i = 0; i < totalChunks; i++) {
+            if (!new File(storageDirectory, baseFilename + "_" + i).exists()) {
+                return false;
+            }
+        }
+        return true;
     }
 
 
