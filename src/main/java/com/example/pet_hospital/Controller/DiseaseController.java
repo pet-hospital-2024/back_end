@@ -419,6 +419,9 @@ public class DiseaseController {
         if (identitySecure("user", Authorization)) {
             return result.error("无操作权限！");
         }
+        String originalFilename = file.getOriginalFilename();
+        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        String type = "";
         cases m = new cases();
         m.setCase_id(caseId);
         m.setCategory(category);
@@ -441,17 +444,21 @@ public class DiseaseController {
             if (!(contentType != null && (contentType.startsWith("image/") || contentType.startsWith("video/")))) {
                 return result.error("文件类型只能是图片或者视频！");
             }
+            type = contentType.startsWith("image/") ? "image" : "video";
         }
 
         // 处理文件上传
-        String baseFilename = caseId + "_" + category;
+        String baseFilename = caseId + "_" + category + "_" + System.currentTimeMillis();
         String chunkFileName = baseFilename + "_" + chunk;
-        Path chunkFile = diseaseService.getFilePath(chunkFileName);
+        Path chunkFile = diseaseService.getFilePath(chunkFileName).toAbsolutePath();
+        //System.out.println("Complete file path: " + chunkFile.toAbsolutePath().toString());
+
 
         try {
             file.transferTo(chunkFile.toFile());
         } catch (IOException e) {
-            return result.error("文件上传失败");
+            e.printStackTrace();  // 在服务器的日志文件中打印堆栈跟踪
+            return result.error("文件上传失败: " + e.getMessage());  // 提供更多错误详情
         }
 
         // 检查是否所有分片已上传完毕
@@ -460,10 +467,11 @@ public class DiseaseController {
             for (int i = 0; i < chunks; i++) {
                 files[i] = diseaseService.getFilePath(baseFilename + "_" + i).toFile();
             }
-            File mergedFile = diseaseService.mergeFiles(files, baseFilename);
+            File mergedFile = diseaseService.mergeFiles(files, baseFilename + extension);
+
 
             // 这里可以添加将合并后的文件上传到MinIO的逻辑
-            diseaseService.uploadMedia(m);
+            diseaseService.uploadCompletedMedia(m, mergedFile, type);
 
             return result.success("文件上传完毕并已合并");
         }

@@ -3,6 +3,7 @@ package com.example.pet_hospital.Service.impl;
 import com.example.pet_hospital.Entity.cases;
 import com.example.pet_hospital.Entity.department;
 import com.example.pet_hospital.Entity.disease;
+import com.example.pet_hospital.Entity.file_upload;
 import com.example.pet_hospital.Mapper.DiseaseMapper;
 import com.example.pet_hospital.Service.DiseaseService;
 import com.github.pagehelper.PageHelper;
@@ -57,7 +58,6 @@ public class DiseaseService_impl implements DiseaseService {
             throw new RuntimeException("Could not initialize storage", e);
         }
     }
-
 
 
     @Override
@@ -281,7 +281,7 @@ public class DiseaseService_impl implements DiseaseService {
 
     @Override
     public Path getFilePath(String filename) {
-        return Paths.get(storageDirectory).resolve(filename);
+        return Paths.get(storageDirectory).resolve(filename).toAbsolutePath().normalize();
     }
 
     @Override
@@ -304,6 +304,56 @@ public class DiseaseService_impl implements DiseaseService {
             }
         }
         return true;
+    }
+
+    @Override
+    public void updateUploadProgress(String uploadId, int chunk) {
+        file_upload upload = diseaseMapper.getUploadbyId(uploadId);
+        upload.setUploaded_chunks(upload.getUploaded_chunks() + 1);
+        diseaseMapper.updateUpload(upload);
+    }
+
+    @Override
+    public boolean isUploadComplete(String uploadId) {
+        return false;
+    }
+
+    @Override
+    public void uploadCompletedMedia(cases m, File mergedFile, String type) {
+        String fileName = System.currentTimeMillis() + "_" + mergedFile.getName();
+        try {
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(fileName)
+                            .stream(new FileInputStream(mergedFile), mergedFile.length(), -1)
+                            .contentType(type)
+                            .build()
+            );
+            String url = minioClient.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                            .method(Method.GET)
+                            .bucket(bucketName)
+                            .object(fileName)
+                            .build()
+            );
+            cases newMedia = new cases();
+            newMedia.setCase_id(m.getCase_id());
+            newMedia.setMedia_name(fileName);
+            newMedia.setMedia_type(type);
+            newMedia.setMedia_url(url);
+            newMedia.setCategory(m.getCategory());
+            diseaseMapper.addMedia(newMedia);
+            // 尝试删除文件并检查是否成功
+            boolean isDeleted = mergedFile.delete();
+            if (!isDeleted) {
+                // 日志记录或处理未能删除文件的情况
+                System.out.println("Failed to delete the file: " + mergedFile.getAbsolutePath());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
