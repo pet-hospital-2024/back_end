@@ -9,6 +9,7 @@ import com.example.pet_hospital.Service.DiseaseService;
 import com.example.pet_hospital.Util.JWTUtils;
 import com.github.pagehelper.PageInfo;
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -413,12 +414,14 @@ public class DiseaseController {
                                 @RequestParam("file") MultipartFile file,
                                 @RequestParam("chunk") int chunk,
                                 @RequestParam("chunks") int chunks,
+                                HttpServletRequest request,
                                 @RequestHeader String Authorization) throws Exception {
 
         // 校验权限、病例ID和类别等
         if (identitySecure("user", Authorization)) {
             return result.error("无操作权限！");
         }
+        String userSessionId = request.getSession().getId();
         String originalFilename = file.getOriginalFilename();
         String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
         String type = "";
@@ -448,7 +451,11 @@ public class DiseaseController {
         }
 
         // 处理文件上传
-        String baseFilename = caseId + "_" + category + "_" + System.currentTimeMillis();
+
+
+        //String baseFilename = caseId + "_" + category  ;
+        // 组合会话ID和原始文件名以生成唯一的基础文件名
+        String baseFilename = caseId + "_" + category + "_" + userSessionId + "_" + originalFilename;
         String chunkFileName = baseFilename + "_" + chunk;
         Path chunkFile = diseaseService.getFilePath(chunkFileName).toAbsolutePath();
         //System.out.println("Complete file path: " + chunkFile.toAbsolutePath().toString());
