@@ -94,11 +94,19 @@ public interface DiseaseService {
 
     public boolean allChunksExist(String baseFilename, int totalChunks);
 
-    public void updateUploadProgress(String uploadId, int chunk);
+
+
+
+
 
     public boolean isUploadComplete(String uploadId);
+
+
+
 
     void uploadCompletedMedia(cases m, File mergedFile,String type) throws Exception;
 
     public  String calculateMD5(File file) throws Exception;
+
+    boolean chunkExists(String baseFilename, int i);
 }

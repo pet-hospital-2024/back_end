@@ -9,7 +9,6 @@ import com.example.pet_hospital.Service.DiseaseService;
 import com.example.pet_hospital.Util.JWTUtils;
 import com.github.pagehelper.PageInfo;
 import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -406,17 +405,15 @@ public class DiseaseController {
         return result.success(newToken(Authorization));
     }
 
-    //分块添加多媒体
+    //接受分块
     @PostMapping("/disease/addMediaChunk")
     public result addMediaChunk(@RequestParam("case_id") String caseId,
                                 @RequestParam("category") String category,
                                 @RequestParam("file") MultipartFile file,
                                 @RequestParam("file_name") String originalFilename,
                                 @RequestParam("chunk") int chunk,
-                                @RequestParam("chunks") int chunks,
-                                @RequestParam("file_md5") String file_md5,
-                                HttpServletRequest request,
-                                @RequestHeader String Authorization) throws Exception {
+
+                                @RequestHeader String Authorization)  {
 
         // 校验权限、病例ID和类别等
         if (identitySecure("user", Authorization)) {
@@ -434,8 +431,6 @@ public class DiseaseController {
         ));
 
 
-        String userSessionId = request.getSession().getId();
-        //String originalFilename = file.getOriginalFilename();
         if (originalFilename == null) {
             return result.error("上传的文件名不能为空。");
         }
@@ -443,11 +438,11 @@ public class DiseaseController {
             return result.error("上传的文件必须包含扩展名。");
         }
         String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toLowerCase();
-        String type;
+
         if (imageExtensions.contains(extension)) {
-            type = "image";
+
         } else if (videoExtensions.contains(extension)) {
-            type = "video";
+
         } else {
             return result.error("文件类型只能是支持的图片或视频格式！");
         }
@@ -467,21 +462,14 @@ public class DiseaseController {
                 || m.getCategory().equals("Result") || m.getCategory().equals("Treatment"))) {
             return result.error("媒体类别只能是Consultation,Examination,Result,Treatment之一！");
         }
-        // 检查文件类型是否为图片或视频（仅在第一个分片时检查）
-        /*if (chunk == 0) {
-            String contentType = file.getContentType();
-            if (!(contentType != null && (contentType.startsWith("image/") || contentType.startsWith("video/")))) {
-                return result.error("文件类型只能是图片或者视频！");
-            }
-            type = contentType.startsWith("image/") ? "image" : "video";
-        }*/
+
 
         // 处理文件上传
 
 
         //String baseFilename = caseId + "_" + category  ;
         // 组合会话ID和原始文件名以生成唯一的基础文件名
-        String baseFilename = caseId + "_" + category + "_" + userSessionId + "_" + originalFilename;
+        String baseFilename = caseId + "_" + category + "_"   + originalFilename;
         String chunkFileName = baseFilename + "_" + chunk;
         Path chunkFile = diseaseService.getFilePath(chunkFileName).toAbsolutePath();
         //System.out.println("Complete file path: " + chunkFile.toAbsolutePath().toString());
@@ -494,6 +482,72 @@ public class DiseaseController {
             return result.error("文件上传失败: " + e.getMessage());  // 提供更多错误详情
         }
 
+
+
+        return result.success("分片 " + chunk + " 上传成功");
+    }
+
+
+    //判断分片是否全都发送成功，如果没有返回没有收到的分片序号，如果成功返回成功并且校验md5
+    @PostMapping("/disease/checkChunk")
+    public result checkChunk(@RequestParam("case_id") String caseId,
+                             @RequestParam("category") String category,
+                             @RequestParam("file_name") String originalFilename,
+                             @RequestParam("chunks") int chunks,
+                             @RequestParam("file_md5") String file_md5,
+                             @RequestHeader String Authorization)throws Exception {
+        if (identitySecure("user", Authorization)) {
+            return result.error("无操作权限！");
+        }
+        Set<String> imageExtensions = new HashSet<>(Arrays.asList(
+                "png", "jpg", "jpeg", "bmp", "gif", "tiff", "svg", // 常见的图像文件格式
+                "heif", "ico", "raw" // 高效图像格式、图标文件、原始照片格式
+        ));
+
+        Set<String> videoExtensions = new HashSet<>(Arrays.asList(
+                "mp4", "avi", "mov", "wmv", "flv", "mkv", // 常见的视频文件格式
+                "m4v", "mpg", "mpeg", "vob", "asf", // 其他广泛支持的视频格式
+                "webm", "3gp", "ogv", "ts", "m2ts", "mts" // 网络视频格式、移动视频、开放视频格式、视频传输格式
+        ));
+
+
+        if (originalFilename == null) {
+            return result.error("上传的文件名不能为空。");
+        }
+        if (!originalFilename.contains(".")) {
+            return result.error("上传的文件必须包含扩展名。");
+        }
+        String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toLowerCase();
+        String type;
+        if (imageExtensions.contains(extension)) {
+            type = "image";
+        } else if (videoExtensions.contains(extension)) {
+            type = "video";
+        } else {
+            return result.error("文件类型只能是支持的图片或视频格式！");
+        }
+
+        cases m = new cases();
+        m.setCase_id(caseId);
+        m.setCategory(category);
+        if (m.getCategory().isEmpty()) {
+            return result.error("媒体类别不能为空！");
+        }
+        if (m.getCase_id().isEmpty()) {
+            return result.error("病例id不能为空！");
+        }
+        if (diseaseService.getCasebyId(m.getCase_id()) == null) {
+            return result.error("该病例不存在！");
+        }
+        if (!(m.getCategory().equals("Consultation") || m.getCategory().equals("Examination")
+                || m.getCategory().equals("Result") || m.getCategory().equals("Treatment"))) {
+            return result.error("媒体类别只能是Consultation,Examination,Result,Treatment之一！");
+        }
+
+        //String baseFilename = caseId + "_" + category  ;
+        // 组合会话ID和原始文件名以生成唯一的基础文件名
+        String baseFilename = caseId + "_" + category + "_"  + originalFilename;
+
         // 检查是否所有分片已上传完毕
         if (diseaseService.allChunksExist(baseFilename, chunks)) {
             File[] files = new File[chunks];
@@ -505,17 +559,28 @@ public class DiseaseController {
             // 检查文件MD5值
             String md5 = diseaseService.calculateMD5(mergedFile);
             if (md5 == null || !md5.equals(file_md5)) {
+                //删除所有分片
+                for (int i = 0; i < chunks; i++) {
+                    diseaseService.getFilePath(baseFilename + "_" + i).toFile().delete();
+                }
                 return result.error("文件MD5值校验失败！");
             }
-
-
-            // 这里可以添加将合并后的文件上传到MinIO的逻辑
             diseaseService.uploadCompletedMedia(m, mergedFile, type);
 
             return result.success("文件上传完毕并已合并");
         }
 
-        return result.success("分片 " + chunk + " 上传成功");
+        //返回没有收到的分片序号列表
+        List<Integer> missingChunks = new ArrayList<>();
+        for (int i = 0; i < chunks; i++) {
+            if (!diseaseService.chunkExists(baseFilename, i)) {
+                missingChunks.add(i);
+            }
+        }
+        return result.error("缺失的分片序号：" + missingChunks);
+
+
+
     }
 
 

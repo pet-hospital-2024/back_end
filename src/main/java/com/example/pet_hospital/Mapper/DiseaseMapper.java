@@ -255,9 +255,5 @@ public interface DiseaseMapper {
     @Update("update syf.case_media set case_media_url=#{media_url},case_media_name=#{media_name},case_media_type=#{media_type} where case_media_id=#{media_id}")
     void changeMedia(cases m);
 
-    @Select("select * from syf.file_upload where upload_id=#{uploadId}")
-    file_upload getUploadbyId(String uploadId);
 
-    @Update("update syf.file_upload set case_id=#{case_id},category=#{category},filename=#{filename},total_chunks=#{total_chunks},uploaded_chunks=#{uploaded_chunks},status=#{status} where upload_id=#{upload_id}")
-    void updateUpload(file_upload upload);
 }

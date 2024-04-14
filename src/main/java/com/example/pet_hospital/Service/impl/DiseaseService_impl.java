@@ -3,7 +3,6 @@ package com.example.pet_hospital.Service.impl;
 import com.example.pet_hospital.Entity.cases;
 import com.example.pet_hospital.Entity.department;
 import com.example.pet_hospital.Entity.disease;
-import com.example.pet_hospital.Entity.file_upload;
 import com.example.pet_hospital.Mapper.DiseaseMapper;
 import com.example.pet_hospital.Service.DiseaseService;
 import com.github.pagehelper.PageHelper;
@@ -307,12 +306,7 @@ public class DiseaseService_impl implements DiseaseService {
         return true;
     }
 
-    @Override
-    public void updateUploadProgress(String uploadId, int chunk) {
-        file_upload upload = diseaseMapper.getUploadbyId(uploadId);
-        upload.setUploaded_chunks(upload.getUploaded_chunks() + 1);
-        diseaseMapper.updateUpload(upload);
-    }
+
 
     @Override
     public boolean isUploadComplete(String uploadId) {
@@ -382,6 +376,11 @@ public class DiseaseService_impl implements DiseaseService {
 
         // 返回MD5值
         return sb.toString();
+    }
+
+    @Override
+    public boolean chunkExists(String baseFilename, int i) {
+        return new File(storageDirectory, baseFilename + "_" + i).exists();
     }
 
 
