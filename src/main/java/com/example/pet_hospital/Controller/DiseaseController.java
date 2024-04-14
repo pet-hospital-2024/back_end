@@ -412,6 +412,7 @@ public class DiseaseController {
     public result addMediaChunk(@RequestParam("case_id") String caseId,
                                 @RequestParam("category") String category,
                                 @RequestParam("file") MultipartFile file,
+                                @RequestParam("file_name") String originalFilename,
                                 @RequestParam("chunk") int chunk,
                                 @RequestParam("chunks") int chunks,
                                 HttpServletRequest request,
@@ -422,7 +423,7 @@ public class DiseaseController {
             return result.error("无操作权限！");
         }
         String userSessionId = request.getSession().getId();
-        String originalFilename = file.getOriginalFilename();
+        //String originalFilename = file.getOriginalFilename();
         if (originalFilename == null) {
             return result.error("上传的文件名不能为空。");
         }
@@ -430,7 +431,7 @@ public class DiseaseController {
             // 可以根据 file.getContentType() 来推断文件类型
             return result.error("上传的文件必须包含扩展名。");
         }
-        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+
         String type = "";
         cases m = new cases();
         m.setCase_id(caseId);
@@ -481,7 +482,7 @@ public class DiseaseController {
             for (int i = 0; i < chunks; i++) {
                 files[i] = diseaseService.getFilePath(baseFilename + "_" + i).toFile();
             }
-            File mergedFile = diseaseService.mergeFiles(files, baseFilename + extension);
+            File mergedFile = diseaseService.mergeFiles(files, baseFilename);
 
 
             // 这里可以添加将合并后的文件上传到MinIO的逻辑
