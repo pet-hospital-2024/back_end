@@ -423,6 +423,10 @@ public class DiseaseController {
         }
         String userSessionId = request.getSession().getId();
         String originalFilename = file.getOriginalFilename();
+        if (originalFilename != null && !originalFilename.contains(".")) {
+            // 可以根据 file.getContentType() 来推断文件类型
+            return result.error("上传的文件必须包含扩展名。");
+        }
         String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
         String type = "";
         cases m = new cases();
