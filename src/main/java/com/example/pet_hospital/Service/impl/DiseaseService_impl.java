@@ -23,6 +23,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
 import java.util.List;
 
 @Service
@@ -354,6 +355,33 @@ public class DiseaseService_impl implements DiseaseService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String calculateMD5(File file) throws Exception {
+        MessageDigest digest = MessageDigest.getInstance("MD5");
+        FileInputStream fis = new FileInputStream(file);
+        byte[] byteArray = new byte[1024];
+        int bytesCount = 0;
+
+        // 读取文件数据并更新到消息摘要
+        while ((bytesCount = fis.read(byteArray)) != -1) {
+            digest.update(byteArray, 0, bytesCount);
+        }
+
+        fis.close();
+
+        // 获取字节数组的MD5摘要
+        byte[] bytes = digest.digest();
+
+        // 把摘要转化为十六进制的形式
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < bytes.length; i++) {
+            sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+        }
+
+        // 返回MD5值
+        return sb.toString();
     }
 
 

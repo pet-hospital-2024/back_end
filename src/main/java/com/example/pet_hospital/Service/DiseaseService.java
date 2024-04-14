@@ -99,4 +99,6 @@ public interface DiseaseService {
     public boolean isUploadComplete(String uploadId);
 
     void uploadCompletedMedia(cases m, File mergedFile,String type) throws Exception;
+
+    public  String calculateMD5(File file) throws Exception;
 }

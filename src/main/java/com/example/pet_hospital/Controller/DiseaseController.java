@@ -18,8 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -415,6 +414,7 @@ public class DiseaseController {
                                 @RequestParam("file_name") String originalFilename,
                                 @RequestParam("chunk") int chunk,
                                 @RequestParam("chunks") int chunks,
+                                @RequestParam("file_md5") String file_md5,
                                 HttpServletRequest request,
                                 @RequestHeader String Authorization) throws Exception {
 
@@ -422,17 +422,35 @@ public class DiseaseController {
         if (identitySecure("user", Authorization)) {
             return result.error("无操作权限！");
         }
+        Set<String> imageExtensions = new HashSet<>(Arrays.asList(
+                "png", "jpg", "jpeg", "bmp", "gif", "tiff", "svg", // 常见的图像文件格式
+                "heif", "ico", "raw" // 高效图像格式、图标文件、原始照片格式
+        ));
+
+        Set<String> videoExtensions = new HashSet<>(Arrays.asList(
+                "mp4", "avi", "mov", "wmv", "flv", "mkv", // 常见的视频文件格式
+                "m4v", "mpg", "mpeg", "vob", "asf", // 其他广泛支持的视频格式
+                "webm", "3gp", "ogv", "ts", "m2ts", "mts" // 网络视频格式、移动视频、开放视频格式、视频传输格式
+        ));
+
+
         String userSessionId = request.getSession().getId();
         //String originalFilename = file.getOriginalFilename();
         if (originalFilename == null) {
             return result.error("上传的文件名不能为空。");
         }
         if (!originalFilename.contains(".")) {
-            // 可以根据 file.getContentType() 来推断文件类型
             return result.error("上传的文件必须包含扩展名。");
         }
-
-        String type = "";
+        String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toLowerCase();
+        String type;
+        if (imageExtensions.contains(extension)) {
+            type = "image";
+        } else if (videoExtensions.contains(extension)) {
+            type = "video";
+        } else {
+            return result.error("文件类型只能是支持的图片或视频格式！");
+        }
         cases m = new cases();
         m.setCase_id(caseId);
         m.setCategory(category);
@@ -450,13 +468,13 @@ public class DiseaseController {
             return result.error("媒体类别只能是Consultation,Examination,Result,Treatment之一！");
         }
         // 检查文件类型是否为图片或视频（仅在第一个分片时检查）
-        if (chunk == 0) {
+        /*if (chunk == 0) {
             String contentType = file.getContentType();
             if (!(contentType != null && (contentType.startsWith("image/") || contentType.startsWith("video/")))) {
                 return result.error("文件类型只能是图片或者视频！");
             }
             type = contentType.startsWith("image/") ? "image" : "video";
-        }
+        }*/
 
         // 处理文件上传
 
@@ -483,6 +501,12 @@ public class DiseaseController {
                 files[i] = diseaseService.getFilePath(baseFilename + "_" + i).toFile();
             }
             File mergedFile = diseaseService.mergeFiles(files, baseFilename);
+
+            // 检查文件MD5值
+            String md5 = diseaseService.calculateMD5(mergedFile);
+            if (md5 == null || !md5.equals(file_md5)) {
+                return result.error("文件MD5值校验失败！");
+            }
 
 
             // 这里可以添加将合并后的文件上传到MinIO的逻辑
