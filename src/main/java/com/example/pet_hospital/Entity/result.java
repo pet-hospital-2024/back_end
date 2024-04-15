@@ -34,6 +34,6 @@ public class result {
     }
 
     public static result nonComplete (Object data){
-        return new result(-2,"缺失的分片序号",data);
+        return new result(-2,"缺失分片",data);
     }
 }
