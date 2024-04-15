@@ -49,8 +49,7 @@ public class ExamService_impl implements ExamService {
     public PageInfo<Exam> getAllExam(int page, int size) {
         PageHelper.startPage(page, size);
         ArrayList<Exam> examList = examMapper.getExamList();
-        PageInfo<Exam> pageInfo = new PageInfo<>(examList);
-        return pageInfo;
+        return new PageInfo<>(examList);
     }
 
 }

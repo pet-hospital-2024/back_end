@@ -28,18 +28,14 @@ public class UserService_impl implements UserService {
 
     @Override
     public Boolean findUser(user u) {
-        if (userMapper.getUser(u)!=null)
-            return true;
-        else
-            return false;
+        return userMapper.getUser(u) != null;
     }
 
     @Override
     public PageInfo<user> getAllUser(int page, int size) {
         PageHelper.startPage(page, size);
         List<user> users = userMapper.getAllUser();
-        PageInfo<user> pageInfo = new PageInfo<>(users);
-        return pageInfo;
+        return new PageInfo<>(users);
     }
 
     @Override
@@ -77,8 +73,7 @@ public class UserService_impl implements UserService {
     public PageInfo<user> getUserByName(String name, int page, int size) {
         PageHelper.startPage(page, size);
         List<user> users = userMapper.getUserByName(name);
-        PageInfo<user> pageInfo = new PageInfo<>(users);
-        return pageInfo;
+        return new PageInfo<>(users);
     }
 
 }

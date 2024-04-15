@@ -25,17 +25,7 @@ public class PaperService_impl implements PaperService {
     }
 
     public String newToken(String Authorization){
-        Claims claims=JWTUtils.jwtParser(Authorization);
-        String username=(String) claims.get("username");
-        String user_id=(String) claims.get("user_id");
-        String identity=(String) claims.get("identity");
-
-        HashMap<String,Object> newclaim=new HashMap<>();
-        newclaim.put("username",username);
-        newclaim.put("user_id",user_id);
-        newclaim.put("identity",identity);
-        String token =JWTUtils.jwtGenerater(newclaim);
-        return token;
+        return JWTUtils.newToken(Authorization);
     }
 
     @Autowired
@@ -59,8 +49,7 @@ public class PaperService_impl implements PaperService {
     public PageInfo<paper> getPaperList(int page, int size) {
         PageHelper.startPage(page, size);
         List<paper> papers = paperMapper.getPaperList();
-        PageInfo<paper> pageInfo = new PageInfo<>(papers);
-        return pageInfo;
+        return new PageInfo<>(papers);
     }
 
     @Override

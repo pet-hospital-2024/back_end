@@ -14,7 +14,8 @@ public interface UserService {
 
     user getUserByID(user u);
 
-    public user getUserByName(user u);
+    user getUserByName(user u);
+
     void deleteUser(user u);
 
     void banUser(user u);

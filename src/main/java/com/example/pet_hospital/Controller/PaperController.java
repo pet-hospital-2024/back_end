@@ -295,8 +295,8 @@ public class PaperController {
 
         }else{
             //返回一个空的question列表
-            questions = new ArrayList<>();
-            
+            r.setQuestions(new ArrayList<>());
+
         }
         //System.out.println(questions);
 

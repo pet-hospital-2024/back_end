@@ -59,7 +59,7 @@ public class LearnController {
         if (location_id == null || location_id.isEmpty()){
             return result.error("地点id不能为空");
         }
-        String role ="";
+        String role;
         switch (role_id) {
             case "1" -> role = "兽医";
             case "2" -> role = "助理";

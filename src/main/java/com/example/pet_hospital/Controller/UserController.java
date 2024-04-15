@@ -277,7 +277,7 @@ public class UserController {
         if (page<=0 || size<=0){
             return result.error("参数错误。");
         }
-        if (name.equals("")){
+        if (name.isEmpty()){
             return result.error("用户名不能为空。");
         }
         if (userService.getUserByName(name,page,size).getList().isEmpty()){

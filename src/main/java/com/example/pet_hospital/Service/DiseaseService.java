@@ -59,11 +59,6 @@ public interface DiseaseService {
     List<department> findAllDepartments();
 
 
-    cases getMediabyUrl(String mediaUrl);
-
-    cases getMediabyName(String mediaName);
-
-
     cases[] findAllMedia();
 
     cases[] getMediaByCaseId(String caseId);
@@ -80,33 +75,24 @@ public interface DiseaseService {
 
     cases[] getMediaByCaseIdAndTypeAndCategory(String caseId, String mediaType, String category);
 
-    public String uploadMedia(cases m) throws Exception;
+    void uploadMedia(cases m) throws Exception;
 
-    public void deleteMedia(String mediaId) throws Exception;
+    void deleteMedia(String mediaId) throws Exception;
 
     String getMediabyId(String mediaId);
 
     void changeMedia(cases m) throws Exception;
 
-    public Path getFilePath(String filename);
+    Path getFilePath(String filename);
 
-    public File mergeFiles(File[] files, String outputFileName) throws Exception;
+    File mergeFiles(File[] files, String outputFileName) throws Exception;
 
-    public boolean allChunksExist(String baseFilename, int totalChunks);
-
-
-
-
-
-
-    public boolean isUploadComplete(String uploadId);
-
-
+    boolean allChunksExist(String baseFilename, int totalChunks);
 
 
     void uploadCompletedMedia(cases m, File mergedFile,String type) throws Exception;
 
-    public  String calculateMD5(File file) throws Exception;
+    String calculateMD5(File file) throws Exception;
 
     boolean chunkExists(String baseFilename, int i);
 }

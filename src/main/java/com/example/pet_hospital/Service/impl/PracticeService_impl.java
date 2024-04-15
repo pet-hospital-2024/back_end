@@ -34,8 +34,7 @@ public class PracticeService_impl implements PracticeService {
     public PageInfo<question> getAllQuestions(int page, int size) {
         PageHelper.startPage(page, size);
         List<question> questions = practiceMapper.getAllQuestions();
-        PageInfo<question> pageInfo = new PageInfo<>(questions);
-        return pageInfo;
+        return new PageInfo<>(questions);
     }
 
     @Override
@@ -62,16 +61,14 @@ public class PracticeService_impl implements PracticeService {
     public PageInfo<question> getquestionbyname(String name, int page, int size) {
         PageHelper.startPage(page, size);
         List<question> questions = practiceMapper.getQuestionByName(name);
-        PageInfo<question> pageInfo = new PageInfo<>(questions);
-        return pageInfo;
+        return new PageInfo<>(questions);
     }
 
     @Override
     public PageInfo<question> getquestionbydisease(String name, int page, int size) {
         PageHelper.startPage(page, size);
         List<question> questions = practiceMapper.getQuestionByDisease(name);
-        PageInfo<question> pageInfo = new PageInfo<>(questions);
-        return pageInfo;
+        return new PageInfo<>(questions);
     }
 
 

@@ -4,14 +4,16 @@ package com.example.pet_hospital.Controller;
 import com.example.pet_hospital.Entity.query;
 import com.example.pet_hospital.Entity.result;
 import com.example.pet_hospital.Service.AIService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.MediaType;
+import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 
 @RestController
 public class AIController {
@@ -21,25 +23,14 @@ public class AIController {
     private AIService aiService;
 
 
-    @PostMapping("/ai")
-    public result getErnieBotTurboResponse(@RequestBody query query,
-                                           HttpSession session,
-                                           @RequestHeader("Authorization") String Authorization
-    ) {
-
-        //不能为空
+    @PostMapping(value = "/ai", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<ServerSentEvent<String>> getErnieBotTurboResponse(@RequestBody query query,
+                                                                  HttpSession session,
+                                                                  @RequestHeader("Authorization") String Authorization) throws Exception {
         if (query.getQuery() == null || query.getQuery().isEmpty()) {
-            return result.error("Query cannot be empty");
+            return Flux.error(new IllegalStateException("Query cannot be empty"));
         }
-
-
-        try {
-            String answer = aiService.getAnswer(query.getQuery(), session);
-            return result.success(answer);
-        } catch (Exception e) {
-            return result.error("Error while processing the request: " + e.getMessage());
-        }
-
+        return aiService.getAnswer(query.getQuery(), session);
     }
 
     //重置ai对话
@@ -49,7 +40,7 @@ public class AIController {
         if (session != null) {
             session.invalidate();  // 使当前会话失效
         }
-        session = request.getSession(true);
+        request.getSession(true);
         return result.success("会话已重置");
     }
 

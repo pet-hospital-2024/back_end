@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class DiseaseService_impl implements DiseaseService {
@@ -182,7 +183,7 @@ public class DiseaseService_impl implements DiseaseService {
 
 
     @Override
-    public String uploadMedia(cases m) throws Exception {
+    public void uploadMedia(cases m) throws Exception {
         MultipartFile file = m.getFile();
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         minioClient.putObject(
@@ -205,12 +206,11 @@ public class DiseaseService_impl implements DiseaseService {
         cases newMedia = new cases();
         newMedia.setCase_id(m.getCase_id()); // 设置你的case_id
         newMedia.setMedia_name(fileName);
-        newMedia.setMedia_type(file.getContentType().startsWith("image/") ? "image" : "video");
+        newMedia.setMedia_type(Objects.requireNonNull(file.getContentType()).startsWith("image/") ? "image" : "video");
         newMedia.setMedia_url(url);
         newMedia.setCategory(m.getCategory()); // 设置category
         diseaseMapper.addMedia(newMedia);
 
-        return url;
     }
 
     @Override
@@ -273,7 +273,7 @@ public class DiseaseService_impl implements DiseaseService {
         //更新这个id的media的url
         newMedia.setMedia_url(url);
         newMedia.setMedia_name(fileName);
-        newMedia.setMedia_type(file.getContentType().startsWith("image/") ? "image" : "video");
+        newMedia.setMedia_type(Objects.requireNonNull(file.getContentType()).startsWith("image/") ? "image" : "video");
         //只更新上面这三个字段，其他字段不变
         diseaseMapper.changeMedia(newMedia);
 
@@ -291,6 +291,7 @@ public class DiseaseService_impl implements DiseaseService {
             for (File file : files) {
                 Files.copy(file.toPath(), out);
                 file.delete(); // Delete after merge
+
             }
         }
         return mergedFile;
@@ -306,12 +307,6 @@ public class DiseaseService_impl implements DiseaseService {
         return true;
     }
 
-
-
-    @Override
-    public boolean isUploadComplete(String uploadId) {
-        return false;
-    }
 
     @Override
     public void uploadCompletedMedia(cases m, File mergedFile, String type) {
@@ -356,7 +351,7 @@ public class DiseaseService_impl implements DiseaseService {
         MessageDigest digest = MessageDigest.getInstance("MD5");
         FileInputStream fis = new FileInputStream(file);
         byte[] byteArray = new byte[1024];
-        int bytesCount = 0;
+        int bytesCount ;
 
         // 读取文件数据并更新到消息摘要
         while ((bytesCount = fis.read(byteArray)) != -1) {
@@ -370,8 +365,8 @@ public class DiseaseService_impl implements DiseaseService {
 
         // 把摘要转化为十六进制的形式
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < bytes.length; i++) {
-            sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+        for (byte aByte : bytes) {
+            sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
         }
 
         // 返回MD5值
@@ -383,16 +378,6 @@ public class DiseaseService_impl implements DiseaseService {
         return new File(storageDirectory, baseFilename + "_" + i).exists();
     }
 
-
-    @Override
-    public cases getMediabyUrl(String mediaUrl) {
-        return diseaseMapper.getMediabyUrl(mediaUrl);
-    }
-
-    @Override
-    public cases getMediabyName(String mediaName) {
-        return diseaseMapper.getMediabyName(mediaName);
-    }
 
     @Override
     public cases[] findAllMedia() {

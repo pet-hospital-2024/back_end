@@ -413,7 +413,7 @@ public class DiseaseController {
                                 @RequestParam("file_name") String originalFilename,
                                 @RequestParam("chunk") int chunk,
 
-                                @RequestHeader String Authorization)  {
+                                @RequestHeader String Authorization) {
 
         // 校验权限、病例ID和类别等
         if (identitySecure("user", Authorization)) {
@@ -439,13 +439,9 @@ public class DiseaseController {
         }
         String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toLowerCase();
 
-        if (imageExtensions.contains(extension)) {
-
-        } else if (videoExtensions.contains(extension)) {
-
-        } else {
+        if (!(imageExtensions.contains(extension) || videoExtensions.contains(extension)))
             return result.error("文件类型只能是支持的图片或视频格式！");
-        }
+
         cases m = new cases();
         m.setCase_id(caseId);
         m.setCategory(category);
@@ -469,7 +465,7 @@ public class DiseaseController {
 
         //String baseFilename = caseId + "_" + category  ;
         // 组合会话ID和原始文件名以生成唯一的基础文件名
-        String baseFilename = caseId + "_" + category + "_"   + originalFilename;
+        String baseFilename = caseId + "_" + category + "_" + originalFilename;
         String chunkFileName = baseFilename + "_" + chunk;
         Path chunkFile = diseaseService.getFilePath(chunkFileName).toAbsolutePath();
         //System.out.println("Complete file path: " + chunkFile.toAbsolutePath().toString());
@@ -483,7 +479,6 @@ public class DiseaseController {
         }
 
 
-
         return result.success("分片 " + chunk + " 上传成功");
     }
 
@@ -495,7 +490,7 @@ public class DiseaseController {
                              @RequestParam("file_name") String originalFilename,
                              @RequestParam("chunks") int chunks,
                              @RequestParam("file_md5") String file_md5,
-                             @RequestHeader String Authorization)throws Exception {
+                             @RequestHeader String Authorization) throws Exception {
         if (identitySecure("user", Authorization)) {
             return result.error("无操作权限！");
         }
@@ -546,7 +541,7 @@ public class DiseaseController {
 
         //String baseFilename = caseId + "_" + category  ;
         // 组合会话ID和原始文件名以生成唯一的基础文件名
-        String baseFilename = caseId + "_" + category + "_"  + originalFilename;
+        String baseFilename = caseId + "_" + category + "_" + originalFilename;
 
         // 检查是否所有分片已上传完毕
         if (diseaseService.allChunksExist(baseFilename, chunks)) {
@@ -578,7 +573,6 @@ public class DiseaseController {
             }
         }
         return result.nonComplete(missingChunks);
-
 
 
     }
