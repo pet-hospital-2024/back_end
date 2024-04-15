@@ -32,4 +32,8 @@ public class result {
     public static result tokenError(String message){
         return new result(-1,message,null);
     }
+
+    public static result nonComplete (Object data){
+        return new result(-2,"缺失的分片序号",data);
+    }
 }

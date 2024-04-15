@@ -577,7 +577,7 @@ public class DiseaseController {
                 missingChunks.add(i);
             }
         }
-        return result.error("缺失的分片序号：" + missingChunks);
+        return result.nonComplete(missingChunks);
 
 
 
