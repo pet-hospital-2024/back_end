@@ -24,7 +24,7 @@ public class AIController {
 
 
     @PostMapping(value = "/ai", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<ServerSentEvent<String>> getErnieBotTurboResponse(@RequestBody query query,
+    public Flux<ServerSentEvent<String>> getResponse(@RequestBody query query,
                                                                   HttpSession session,
                                                                   @RequestHeader("Authorization") String Authorization) throws Exception {
         if (query.getQuery() == null || query.getQuery().isEmpty()) {
