@@ -19,6 +19,7 @@ import reactor.core.scheduler.Schedulers;
 
 import java.io.IOException;
 import java.util.AbstractMap;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -52,11 +53,19 @@ public class AIService_impl implements AIService {
                             AgentBuilderIterator itor = agentBuilder.run(query, conversationId, null, true);
                             while (itor.hasNext()) {
                                 AgentBuilderResult response = itor.next();
-                                sink.next(ServerSentEvent.builder(response.getAnswer()).build());
+                                // 拆分字符串，逐个字节发送
+                                for (char ch : response.getAnswer().toCharArray()) {
+                                    // 延时可以根据需求调整或去除
+                                    TimeUnit.MILLISECONDS.sleep(100);  // 假设每100毫秒发送一个字
+                                    sink.next(ServerSentEvent.builder(String.valueOf(ch)).build());
+                                }
                             }
                             sink.complete();
                         } catch (IOException | AppBuilderServerException e) {
                             sink.error(e);  // 发送错误信号
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                            sink.error(e);  // 处理线程中断异常
                         }
                     });
                 });
