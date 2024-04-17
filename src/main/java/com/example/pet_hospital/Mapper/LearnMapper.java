@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface LearnMapper {
 
-    @Select("select ll.learn_location_name,learn_location_id,learn_duty from syf.learn_order left join syf.learn_location ll on learn_order.learn_location_name = ll.learn_location_name where learn_role=#{role}")
+    @Select("select distinct ll.learn_location_name,learn_location_id,learn_duty from syf.learn_order left join syf.learn_location ll on learn_order.learn_location_name = ll.learn_location_name where learn_role=#{role}")
     @Result(column = "learn_location_name", property = "location_name")
     @Result(column = "learn_location_id", property = "location_id")
     @Result(column = "learn_duty", property = "learn_duty")
@@ -29,7 +29,7 @@ public interface LearnMapper {
 
 
 
-    @Select("select learn_process_order,learn_process_name from syf.learn_process where learn_role=#{role}")
+    @Select("select distinct learn_process_order, learn_process_name from syf.learn_process where learn_role=#{role}")
     @Result(column = "learn_process_order", property = "process_order")
     @Result(column = "learn_process_name", property = "process_name")
     learn_process[] getLearnProcess(String role);
