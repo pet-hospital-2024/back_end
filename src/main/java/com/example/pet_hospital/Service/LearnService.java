@@ -1,21 +1,18 @@
 package com.example.pet_hospital.Service;
 
-import com.example.pet_hospital.Entity.learn_item;
-import com.example.pet_hospital.Entity.learn_location;
-import com.example.pet_hospital.Entity.learn_order;
-import com.example.pet_hospital.Entity.learn_process;
+import com.example.pet_hospital.Entity.learn;
 
 public interface LearnService {
 
-    learn_order[] getLearnOrder(String role);
+    learn[] getLearnOrder(String role);
 
 //    List getLearnItems(String locationId);
 
-    learn_location[] getLocations();
+    learn[] getLocations();
 
-    learn_item getLearnItem(String locationName, String role);
+    learn getLearnItem(String locationName, String role);
 
-    learn_process[] getLearnProcess(String role);
+    learn[] getLearnProcess(String role);
 
     String getLocationName(String locationId);
 }

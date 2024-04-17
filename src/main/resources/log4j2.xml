@@ -2,16 +2,14 @@
 <Configuration>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} - %m%n"/>
+            <!-- HighlightPatternLayout 为日志添加颜色，其中每个日志级别可以指定不同的颜色 -->
+            <PatternLayout pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} - %m%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=pink, DEBUG=blue, TRACE=blue}">
+            </PatternLayout>
         </Console>
-        <File name="File" fileName="app.log" append="false">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} - %m%n"/>
-        </File>
     </Appenders>
     <Loggers>
         <Root level="info">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="File"/>
         </Root>
     </Loggers>
 </Configuration>
