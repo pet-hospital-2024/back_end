@@ -18,4 +18,5 @@ public class learn {
     String location_id;
     String location_name;
     String location_introduction;
+    String learn_duty;
 }
