@@ -378,6 +378,30 @@ public class DiseaseService_impl implements DiseaseService {
         return new File(storageDirectory, baseFilename + "_" + i).exists();
     }
 
+    @Override
+    public cases getMediabyUrl(String mediaUrl) {
+        return diseaseMapper.getMediabyUrl(mediaUrl);
+    }
+
+    @Override
+    public void deleteMediaByUrl(String url) {
+        cases mediaToDelete = diseaseMapper.getMediabyUrl(url);
+        if (mediaToDelete != null) {
+            try {
+                minioClient.removeObject(
+                        RemoveObjectArgs.builder()
+                                .bucket(bucketName)
+                                .object(mediaToDelete.getMedia_name())
+                                .build()
+                );
+                diseaseMapper.deleteMedia(mediaToDelete);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
 
     @Override
     public cases[] findAllMedia() {

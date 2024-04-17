@@ -95,4 +95,8 @@ public interface DiseaseService {
     String calculateMD5(File file) throws Exception;
 
     boolean chunkExists(String baseFilename, int i);
+
+    cases getMediabyUrl(String mediaUrl);
+
+    void deleteMediaByUrl(String url);
 }

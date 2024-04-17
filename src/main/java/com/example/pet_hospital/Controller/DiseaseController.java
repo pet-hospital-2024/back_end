@@ -620,6 +620,20 @@ public class DiseaseController {
         return result.success(newToken(Authorization));
     }
 
+    //删除病例多媒体（通过url）
+    @PostMapping("/disease/deleteMediaByUrl")
+    public result deleteMediaByUrl(@RequestBody cases m, @RequestHeader String Authorization) throws Exception {
+        if (identitySecure("user", Authorization)) {
+            return result.error("无操作权限！");
+        }
+        if (diseaseService.getMediabyUrl(m.getMedia_url()) == null) {
+            return result.error("该媒体不存在！");
+        }
+        String url = m.getMedia_url();
+        diseaseService.deleteMediaByUrl(url);
+        return result.success(newToken(Authorization));
+    }
+
 
     //获取病例多媒体
     //可以选择type和category进行筛选
