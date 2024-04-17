@@ -26,7 +26,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         String jwt= request.getHeader("Authorization");
 
-        if (jwt.length()==0||jwt.equals(null)){
+        if (jwt.equals(null) || jwt.length()==0){
             log.info("请求头为空，返回未登录界面。");
             result error =result.error("Didn't login. Please login first.");
             String notLogin= JSONUtil.toJsonStr(error);
