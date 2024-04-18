@@ -53,10 +53,16 @@ public class AIService_impl implements AIService {
                             AgentBuilderIterator itor = agentBuilder.run(query, conversationId, null, true);
                             while (itor.hasNext()) {
                                 AgentBuilderResult response = itor.next();
+
+                                // 替换空格和回车
+                                String modifiedAnswer = response.getAnswer()
+                                        .replace(" ", "_")   // 替换空格为下划线
+                                        .replace("\n", "</br>"); // 替换回车为HTML换行符
+
                                 // 拆分字符串，逐个字节发送
-                                for (char ch : response.getAnswer().toCharArray()) {
+                                for (char ch : modifiedAnswer.toCharArray()) {
                                     // 延时可以根据需求调整或去除
-                                    TimeUnit.MILLISECONDS.sleep(50);  // 假设每50毫秒发送一个字
+                                    TimeUnit.MILLISECONDS.sleep(30);  // 假设每30毫秒发送一个字
                                     sink.next(ServerSentEvent.builder(String.valueOf(ch)).build());
                                 }
                             }
