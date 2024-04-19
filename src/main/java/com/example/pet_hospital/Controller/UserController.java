@@ -114,8 +114,10 @@ public class UserController {
             if (!checkEmail(u.getEmail())){
                 return result.error("邮箱格式错误。");
             }
-            if (u.getPhone_number().length()!=11){
-                return result.error("手机号长度不符合要求。");
+            String regex = "(13[0-9]|15[012356789]|18[056789])\\d{8}";
+
+            if (!u.getPhone_number().matches(regex)){
+                return result.error("手机号无效！");
             }
             userService.register(u);
             return result.success();
@@ -192,6 +194,8 @@ public class UserController {
                     get(USER_LOGIN_KEY+u.getUsername()),user.class));
         }
         if (userService.getUserByName(u)!=null){
+            stringRedisTemplate.opsForValue().set(USER_LOGIN_KEY+u.getUsername(),
+                    JSONUtil.toJsonStr(userService.getUserByName(u)),30,TimeUnit.MINUTES);
             return result.success(userService.getUserByName(u));
         }
         else {
