@@ -228,6 +228,36 @@ public class DiseaseService_impl implements DiseaseService {
             throw new Exception("Media not found with id: " + mediaId);
         }
     }
+    @Override
+    public void deleteMediaByUrl(String url) throws Exception {
+        cases mediaToDelete = diseaseMapper.getMediabyUrl(url);
+        if (mediaToDelete != null) {
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(mediaToDelete.getMedia_name())
+                            .build()
+            );
+            diseaseMapper.deleteMedia(mediaToDelete);
+        } else {
+            throw new Exception("Media not found with id: " + mediaToDelete.getMedia_id());
+        }
+    }
+        /*if (mediaToDelete != null) {
+            try {
+                minioClient.removeObject(
+                        RemoveObjectArgs.builder()
+                                .bucket(bucketName)
+                                .object(mediaToDelete.getMedia_name())
+                                .build()
+                );
+                diseaseMapper.deleteMedia(mediaToDelete);
+            } catch (Exception e) {
+                throw new Exception("Media not found with id: " + mediaToDelete.getMedia_id());
+            }
+        }
+
+    }*/
 
     @Override
     public String getMediabyId(String mediaId) {
@@ -383,24 +413,7 @@ public class DiseaseService_impl implements DiseaseService {
         return diseaseMapper.getMediabyUrl(mediaUrl);
     }
 
-    @Override
-    public void deleteMediaByUrl(String url) {
-        cases mediaToDelete = diseaseMapper.getMediabyUrl(url);
-        if (mediaToDelete != null) {
-            try {
-                minioClient.removeObject(
-                        RemoveObjectArgs.builder()
-                                .bucket(bucketName)
-                                .object(mediaToDelete.getMedia_name())
-                                .build()
-                );
-                diseaseMapper.deleteMedia(mediaToDelete);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
 
-    }
 
 
     @Override

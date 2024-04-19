@@ -98,5 +98,5 @@ public interface DiseaseService {
 
     cases getMediabyUrl(String mediaUrl);
 
-    void deleteMediaByUrl(String url);
+    void deleteMediaByUrl(String url) throws Exception;
 }

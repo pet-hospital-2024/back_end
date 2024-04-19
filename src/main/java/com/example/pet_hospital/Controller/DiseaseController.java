@@ -629,6 +629,10 @@ public class DiseaseController {
         if (diseaseService.getMediabyUrl(m.getMedia_url()) == null) {
             return result.error("该媒体不存在！");
         }
+
+        /*String id = diseaseService.getMediabyUrl(m.getMedia_url()).getMedia_id();
+        diseaseService.deleteMedia(id);*/
+
         String url = m.getMedia_url();
         diseaseService.deleteMediaByUrl(url);
         return result.success(newToken(Authorization));
