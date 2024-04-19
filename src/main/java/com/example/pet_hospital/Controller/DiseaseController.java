@@ -634,7 +634,7 @@ public class DiseaseController {
         diseaseService.deleteMedia(id);*/
 
         String url = m.getMedia_url();
-        diseaseService.deleteMediaByUrl(url);
+        diseaseService.deleteMediaByUrl(url);//
         return result.success(newToken(Authorization));
     }
 
