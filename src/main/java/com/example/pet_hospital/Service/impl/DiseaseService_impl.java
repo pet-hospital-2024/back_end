@@ -309,37 +309,37 @@ public class DiseaseService_impl implements DiseaseService {
 
 
     @Override
-    public void uploadCompletedMedia(cases m, File mergedFile, String type) throws Exception{
+    public void uploadCompletedMedia(cases m, File mergedFile, String type) throws Exception {
         String fileName = System.currentTimeMillis() + "_" + mergedFile.getName();
 
-            minioClient.putObject(
-                    PutObjectArgs.builder()
-                            .bucket(bucketName)
-                            .object(fileName)
-                            .stream(new FileInputStream(mergedFile), mergedFile.length(), -1)
-                            .contentType(type)
-                            .build()
-            );
-            String url = minioClient.getPresignedObjectUrl(
-                    GetPresignedObjectUrlArgs.builder()
-                            .method(Method.GET)
-                            .bucket(bucketName)
-                            .object(fileName)
-                            .build()
-            );
-            cases newMedia = new cases();
-            newMedia.setCase_id(m.getCase_id());
-            newMedia.setMedia_name(fileName);
-            newMedia.setMedia_type(type);
-            newMedia.setMedia_url(url);
-            newMedia.setCategory(m.getCategory());
-            diseaseMapper.addMedia(newMedia);
-            // 尝试删除文件并检查是否成功
-            boolean isDeleted = mergedFile.delete();
-            if (!isDeleted) {
-                // 日志记录或处理未能删除文件的情况
-                System.out.println("Failed to delete the file: " + mergedFile.getAbsolutePath());
-            }
+        minioClient.putObject(
+                PutObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(fileName)
+                        .stream(new FileInputStream(mergedFile), mergedFile.length(), -1)
+                        .contentType(type)
+                        .build()
+        );
+        String url = minioClient.getPresignedObjectUrl(
+                GetPresignedObjectUrlArgs.builder()
+                        .method(Method.GET)
+                        .bucket(bucketName)
+                        .object(fileName)
+                        .build()
+        );
+        cases newMedia = new cases();
+        newMedia.setCase_id(m.getCase_id());
+        newMedia.setMedia_name(fileName);
+        newMedia.setMedia_type(type);
+        newMedia.setMedia_url(url);
+        newMedia.setCategory(m.getCategory());
+        diseaseMapper.addMedia(newMedia);
+        // 尝试删除文件并检查是否成功
+        boolean isDeleted = mergedFile.delete();
+        if (!isDeleted) {
+            // 日志记录或处理未能删除文件的情况
+            System.out.println("Failed to delete the file: " + mergedFile.getAbsolutePath());
+        }
 
 
     }
@@ -349,7 +349,7 @@ public class DiseaseService_impl implements DiseaseService {
         MessageDigest digest = MessageDigest.getInstance("MD5");
         FileInputStream fis = new FileInputStream(file);
         byte[] byteArray = new byte[1024];
-        int bytesCount ;
+        int bytesCount;
 
         // 读取文件数据并更新到消息摘要
         while ((bytesCount = fis.read(byteArray)) != -1) {
@@ -382,7 +382,7 @@ public class DiseaseService_impl implements DiseaseService {
     }
 
     @Override
-    public void deleteMediaByUrl(String url) throws Exception{
+    public void deleteMediaByUrl(String url) throws Exception {
         cases mediaToDelete = diseaseMapper.getMediabyUrl(url);
         if (mediaToDelete != null) {
             minioClient.removeObject(
@@ -390,7 +390,7 @@ public class DiseaseService_impl implements DiseaseService {
                             .bucket(bucketName)
                             .object(mediaToDelete.getMedia_name())
                             .build()
-                );
+            );
             diseaseMapper.deleteMedia(mediaToDelete);
         }
 

@@ -26,22 +26,22 @@ public class UserController {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-    public Boolean identitySecure(String target, String Authorization){
+    public Boolean identitySecure(String target, String Authorization) {
         Claims claims = JWTUtils.jwtParser(Authorization);
-        String identity=(String) claims.get("identity");
+        String identity = (String) claims.get("identity");
         return target.equals(identity);
     }
 
-    public String newToken(String Authorization){
-        Claims claims=JWTUtils.jwtParser(Authorization);
-        String username=(String) claims.get("username");
-        String user_id=(String) claims.get("user_id");
-        String identity=(String) claims.get("identity");
+    public String newToken(String Authorization) {
+        Claims claims = JWTUtils.jwtParser(Authorization);
+        String username = (String) claims.get("username");
+        String user_id = (String) claims.get("user_id");
+        String identity = (String) claims.get("identity");
 
-        HashMap<String,Object> newclaim=new HashMap<>();
-        newclaim.put("username",username);
-        newclaim.put("user_id",user_id);
-        newclaim.put("identity",identity);
+        HashMap<String, Object> newclaim = new HashMap<>();
+        newclaim.put("username", username);
+        newclaim.put("user_id", user_id);
+        newclaim.put("identity", identity);
         return JWTUtils.jwtGenerater(newclaim);
     }
 
@@ -58,7 +58,7 @@ public class UserController {
         return flag;
     }
 
-    String USER_LOGIN_KEY="LOGIN_USER:";
+    String USER_LOGIN_KEY = "LOGIN_USER:";
 
 //    @PostMapping("/user/code")
 //    public result sendCode(@RequestBody user u){
@@ -66,23 +66,21 @@ public class UserController {
 //    }
 
     @PostMapping("/user/login")
-    public result login(@RequestBody user u){
-        user us= userService.login(u);
-        if (us!=null && !us.getIdentity().equals("banned"))
-        {
-            Map<String,Object> claims = new HashMap<>();
-            claims.put("username",us.getUsername());
-            claims.put("user_id",us.getUser_id());
-            claims.put("identity",us.getIdentity());
+    public result login(@RequestBody user u) {
+        user us = userService.login(u);
+        if (us != null && !us.getIdentity().equals("banned")) {
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("username", us.getUsername());
+            claims.put("user_id", us.getUser_id());
+            claims.put("identity", us.getIdentity());
             String token = JWTUtils.jwtGenerater(claims);
             us.setToken(token);
             stringRedisTemplate.opsForValue().
-                    set(USER_LOGIN_KEY+us.getUsername(), JSONUtil.toJsonStr(us),
+                    set(USER_LOGIN_KEY + us.getUsername(), JSONUtil.toJsonStr(us),
                             30, TimeUnit.MINUTES);
-            return result.success("登录成功",token);
-        }
-        else {
-            if (us==null){
+            return result.success("登录成功", token);
+        } else {
+            if (us == null) {
                 return result.error("用户名或密码错误");
             }
             return result.error("该用户已被封禁");
@@ -90,115 +88,111 @@ public class UserController {
     }
 
     @PostMapping("/user/register")
-    public result register (@RequestBody user u){
+    public result register(@RequestBody user u) {
         //BitMapBloomFilter filter=new BitMapBloomFilter(10);
         Boolean j = userService.findUser(u);
         if (!j)//没找到，代表可以进行注册
         {
-            String pwd=u.getPassword();
-            String name =u.getUsername();
-            if (name.length()<4|| name.length()>16){
+            String pwd = u.getPassword();
+            String name = u.getUsername();
+            if (name.length() < 4 || name.length() > 16) {
                 return result.error("用户名长度不符合要求");
             }
-            for (int i=0;i<name.length();i++){
-                if (!Character.isLetterOrDigit(name.charAt(i))){
+            for (int i = 0; i < name.length(); i++) {
+                if (!Character.isLetterOrDigit(name.charAt(i))) {
                     return result.error("用户名仅可包含字母和数字。");
                 }
             }
-            if (pwd.length()<6|| pwd.length()>15){
+            if (pwd.length() < 6 || pwd.length() > 15) {
                 return result.error("密码长度不符合要求");
             }
-            if (!pwd.matches(".*[a-zA-Z]+.*")||!pwd.matches(".*[0-9]+.*")){
+            if (!pwd.matches(".*[a-zA-Z]+.*") || !pwd.matches(".*[0-9]+.*")) {
                 return result.error("密码必须包含字母和数字。");
             }
-            if (!checkEmail(u.getEmail())){
+            if (!checkEmail(u.getEmail())) {
                 return result.error("邮箱格式错误。");
             }
             String regex = "(13[0-9]|15[012356789]|18[056789])\\d{8}";
 
-            if (!u.getPhone_number().matches(regex)){
+            if (!u.getPhone_number().matches(regex)) {
                 return result.error("手机号无效！");
             }
             userService.register(u);
             return result.success();
-        }
-        else {
+        } else {
             return result.error("该用户名已存在，无法注册。");
         }
     }
 
     @PostMapping("/user/ban")
-    public result UserBan(@RequestBody user u, @RequestHeader String Authorization){
-        if (!identitySecure("administrator",Authorization)){
+    public result UserBan(@RequestBody user u, @RequestHeader String Authorization) {
+        if (!identitySecure("administrator", Authorization)) {
             return result.error("无操作权限！");
         }
-        if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+u.getUsername())!=null){
-            stringRedisTemplate.delete(USER_LOGIN_KEY+u.getUsername());
+        if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY + u.getUsername()) != null) {
+            stringRedisTemplate.delete(USER_LOGIN_KEY + u.getUsername());
         }
-        if (userService.getUserByName(u)==null){
+        if (userService.getUserByName(u) == null) {
             return result.error("用户不存在！");
         }
         userService.banUser(u);
-        if (JWTUtils.refreshTokenNeeded(Authorization)){
+        if (JWTUtils.refreshTokenNeeded(Authorization)) {
             return result.success(newToken(Authorization));
-        }
-        else {
+        } else {
             return result.success(Authorization);
         }
     }
 
     @PostMapping("/user/delete")
-    public result delete(@RequestBody user u,@RequestHeader String Authorization){
-        if (!identitySecure("administrator",Authorization)){
+    public result delete(@RequestBody user u, @RequestHeader String Authorization) {
+        if (!identitySecure("administrator", Authorization)) {
             return result.error("无操作权限！");
         }
         userService.deleteUser(u);
-        if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+u.getUsername())!=null){
-            stringRedisTemplate.delete(USER_LOGIN_KEY+u.getUsername());
+        if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY + u.getUsername()) != null) {
+            stringRedisTemplate.delete(USER_LOGIN_KEY + u.getUsername());
         }
-        if (JWTUtils.refreshTokenNeeded(Authorization)){
+        if (JWTUtils.refreshTokenNeeded(Authorization)) {
             return result.success(newToken(Authorization));
-        }
-        else {
+        } else {
             return result.success(Authorization);
         }
     }
 
     @PostMapping("/user/changeinfo")
-    public result alterUserInfo(@RequestBody user u, @RequestHeader String Authorization){
-        if (userService.getUserByID(u)==null){
+    public result alterUserInfo(@RequestBody user u, @RequestHeader String Authorization) {
+        if (userService.getUserByID(u) == null) {
             return result.error("用户不存在！");
         }
 
         userService.alterUserInfo(u);
-        user us=userService.getUserByName(u);
+        user us = userService.getUserByName(u);
 
-        String token =newToken(Authorization);
+        String token = newToken(Authorization);
         us.setToken(token);
-        stringRedisTemplate.opsForValue().set(USER_LOGIN_KEY+us.getUsername(),
-                JSONUtil.toJsonStr(us),30,TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(USER_LOGIN_KEY + us.getUsername(),
+                JSONUtil.toJsonStr(us), 30, TimeUnit.MINUTES);
         return result.success(newToken(Authorization));
 
     }
 
     @GetMapping("/user/getinfo")
-    public result getUser(@RequestParam(name = "username") String username,@RequestHeader String Authorization){
-        if (!identitySecure("administrator",Authorization)){
+    public result getUser(@RequestParam(name = "username") String username, @RequestHeader String Authorization) {
+        if (!identitySecure("administrator", Authorization)) {
             return result.error("无操作权限！");
         }
 
-        user u=new user();
+        user u = new user();
         u.setUsername(username);
-        if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+u.getUsername())!=null){
+        if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY + u.getUsername()) != null) {
             return result.success(JSONUtil.toBean(stringRedisTemplate.opsForValue().
-                    get(USER_LOGIN_KEY+u.getUsername()),user.class));
+                    get(USER_LOGIN_KEY + u.getUsername()), user.class));
         }
-        if (userService.getUserByName(u)!=null){
-            stringRedisTemplate.opsForValue().set(USER_LOGIN_KEY+u.getUsername(),
-                    JSONUtil.toJsonStr(userService.getUserByName(u)),30,TimeUnit.MINUTES);
+        if (userService.getUserByName(u) != null) {
+            stringRedisTemplate.opsForValue().set(USER_LOGIN_KEY + u.getUsername(),
+                    JSONUtil.toJsonStr(userService.getUserByName(u)), 30, TimeUnit.MINUTES);
             return result.success(userService.getUserByName(u));
-        }
-        else {
+        } else {
             return result.error("未查找到该用户。");
         }
     }
@@ -206,11 +200,11 @@ public class UserController {
     @GetMapping("/user/getAllUser")
     public result getAllUser(@RequestHeader String Authorization,
                              @RequestParam(name = "page", defaultValue = "1") int page,
-                             @RequestParam(name = "size", defaultValue = "10") int size){
-        if (!identitySecure("administrator",Authorization)){
+                             @RequestParam(name = "size", defaultValue = "10") int size) {
+        if (!identitySecure("administrator", Authorization)) {
             return result.error("无操作权限！");
         }
-        if(page<=0||size<=0){
+        if (page <= 0 || size <= 0) {
             return result.error("参数错误！");
         }
         PageInfo<user> pageResult = userService.getAllUser(page, size);
@@ -219,51 +213,48 @@ public class UserController {
 
 
     @PostMapping("/user/updatePwd")
-    public result ChangePassword(@RequestBody user u, @RequestHeader String Authorization){
-        if (userService.getUserByID(u)==null){
+    public result ChangePassword(@RequestBody user u, @RequestHeader String Authorization) {
+        if (userService.getUserByID(u) == null) {
             return result.error("用户不存在！");
         }
         userService.ChangePassword(u);
-        user us=userService.getUserByID(u);
-        stringRedisTemplate.opsForValue().set(USER_LOGIN_KEY+us.getUsername(),
-                JSONUtil.toJsonStr(us),30, TimeUnit.MINUTES);
-        if (JWTUtils.refreshTokenNeeded(Authorization)){
+        user us = userService.getUserByID(u);
+        stringRedisTemplate.opsForValue().set(USER_LOGIN_KEY + us.getUsername(),
+                JSONUtil.toJsonStr(us), 30, TimeUnit.MINUTES);
+        if (JWTUtils.refreshTokenNeeded(Authorization)) {
             return result.success(newToken(Authorization));
-        }
-        else {
+        } else {
             return result.success(Authorization);
         }
     }
 
     @PostMapping("/user/verifyOldPwd")
-    public result CheckPassword(@RequestBody user u,@RequestHeader String Authorization){
-        if (userService.getUserByID(u)==null){
+    public result CheckPassword(@RequestBody user u, @RequestHeader String Authorization) {
+        if (userService.getUserByID(u) == null) {
             return result.error("用户不存在！");
         }
 
-        user us=userService.getUserByID(u);
-        if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY+us.getUsername())!=null){//缓存命中
-            us= JSONUtil.toBean(stringRedisTemplate.opsForValue().
-                    get(USER_LOGIN_KEY+us.getUsername()), user.class);
-            if (!u.getOldPassword().equals(us.getPassword())){
+        user us = userService.getUserByID(u);
+        if (stringRedisTemplate.opsForValue().get(USER_LOGIN_KEY + us.getUsername()) != null) {//缓存命中
+            us = JSONUtil.toBean(stringRedisTemplate.opsForValue().
+                    get(USER_LOGIN_KEY + us.getUsername()), user.class);
+            if (!u.getOldPassword().equals(us.getPassword())) {
                 return result.error("密码错误！");
-            }else {
-                if (JWTUtils.refreshTokenNeeded(Authorization)){
+            } else {
+                if (JWTUtils.refreshTokenNeeded(Authorization)) {
                     return result.success(newToken(Authorization));
-                }
-                else {
+                } else {
                     return result.success(Authorization);
                 }
             }
         }
 
-        if (!u.getOldPassword().equals(us.getPassword())){
+        if (!u.getOldPassword().equals(us.getPassword())) {
             return result.error("密码错误！");
-        }else {
-            if (JWTUtils.refreshTokenNeeded(Authorization)){
+        } else {
+            if (JWTUtils.refreshTokenNeeded(Authorization)) {
                 return result.success(newToken(Authorization));
-            }
-            else {
+            } else {
                 return result.success(Authorization);
             }
         }
@@ -274,21 +265,21 @@ public class UserController {
     public result GetUserByName(@RequestParam(name = "username") String name,
                                 @RequestParam(value = "page", defaultValue = "1") int page,
                                 @RequestParam(value = "size", defaultValue = "10") int size,
-                                @RequestHeader String Authorization){
-        if (identitySecure("user",Authorization)){
+                                @RequestHeader String Authorization) {
+        if (identitySecure("user", Authorization)) {
             return result.error("无操作权限。");
         }
-        if (page<=0 || size<=0){
+        if (page <= 0 || size <= 0) {
             return result.error("参数错误。");
         }
-        if (name.isEmpty()){
+        if (name.isEmpty()) {
             return result.error("用户名不能为空。");
         }
-        if (userService.getUserByName(name,page,size).getList().isEmpty()){
+        if (userService.getUserByName(name, page, size).getList().isEmpty()) {
             return result.error("未找到相关用户。");
         }
 
-        return result.success(userService.getUserByName(name,page,size));
+        return result.success(userService.getUserByName(name, page, size));
 
     }
 }

@@ -66,11 +66,7 @@ server:
   port: 8081
 
 appbuilder:
-  #4.0
-  #appId: 411a4dd3-e4fc-4384-b872-921dbaddfb3e
-  #token: bce-v3/ALTAK-XaSJ0jsk7DeUIRGftgwRz/5cbe1b4c259f2d9c943c7784531239cbc97e549a
-
-  #3.5
+  
   appId: 9c18fc91-3639-40cd-b73d-57ea86359e9e
   token: bce-v3/ALTAK-XaSJ0jsk7DeUIRGftgwRz/5cbe1b4c259f2d9c943c7784531239cbc97e549a
 
@@ -83,12 +79,5 @@ custom:
     readTimeout: 300     # 读取超时时间（秒）
 
 
-aliyun:
-  accessKeyId: LTAI5tQqugm6r3VwZn8t4iph
-  accessKeySecret: d9AFGkmUygC8svruWOuVHNQffsWELS
-  oss:
-    endpoint: oss-cn-shanghai.aliyuncs.com
-    bucketName: alexoh
-  vod:
-    regionId: cn-shanghai # 如"cn-shanghai"
+
 

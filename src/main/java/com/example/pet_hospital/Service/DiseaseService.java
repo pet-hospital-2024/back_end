@@ -90,7 +90,7 @@ public interface DiseaseService {
     boolean allChunksExist(String baseFilename, int totalChunks);
 
 
-    void uploadCompletedMedia(cases m, File mergedFile,String type) throws Exception;
+    void uploadCompletedMedia(cases m, File mergedFile, String type) throws Exception;
 
     String calculateMD5(File file) throws Exception;
 
