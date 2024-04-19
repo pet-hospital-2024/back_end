@@ -309,9 +309,9 @@ public class DiseaseService_impl implements DiseaseService {
 
 
     @Override
-    public void uploadCompletedMedia(cases m, File mergedFile, String type) {
+    public void uploadCompletedMedia(cases m, File mergedFile, String type) throws Exception{
         String fileName = System.currentTimeMillis() + "_" + mergedFile.getName();
-        try {
+
             minioClient.putObject(
                     PutObjectArgs.builder()
                             .bucket(bucketName)
@@ -341,9 +341,7 @@ public class DiseaseService_impl implements DiseaseService {
                 System.out.println("Failed to delete the file: " + mergedFile.getAbsolutePath());
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
     @Override
