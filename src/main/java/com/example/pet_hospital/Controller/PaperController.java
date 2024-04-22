@@ -181,6 +181,11 @@ public class PaperController {
             return result.error("无操作权限！");
         }
 
+        // 检查试卷是否存在，然后执行删除操作
+        if (paperService.getPaperByID(p) == null) {
+            return result.error("该试卷不存在！");
+        }
+
         // 删除试卷之前，先删除相关的缓存
         String paperCacheKey = "paper:" + p.getPaper_id();
         if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(paperCacheKey))) {
@@ -196,10 +201,7 @@ public class PaperController {
             }
         }
 
-        // 检查试卷是否存在，然后执行删除操作
-        if (paperService.getPaperByID(p) == null) {
-            return result.error("该试卷不存在！");
-        }
+
         paperService.deletePaper(p);
 
         if (JWTUtils.refreshTokenNeeded(Authorization)) {

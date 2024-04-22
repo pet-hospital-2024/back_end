@@ -1,6 +1,7 @@
 package com.example.pet_hospital.Service.impl;
 
 import com.example.pet_hospital.Entity.paper;
+import com.example.pet_hospital.Entity.question;
 import com.example.pet_hospital.Mapper.PaperMapper;
 import com.example.pet_hospital.Service.PaperService;
 import com.example.pet_hospital.Util.JWTUtils;
@@ -66,6 +67,15 @@ public class PaperService_impl implements PaperService {
     @Override
     public void deleteQuestionFromPaper(paper p) {
         paperMapper.deleteQuestionFromPaper_Questions(p);
+        //把order大于删除的order的题目的order都减一
+        //获取试卷题目列表，然后遍历，如果order大于删除的order，就减一
+        List<question> questions=paperMapper.getQuestionsFromPaper(p.getPaper_id()).getQuestions();
+        for (question q:questions){
+            if (q.getOrder()>p.getQuestion_order()){
+                q.setOrder(q.getOrder()-1);
+                paperMapper.changePaperQuestion(p);
+            }
+        }
     }
 
 
