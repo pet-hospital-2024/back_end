@@ -131,6 +131,10 @@ public class PaperController {
         if (paperService.ifOrderExist(p) != null && !paperService.ifOrderExist(p).isEmpty()) {
             return result.error("order已存在！");
         }
+        //分数必须是正整数
+        if (p.getQuestion_value() <= 0 || p.getQuestion_value() % 1 != 0){
+            return result.error("分数必须是正整数！");
+        }
 
         paperService.insertNewQuestion(p);
 
