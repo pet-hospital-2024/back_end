@@ -7,11 +7,9 @@ import com.example.pet_hospital.Mapper.DiseaseMapper;
 import com.example.pet_hospital.Service.DiseaseService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
-import io.minio.http.Method;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +35,9 @@ public class DiseaseService_impl implements DiseaseService {
 
     @Value("${minio.bucket-name}")
     private String bucketName;
+
+    @Value("${minio.url}")
+    private String minioURL;
 
     @Autowired
     public DiseaseService_impl(MinioClient minioClient, DiseaseMapper diseaseMapper) {
@@ -195,13 +196,16 @@ public class DiseaseService_impl implements DiseaseService {
                         .build()
         );
 
-        String url = minioClient.getPresignedObjectUrl(
+        /*String url = minioClient.getPresignedObjectUrl(
                 GetPresignedObjectUrlArgs.builder()
                         .method(Method.GET)
                         .bucket(bucketName)
                         .object(fileName)
                         .build()
-        );
+        );*/
+
+        String url = minioURL + bucketName + "/" + fileName;
+
 
         cases newMedia = new cases();
         newMedia.setCase_id(m.getCase_id()); // 设置你的case_id
@@ -260,13 +264,16 @@ public class DiseaseService_impl implements DiseaseService {
                         .build()
         );
         //更新url
-        String url = minioClient.getPresignedObjectUrl(
+        /*String url = minioClient.getPresignedObjectUrl(
                 GetPresignedObjectUrlArgs.builder()
                         .method(Method.GET)
                         .bucket(bucketName)
                         .object(fileName)
                         .build()
-        );
+        );*/
+
+
+        String url = minioURL + bucketName + "/" + fileName;
         //更新数据库
         cases newMedia = new cases();
         newMedia.setMedia_id(m.getMedia_id());
@@ -320,13 +327,16 @@ public class DiseaseService_impl implements DiseaseService {
                         .contentType(type)
                         .build()
         );
-        String url = minioClient.getPresignedObjectUrl(
+        /*String url = minioClient.getPresignedObjectUrl(
                 GetPresignedObjectUrlArgs.builder()
                         .method(Method.GET)
                         .bucket(bucketName)
                         .object(fileName)
                         .build()
-        );
+        );*/
+
+        String url = minioURL + bucketName + "/" + fileName;
+
         cases newMedia = new cases();
         newMedia.setCase_id(m.getCase_id());
         newMedia.setMedia_name(fileName);

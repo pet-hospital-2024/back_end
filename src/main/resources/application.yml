@@ -39,6 +39,9 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 minio:
+
+  url: http://wxl475.cn:9000
+
   # 访问的url
   endpoint: http://wxl475.cn
   # API的端口
