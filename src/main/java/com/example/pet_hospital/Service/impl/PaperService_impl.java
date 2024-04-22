@@ -72,8 +72,7 @@ public class PaperService_impl implements PaperService {
         List<question> questions=paperMapper.getQuestionsFromPaper(p.getPaper_id()).getQuestions();
         for (question q:questions){
             if (q.getOrder()>p.getQuestion_order()){
-                q.setOrder(q.getOrder()-1);
-                paperMapper.changePaperQuestion(p);
+                paperMapper.changePaperQuestion(p.getPaper_id(),q.getQuestion_id(),(q.getOrder()-1));
             }
         }
     }
