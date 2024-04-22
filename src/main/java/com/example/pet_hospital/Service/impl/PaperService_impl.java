@@ -66,12 +66,14 @@ public class PaperService_impl implements PaperService {
 
     @Override
     public void deleteQuestionFromPaper(paper p) {
+        int dOrder=paperMapper.getQuestionOrder(p.getPaper_id(),p.getQuestion_id());
         paperMapper.deleteQuestionFromPaper_Questions(p);
         //把order大于删除的order的题目的order都减一
         //获取试卷题目列表，然后遍历，如果order大于删除的order，就减一
+
         List<question> questions=paperMapper.getQuestionsFromPaper(p.getPaper_id()).getQuestions();
         for (question q:questions){
-            if (q.getOrder()>p.getQuestion_order()){
+            if (q.getOrder()>dOrder){
                 paperMapper.changePaperQuestion(p.getPaper_id(),q.getQuestion_id(),(q.getOrder()-1));
             }
         }
