@@ -217,6 +217,10 @@ public class PaperController {
         if (identitySecure("user", Authorization)) {
             return result.error("无操作权限！");
         }
+        // 检查试卷和题目id是否为空
+        if (p.getPaper_id() == null || p.getQuestion_id() == null) {
+            return result.error("试卷id和题目id不能为空！");
+        }
 
         question q = new question();
         q.setQuestion_id(p.getQuestion_id());
