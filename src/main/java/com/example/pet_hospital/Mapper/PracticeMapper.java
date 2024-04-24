@@ -10,6 +10,9 @@ public interface PracticeMapper {
     @Delete("delete from syf.questions where question_id=#{question_id}")
     void deleteQuestion(question q);
 
+    @Delete("delete from syf.paper_questions where question_id=#{question_id}")
+    void deletePaperQuestion(question q);
+
     @Insert("insert into syf.questions values(uuid_short(),#{type},#{question_body},#{A},#{B},#{C},#{D},#{right_choice},#{judgement},#{disease_id},#{department_id})")
     void addQuestion(question q);
 
@@ -67,4 +70,8 @@ public interface PracticeMapper {
     //根据疾病name获取题目
     @Select("select * from syf.questions join syf.disease on syf.questions.disease_id=syf.disease.disease_id join syf.department on syf.questions.department_id=syf.department.department_id where disease_name=#{name}")
     List<question> getQuestionByDisease(String name);
+
+
+    @Select("select paper_id from syf.paper_questions where question_id=#{question_id}")
+    List<String> getPaperIDsByQuestionID(question q);
 }

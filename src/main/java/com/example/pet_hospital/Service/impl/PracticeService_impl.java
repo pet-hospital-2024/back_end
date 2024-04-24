@@ -1,6 +1,7 @@
 package com.example.pet_hospital.Service.impl;
 
 import com.example.pet_hospital.Entity.question;
+import com.example.pet_hospital.Mapper.PaperMapper;
 import com.example.pet_hospital.Mapper.PracticeMapper;
 import com.example.pet_hospital.Service.PracticeService;
 import com.github.pagehelper.PageHelper;
@@ -15,6 +16,8 @@ public class PracticeService_impl implements PracticeService {
     @Autowired
     private PracticeMapper practiceMapper;
 
+    private PaperMapper paperMapper;
+
     @Override
     public void addQuestion(question q) {
         practiceMapper.addQuestion(q);
@@ -22,6 +25,27 @@ public class PracticeService_impl implements PracticeService {
 
     @Override
     public void deleteQuestion(question q) {
+        //先获取有哪些试卷包含了这个问题
+        List<String> paperIDs = practiceMapper.getPaperIDsByQuestionID(q);
+
+        //获取问题的order
+        int dOrder = practiceMapper.getQuestionByID(q).getOrder();
+
+        //删除试卷中的问题
+        practiceMapper.deletePaperQuestion(q);
+        //遍历试卷list，每张试卷中的order大于当前order的试题的order-1
+        for (String paperID : paperIDs) {
+            //获取试卷中的问题
+            List<question> questions=paperMapper.getQuestionsFromPaper(paperID).getQuestions();
+            for (question qq:questions){
+                if (qq.getOrder()>dOrder){
+                    paperMapper.changePaperQuestion(paperID,qq.getQuestion_id(),(qq.getOrder()-1));
+                }
+            }
+        }
+
+
+        //删除问题
         practiceMapper.deleteQuestion(q);
     }
 
