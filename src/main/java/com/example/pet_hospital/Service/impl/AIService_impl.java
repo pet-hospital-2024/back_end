@@ -19,7 +19,6 @@ import reactor.core.scheduler.Schedulers;
 
 import java.io.IOException;
 import java.util.AbstractMap;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -59,21 +58,26 @@ public class AIService_impl implements AIService {
                                         .replace(" ", "_")   // 替换空格为下划线
                                         .replace("\n", "<br>"); // 替换回车为HTML换行符
 
-                                // 拆分字符串，逐个字节发送
+                                // 拆分字符串，每三个字符发送一次
+                                StringBuilder batch = new StringBuilder();
                                 for (char ch : modifiedAnswer.toCharArray()) {
-                                    // 延时可以根据需求调整或去除
-                                    TimeUnit.MILLISECONDS.sleep(30);  // 假设每30毫秒发送一个字
-                                    sink.next(ServerSentEvent.builder(String.valueOf(ch)).build());
+                                    batch.append(ch);
+                                    if (batch.length() == 3) { // 当累积到三个字符时发送
+                                        sink.next(ServerSentEvent.builder(batch.toString()).build());
+                                        batch.setLength(0); // 清空StringBuilder以便重新累积
+                                    }
                                 }
+                                // 发送剩余的字符（如果有的话）
+                                if (batch.length() > 0) {
+                                    sink.next(ServerSentEvent.builder(batch.toString()).build());
+                                }
+                                sink.complete();
                             }
-                            sink.complete();
                         } catch (IOException | AppBuilderServerException e) {
                             sink.error(e);  // 发送错误信号
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                            sink.error(e);  // 处理线程中断异常
-                        }
+                        } 
                     });
                 });
     }
+
 }
