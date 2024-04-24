@@ -95,5 +95,10 @@ public class PracticeService_impl implements PracticeService {
         return new PageInfo<>(questions);
     }
 
+    @Override
+    public boolean questionUsed(question q) {
+        return practiceMapper.questionUsed(q) > 0;
+    }
+
 
 }

@@ -288,4 +288,27 @@ public class PracticeController {
         return result.success(practiceService.getquestionbydisease(name,page,size));
     }
 
+
+
+    //判断题目是否在某些试卷被用到
+    @PostMapping("/question/used")
+    public result questionUsed(@RequestBody question q, @RequestHeader String Authorization) {
+        if(identitySecure("user",Authorization)){
+            return result.error("无操作权限。");
+        }
+        //判断是否为空
+        if(q.getQuestion_id()==null){
+            return result.error("题目id不能为空！");
+        }
+        //判断题目是否存在
+        if(practiceService.getQuestionByID(q)==null){
+            return result.error("该题目不存在！");
+        }
+
+        if(practiceService.questionUsed(q)){
+            return result.used("该题目已被使用！");
+        }
+        return result.success("该题目未被使用！");
+    }
+
 }

@@ -74,4 +74,8 @@ public interface PracticeMapper {
 
     @Select("select paper_id from syf.paper_questions where question_id=#{question_id}")
     List<String> getPaperIDsByQuestionID(question q);
+
+
+    @Select("select count(*) from syf.paper_questions where question_id=#{question_id}")
+    int questionUsed(question q);
 }

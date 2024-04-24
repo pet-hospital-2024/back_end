@@ -23,4 +23,6 @@ public interface PracticeService {
     PageInfo<question> getquestionbyname(String name, int page, int size);
 
     PageInfo<question> getquestionbydisease(String name, int page, int size);
+
+    boolean questionUsed(question q);
 }

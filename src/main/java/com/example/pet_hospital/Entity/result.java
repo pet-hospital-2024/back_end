@@ -36,4 +36,8 @@ public class result {
     public static result nonComplete (Object data){
         return new result(-2,"缺失分片",data);
     }
+
+    public static result used (String message){
+        return new result(2,message,null);
+    }
 }
