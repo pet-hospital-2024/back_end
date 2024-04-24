@@ -60,7 +60,7 @@ public class AIService_impl implements AIService {
 
                                 // 替换空格和回车
                                 String modifiedAnswer = response.getAnswer()
-                                        .replace(" ", "_")   // 替换空格为下划线
+                                        //.replace(" ", "_")   // 替换空格为下划线
                                         .replace("\n", "<br>"); // 替换回车为HTML换行符
 
                                 // 拆分字符串，每三个字节发送一次
