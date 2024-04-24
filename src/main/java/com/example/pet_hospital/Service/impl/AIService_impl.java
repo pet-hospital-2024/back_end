@@ -115,7 +115,7 @@ public class AIService_impl implements AIService {
                                 // 拆分字符串，逐个字节发送
                                 for (char ch : modifiedAnswer.toCharArray()) {
                                     // 延时可以根据需求调整或去除
-                                    TimeUnit.MILLISECONDS.sleep(30);  // 假设每30毫秒发送一个字
+                                    TimeUnit.MILLISECONDS.sleep(100);  // 假设每30毫秒发送一个字
                                     sink.next(ServerSentEvent.builder(String.valueOf(ch)).build());
                                 }
                             }
