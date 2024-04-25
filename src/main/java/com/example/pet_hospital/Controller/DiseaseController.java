@@ -72,6 +72,28 @@ public class DiseaseController {
         return result.success(newToken(Authorization));
     }
 
+
+    //判断此科室是否有疾病
+    @PostMapping("/disease/hasDisease")
+    public result hasDisease(@RequestBody department k, @RequestHeader String Authorization) {
+        if (identitySecure("user", Authorization)) {
+            return result.error("无操作权限！");
+        }
+        //科室id不能为空
+        if (k.getDepartment_id().isEmpty()) {
+            return result.error("科室id不能为空！");
+        }
+
+        if (diseaseService.getDepartmentbyId(k.getDepartment_id()) == null) {
+            return result.error("该科室不存在！");
+        }
+        if (diseaseService.getDiseasebyDepartment(k.getDepartment_id(), 5, 5).getList().isEmpty()) {
+            return result.success("该科室下没有疾病！");
+        }
+        return result.used("该科室下有疾病！");
+    }
+
+
     //删除科室
     @PostMapping("/disease/deleteDepartment")
     public result deleteDepartment(@RequestBody department k, @RequestHeader String Authorization) {
@@ -155,6 +177,25 @@ public class DiseaseController {
         }
         diseaseService.addDisease(d);
         return result.success(newToken(Authorization));
+    }
+
+    //判断此疾病是否有病例
+    @PostMapping("/disease/hasCase")
+    public result hasCase(@RequestBody disease d, @RequestHeader String Authorization) {
+        if (identitySecure("user", Authorization)) {
+            return result.error("无操作权限！");
+        }
+        //疾病id不能为空
+        if (d.getDisease_id().isEmpty()) {
+            return result.error("疾病id不能为空！");
+        }
+        if (diseaseService.getDiseasebyId(d.getDisease_id()) == null) {
+            return result.error("该疾病不存在！");
+        }
+        if (diseaseService.getCasebyDis(d.getDisease_id()).length == 0) {
+            return result.success("该疾病下没有病例！");
+        }
+        return result.used("该疾病下有病例！");
     }
 
     //删除疾病
@@ -257,6 +298,25 @@ public class DiseaseController {
         }
         diseaseService.addCase(i);
         return result.success(newToken(Authorization));
+    }
+
+    //判断此病例是否有多媒体
+    @PostMapping("/disease/hasMedia")
+    public result hasMedia(@RequestBody cases i, @RequestHeader String Authorization) {
+        if (identitySecure("user", Authorization)) {
+            return result.error("无操作权限！");
+        }
+        //病例id不能为空
+        if (i.getCase_id().isEmpty()) {
+            return result.error("病例id不能为空！");
+        }
+        if (diseaseService.getCasebyId(i.getCase_id()) == null) {
+            return result.error("该病例不存在！");
+        }
+        if (diseaseService.getMediaByCaseId(i.getCase_id()).length == 0) {
+            return result.success("该病例下没有多媒体！");
+        }
+        return result.used("该病例下有多媒体！");
     }
 
     //删除病例

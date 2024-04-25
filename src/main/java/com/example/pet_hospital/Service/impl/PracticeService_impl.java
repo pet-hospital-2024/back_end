@@ -28,18 +28,17 @@ public class PracticeService_impl implements PracticeService {
         //先获取有哪些试卷包含了这个问题
         List<String> paperIDs = practiceMapper.getPaperIDsByQuestionID(q);
 
-        //获取问题的order
-        int dOrder = practiceMapper.getQuestionByID(q).getOrder();
-
-        //删除试卷中的问题
-        practiceMapper.deletePaperQuestion(q);
         //遍历试卷list，每张试卷中的order大于当前order的试题的order-1
         for (String paperID : paperIDs) {
+            //获取问题的order
+            int dOrder = paperMapper.getQuestionOrder(paperID, q.getQuestion_id());
+            //删除这个试卷的这个问题
+            paperMapper.deletePaperQuestion(paperID, q.getQuestion_id());
             //获取试卷中的问题
-            List<question> questions=paperMapper.getQuestionsFromPaper(paperID).getQuestions();
-            for (question qq:questions){
-                if (qq.getOrder()>dOrder){
-                    paperMapper.changePaperQuestion(paperID,qq.getQuestion_id(),(qq.getOrder()-1));
+            List<question> questions = paperMapper.getQuestionsFromPaper(paperID).getQuestions();
+            for (question qq : questions) {
+                if (qq.getOrder() > dOrder) {
+                    paperMapper.changePaperQuestion(paperID, qq.getQuestion_id(), (qq.getOrder() - 1));
                 }
             }
         }

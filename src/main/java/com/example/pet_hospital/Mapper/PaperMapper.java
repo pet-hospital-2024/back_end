@@ -17,7 +17,7 @@ public interface PaperMapper {
     void insertNewQuestion(paper p);
 
     @Select("select * from syf.papers where paper_id=#{paper_id}")
-    paper getPaperByID (paper p);
+    paper getPaperByID(paper p);
 
     @Select("SELECT * FROM syf.papers WHERE paper_id = #{paper_id}")
     @Results(value = {
@@ -45,15 +45,14 @@ public interface PaperMapper {
     List<question> selectQuestionsForPaper(String paper_id);
 
     @Select("SELECT a,b,c,d FROM syf.questions WHERE question_id = #{question_id}")
-
     Map<String, String> selectOptionsForQuestion(String question_id);
 
 
     @Select("select * from syf.papers where paper_name=#{paper_name}")
-    paper getPaperByName (paper p);
+    paper getPaperByName(paper p);
 
     @Select("select * from syf.papers")
-    List<paper> getPaperList ();
+    List<paper> getPaperList();
 
     @Delete("delete from syf.papers where paper_id=#{paper_id}")
     void deletePaperFromPapers(paper p);
@@ -65,13 +64,11 @@ public interface PaperMapper {
     void deleteQuestionFromPaper_Questions(paper p);
 
 
-
-
     @Select("select * from syf.paper_questions where paper_id=#{paper_id} and question_id=#{question_id}")
-    List<Map<String,String>> ifPaperContainsQueston(paper p);
+    List<Map<String, String>> ifPaperContainsQueston(paper p);
 
     @Select("select paper_id,question_id from syf.paper_questions where paper_id=#{paper_id} and `order` = #{question_order}")
-    List<Map<String,String>> ifOrderExist(paper p);
+    List<Map<String, String>> ifOrderExist(paper p);
 
     @Update("update syf.papers set value=#{value},question_number=#{questionNumber} where paper_id=#{paperId}")
     void updatePaperValueAndQuestionNumber(String paperId, int value, int questionNumber);
@@ -79,7 +76,7 @@ public interface PaperMapper {
     @Update("update syf.papers set duration=#{duration},paper_name=#{paper_name} where paper_id=#{paper_id}")
     void changePaper(paper p);
 
-    @Select("select question_id from syf.paper_questions where paper_id=#{paper_id}")
+    @Select("select question_id from syf.paper_questions where paper_id=#{paperId}")
     List<String> getQuestionsIDFromPaper(String paperId);
 
     @Update("update syf.paper_questions set `order`=#{i} where paper_id=#{paperId} and question_id=#{questionId}")
@@ -87,6 +84,9 @@ public interface PaperMapper {
 
     @Select("select `order` from syf.paper_questions where paper_id=#{paperId} and question_id=#{questionId}")
     int getQuestionOrder(String paperId, String questionId);
+
+    @Delete("delete from syf.paper_questions where paper_id=#{paperID} and question_id=#{questionId}")
+    void deletePaperQuestion(String paperID, String questionId);
 
 
 //    @Select("select question_id from syf.paper_questions where paper_id=#{paper_id}")

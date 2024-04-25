@@ -10,8 +10,6 @@ public interface PracticeMapper {
     @Delete("delete from syf.questions where question_id=#{question_id}")
     void deleteQuestion(question q);
 
-    @Delete("delete from syf.paper_questions where question_id=#{question_id}")
-    void deletePaperQuestion(question q);
 
     @Insert("insert into syf.questions values(uuid_short(),#{type},#{question_body},#{A},#{B},#{C},#{D},#{right_choice},#{judgement},#{disease_id},#{department_id})")
     void addQuestion(question q);

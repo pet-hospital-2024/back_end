@@ -86,6 +86,16 @@ public class DiseaseService_impl implements DiseaseService {
 
     @Override
     public void deleteDepartment(department k) {
+        //删除科室时，先删除科室的所有疾病
+        //先获取这个科室的所有疾病
+        List<disease> diseaseList = diseaseMapper.getDiseasebyDepartment(k.getDepartment_id());
+        for (disease i : diseaseList) {
+            try {
+                deleteDisease(i);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         diseaseMapper.deleteDepartment(k);
     }
 
@@ -106,6 +116,15 @@ public class DiseaseService_impl implements DiseaseService {
 
     @Override
     public void deleteDisease(disease d) {
+        //删除疾病时，先删除疾病的所有病例
+        cases[] caseList = diseaseMapper.getCasebyDis(d.getDisease_id());
+        for (cases i : caseList) {
+            try {
+                deleteCase(i);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         diseaseMapper.deleteDisease(d);
     }
 
@@ -143,6 +162,16 @@ public class DiseaseService_impl implements DiseaseService {
 
     @Override
     public void deleteCase(cases i) {
+        //删除病例时，先删除病例的所有media
+        cases[] mediaList = diseaseMapper.getMediaByCaseId(i.getCase_id());
+        for (cases media : mediaList) {
+            try {
+                deleteMedia(media.getMedia_id());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         diseaseMapper.deleteCase(i);
     }
 
