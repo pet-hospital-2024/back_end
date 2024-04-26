@@ -16,6 +16,7 @@ public class PracticeService_impl implements PracticeService {
     @Autowired
     private PracticeMapper practiceMapper;
 
+    @Autowired
     private PaperMapper paperMapper;
 
     @Override
