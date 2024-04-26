@@ -3,18 +3,18 @@ spring:
     session:
       timeout: 30m
     multipart:
-      max-file-size: 2000MB # 设置单个文件最大大小
-      max-request-size: 2150MB # 设置整个请求的最大大小
+      max-file-size: 2000MB  # 设置单个文件最大大小
+      max-request-size: 2150MB  # 设置整个请求的最大大小
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:mysql://wxl475.cn:3306/
+    username: syf
+    password: PrjtmBwCRwsY8bmX
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
-      password: ${REDIS_PASSWORD}
+      host: wxl475.cn
+      port: 6382
+      password: wxl5211314
 
       jedis:
         pool:
@@ -23,9 +23,9 @@ spring:
           min-idle: 2
           max-wait: 3000ms
   mail:
-    host: ${MAIL_HOST}
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
+    host: smtp.qq.com
+    username: 2146765861@qq.com
+    password: ybmrbhsvbqwldjgb
     properties:
       mail:
         smtp:
@@ -39,18 +39,25 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 minio:
-  url: ${MINIO_URL}
-  endpoint: ${MINIO_ENDPOINT}
-  port: ${MINIO_PORT}
-  accessKey: ${MINIO_ACCESS_KEY}
-  secretKey: ${MINIO_SECRET_KEY}
+
+  url: http://wxl475.cn:9000/
+
+  # 访问的url
+  endpoint: http://wxl475.cn
+  # API的端口
+  port: 9000
+  # 秘钥
+  accessKey: Gzbw8F6d9xxYjkZwHSGs
+  secretKey: JgYhU5NX3Ycw8Yzq9V5smzSwgiK0sCC3iBrPYisp
   secure: false
-  bucket-name: ${MINIO_BUCKET_NAME}
-  image-size: 10485760
-  file-size: 1073741824
+  bucket-name: syf # 桶名
+  image-size: 10485760 # 图片文件的最大大小
+  file-size: 1073741824 # 文件的最大大小
+
 
 app:
   storage-directory: "./storage"
+
 
 pagehelper:
   helper-dialect: mysql
@@ -62,11 +69,18 @@ server:
   port: 8081
 
 appbuilder:
-  appId: ${APPBUILDER_APP_ID}
-  token: ${APPBUILDER_TOKEN}
+
+  appId: 9c18fc91-3639-40cd-b73d-57ea86359e9e
+  token: bce-v3/ALTAK-XaSJ0jsk7DeUIRGftgwRz/5cbe1b4c259f2d9c943c7784531239cbc97e549a
+
+
 
 custom:
   okhttp:
-    connectTimeout: 300 # 连接超时时间（秒）
-    writeTimeout: 300 # 写入超时时间（秒）
-    readTimeout: 300 # 读取超时时间（秒）
+    connectTimeout: 300  # 连接超时时间（秒）
+    writeTimeout: 300    # 写入超时时间（秒）
+    readTimeout: 300     # 读取超时时间（秒）
+
+
+
+
